@@ -464,7 +464,6 @@
   </style>
 </head>
 <body>
-<body>
   <div class="wrap">
 
     <div id="authBox" style="margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(15,23,42,.08);">
@@ -790,62 +789,35 @@
       });
     }
 
-    function renderGymNotes() {
-      const list = document.getElementById('gymNotesList');
-      const notes = Array.isArray(appData.gymNotes) ? appData.gymNotes : [];
-      if (!notes.length) {
-        list.innerHTML = '<div class="empty-note">还没有训练笔记，先添加第一条吧。</div>';
-        return;
-      }
+  function renderGymNotes(notes = []) {
+  const list = document.getElementById('gymNotesList');
 
-      list.innerHTML = notes
-        .slice()
-        .reverse()
-        .map((note, indexFromEnd) => {
-          const actualIndex = notes.length - 1 - indexFromEnd;
-          const safeContent = String(note.content || '')
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-          const safeTime = String(note.time || '');
-          return `
-            <div class="note-item">
-              <div class="note-item-top">
-                <div class="note-time">${safeTime}</div>
-                <button class="note-delete" onclick="deleteGymNote(${actualIndex})">删除</button>
-              </div>
-              <div class="note-content">${safeContent.replace(/\n/g, '<br>')}</div>
-            </div>
-          `;
-        })
-        .join('');
-    }
+  if (!notes.length) {
+    list.innerHTML = '<div class="empty-note">还没有训练笔记，先添加第一条吧。</div>';
+    return;
+  }
 
-    function addGymNote() {
-      const input = document.getElementById('gymNoteInput');
-      const value = input.value.trim();
-      if (!value) {
-        showToast('先输入一点笔记内容');
-        return;
-      }
-      if (!Array.isArray(appData.gymNotes)) appData.gymNotes = [];
-      appData.gymNotes.push({
-        content: value,
-        time: new Date().toLocaleString('zh-CN')
-      });
-      input.value = '';
-      saveData();
-      renderGymNotes();
-      showToast('已添加笔记');
-    }
+  list.innerHTML = notes.map((note) => {
+    const safeContent = String(note.content || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
 
-    function deleteGymNote(index) {
-      if (!Array.isArray(appData.gymNotes)) return;
-      appData.gymNotes.splice(index, 1);
-      saveData();
-      renderGymNotes();
-      showToast('已删除笔记');
-    }
+    const timeText = note.createdAt
+      ? new Date(note.createdAt).toLocaleString('zh-CN')
+      : '刚刚';
+
+    return `
+      <div class="note-item">
+        <div class="note-item-top">
+          <div class="note-time">${timeText}</div>
+          <button class="note-delete" onclick="window.deleteGymNote('${note.id}')">删除</button>
+        </div>
+        <div class="note-content">${safeContent.replace(/\n/g, '<br>')}</div>
+      </div>
+    `;
+  }).join('');
+}
 
     function exportData() {
       saveData(false);
@@ -898,15 +870,17 @@
     document.getElementById('mobileBackBtn').addEventListener('click', () => {
       if (currentView !== 'home') showView(parentMap[currentView] || 'home');
     });
-    document.getElementById('addGymNoteBtn').addEventListener('click', addGymNote);
-    document.getElementById('gymNoteInput').addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        addGymNote();
-      }
-    });
+document.getElementById('addGymNoteBtn').addEventListener('click', () => {
+  if (window.addGymNote) window.addGymNote();
+});
+
+document.getElementById('gymNoteInput').addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    if (window.addGymNote) window.addGymNote();
+  }
+});
 
       window.showView = showView;
-    window.deleteGymNote = deleteGymNote;
 
     renderCrumbs(meta.home.crumbs);
     bindEditors();
@@ -926,8 +900,16 @@
       signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyCKXYFGsmoHNQKgB4-dJJf-aBhYj3zvNkQ",
       authDomain: "life-study-app.firebaseapp.com",
@@ -941,7 +923,9 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
+let currentUid = null;
+let unsubscribeGymNotes = null;
+    
     window.firebaseApp = app;
     window.firebaseAuth = auth;
     window.firebaseDb = db;
@@ -999,15 +983,92 @@
       }
     });
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authStatus.textContent = "当前已登录：" + user.email;
-        console.log("当前用户 UID:", user.uid);
-      } else {
-        authStatus.textContent = "当前未登录";
-      }
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUid = user.uid;
+    authStatus.textContent = "当前已登录：" + user.email;
+    console.log("当前用户 UID:", user.uid);
+    watchGymNotes(user.uid);
+  } else {
+    currentUid = null;
+    authStatus.textContent = "当前未登录";
+
+    if (unsubscribeGymNotes) {
+      unsubscribeGymNotes();
+      unsubscribeGymNotes = null;
+    }
+
+window.renderGymNotes([]);
+  }
+});
+
+    function getGymNotesCollection(uid) {
+  return collection(db, "users", uid, "gymNotes");
+}
+
+function watchGymNotes(uid) {
+  if (unsubscribeGymNotes) {
+    unsubscribeGymNotes();
+    unsubscribeGymNotes = null;
+  }
+
+  const q = query(getGymNotesCollection(uid), orderBy("createdAt", "desc"));
+
+  unsubscribeGymNotes = onSnapshot(q, (snapshot) => {
+    const notes = snapshot.docs.map(item => ({
+      id: item.id,
+      ...item.data()
+    }));
+    window.renderGymNotes(notes);
+  });
+}
+
+async function addGymNote() {
+  const input = document.getElementById('gymNoteInput');
+  const value = input.value.trim();
+
+  if (!currentUid) {
+    showToast('请先登录');
+    return;
+  }
+
+  if (!value) {
+    showToast('先输入一点笔记内容');
+    return;
+  }
+
+  try {
+    await addDoc(getGymNotesCollection(currentUid), {
+      content: value,
+      createdAt: Date.now()
     });
 
+    input.value = '';
+    showToast('已添加笔记');
+  } catch (error) {
+    console.error(error);
+    showToast('添加失败');
+  }
+}
+
+async function deleteGymNote(noteId) {
+  if (!currentUid) {
+    showToast('请先登录');
+    return;
+  }
+
+  try {
+    await deleteDoc(doc(db, "users", currentUid, "gymNotes", noteId));
+    showToast('已删除笔记');
+  } catch (error) {
+    console.error(error);
+    showToast('删除失败');
+  }
+}
+
+window.addGymNote = addGymNote;
+window.deleteGymNote = deleteGymNote;
+    
     console.log("Firebase 已连接成功");
   </script>
 </body>
