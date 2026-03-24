@@ -1,17 +1,3 @@
-<div id="authBox" style="margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(15,23,42,.08);">
-  <div style="display:grid;gap:10px;max-width:420px;">
-    <input id="emailInput" type="email" placeholder="请输入邮箱"
-      style="height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);font:inherit;">
-    <input id="passwordInput" type="password" placeholder="请输入密码"
-      style="height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);font:inherit;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <button id="registerBtn" style="height:42px;padding:0 14px;border:none;border-radius:12px;background:#111827;color:#fff;cursor:pointer;">注册</button>
-      <button id="loginBtn" style="height:42px;padding:0 14px;border:1px solid rgba(15,23,42,.12);border-radius:12px;background:#fff;cursor:pointer;">登录</button>
-      <button id="logoutBtn" style="height:42px;padding:0 14px;border:1px solid rgba(15,23,42,.12);border-radius:12px;background:#fff;cursor:pointer;">退出登录</button>
-    </div>
-    <div id="authStatus" style="font-size:14px;color:#6b7280;">当前未登录</div>
-  </div>
-</div>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -478,7 +464,23 @@
   </style>
 </head>
 <body>
+<body>
   <div class="wrap">
+
+    <div id="authBox" style="margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(15,23,42,.08);">
+      <div style="display:grid;gap:10px;max-width:420px;">
+        <input id="emailInput" type="email" placeholder="请输入邮箱"
+          style="height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);font:inherit;">
+        <input id="passwordInput" type="password" placeholder="请输入密码"
+          style="height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);font:inherit;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button id="registerBtn" style="height:42px;padding:0 14px;border:none;border-radius:12px;background:#111827;color:#fff;cursor:pointer;">注册</button>
+          <button id="loginBtn" style="height:42px;padding:0 14px;border:1px solid rgba(15,23,42,.12);border-radius:12px;background:#fff;cursor:pointer;">登录</button>
+          <button id="logoutBtn" style="height:42px;padding:0 14px;border:1px solid rgba(15,23,42,.12);border-radius:12px;background:#fff;cursor:pointer;">退出登录</button>
+        </div>
+        <div id="authStatus" style="font-size:14px;color:#6b7280;">当前未登录</div>
+      </div>
+    </div>
     <div class="top">
       <div class="title">
         <small>📱 生活学习管理系统（健身房笔记版）</small>
@@ -903,7 +905,7 @@
       }
     });
 
-    window.showView = showView;
+      window.showView = showView;
     window.deleteGymNote = deleteGymNote;
 
     renderCrumbs(meta.home.crumbs);
@@ -913,98 +915,100 @@
     if (appData.updatedAt) {
       document.getElementById('saveStatus').textContent = '状态：已加载上次数据 ' + appData.updatedAt;
     }
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+  </script>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCKXYFGsmoHNQKgB4-dJJf-aBhYj3zvNkQ",
-  authDomain: "life-study-app.firebaseapp.com",
-  projectId: "life-study-app",
-  storageBucket: "life-study-app.firebasestorage.app",
-  messagingSenderId: "368915786752",
-  appId: "1:368915786752:web:41b39136af139356e3fce5",
-  measurementId: "G-6S5GMKQ7EV"
-};
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyCKXYFGsmoHNQKgB4-dJJf-aBhYj3zvNkQ",
+      authDomain: "life-study-app.firebaseapp.com",
+      projectId: "life-study-app",
+      storageBucket: "life-study-app.firebasestorage.app",
+      messagingSenderId: "368915786752",
+      appId: "1:368915786752:web:41b39136af139356e3fce5",
+      measurementId: "G-6S5GMKQ7EV"
+    };
 
-  window.firebaseApp = app;
-  window.firebaseAuth = auth;
-  window.firebaseDb = db;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const emailInput = document.getElementById("emailInput");
-  const passwordInput = document.getElementById("passwordInput");
-  const registerBtn = document.getElementById("registerBtn");
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const authStatus = document.getElementById("authStatus");
+    window.firebaseApp = app;
+    window.firebaseAuth = auth;
+    window.firebaseDb = db;
 
-  registerBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
+    const emailInput = document.getElementById("emailInput");
+    const passwordInput = document.getElementById("passwordInput");
+    const registerBtn = document.getElementById("registerBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const authStatus = document.getElementById("authStatus");
 
-    if (!email || !password) {
-      authStatus.textContent = "请先输入邮箱和密码";
-      return;
-    }
+    registerBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
 
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      authStatus.textContent = "注册成功，已自动登录";
-    } catch (error) {
-      authStatus.textContent = "注册失败：" + error.message;
-      console.error(error);
-    }
-  });
+      if (!email || !password) {
+        authStatus.textContent = "请先输入邮箱和密码";
+        return;
+      }
 
-  loginBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        authStatus.textContent = "注册成功，已自动登录";
+      } catch (error) {
+        authStatus.textContent = "注册失败：" + error.message;
+        console.error(error);
+      }
+    });
 
-    if (!email || !password) {
-      authStatus.textContent = "请先输入邮箱和密码";
-      return;
-    }
+    loginBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      authStatus.textContent = "登录成功";
-    } catch (error) {
-      authStatus.textContent = "登录失败：" + error.message;
-      console.error(error);
-    }
-  });
+      if (!email || !password) {
+        authStatus.textContent = "请先输入邮箱和密码";
+        return;
+      }
 
-  logoutBtn.addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      authStatus.textContent = "已退出登录";
-    } catch (error) {
-      authStatus.textContent = "退出失败：" + error.message;
-      console.error(error);
-    }
-  });
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        authStatus.textContent = "登录成功";
+      } catch (error) {
+        authStatus.textContent = "登录失败：" + error.message;
+        console.error(error);
+      }
+    });
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      authStatus.textContent = "当前已登录：" + user.email;
-      console.log("当前用户 UID:", user.uid);
-    } else {
-      authStatus.textContent = "当前未登录";
-    }
-  });
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        authStatus.textContent = "已退出登录";
+      } catch (error) {
+        authStatus.textContent = "退出失败：" + error.message;
+        console.error(error);
+      }
+    });
 
-  console.log("Firebase 已连接成功");
-</script>
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authStatus.textContent = "当前已登录：" + user.email;
+        console.log("当前用户 UID:", user.uid);
+      } else {
+        authStatus.textContent = "当前未登录";
+      }
+    });
+
+    console.log("Firebase 已连接成功");
+  </script>
 </body>
 </html>
