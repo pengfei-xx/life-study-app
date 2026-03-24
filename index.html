@@ -913,13 +913,18 @@
     if (appData.updatedAt) {
       document.getElementById('saveStatus').textContent = '状态：已加载上次数据 ' + appData.updatedAt;
     }
-  </script>
-  <script type="module">
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
   import { getFirestore } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
- const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCKXYFGsmoHNQKgB4-dJJf-aBhYj3zvNkQ",
   authDomain: "life-study-app.firebaseapp.com",
   projectId: "life-study-app",
@@ -936,6 +941,68 @@
   window.firebaseApp = app;
   window.firebaseAuth = auth;
   window.firebaseDb = db;
+
+  const emailInput = document.getElementById("emailInput");
+  const passwordInput = document.getElementById("passwordInput");
+  const registerBtn = document.getElementById("registerBtn");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const authStatus = document.getElementById("authStatus");
+
+  registerBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+      authStatus.textContent = "请先输入邮箱和密码";
+      return;
+    }
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      authStatus.textContent = "注册成功，已自动登录";
+    } catch (error) {
+      authStatus.textContent = "注册失败：" + error.message;
+      console.error(error);
+    }
+  });
+
+  loginBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+      authStatus.textContent = "请先输入邮箱和密码";
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      authStatus.textContent = "登录成功";
+    } catch (error) {
+      authStatus.textContent = "登录失败：" + error.message;
+      console.error(error);
+    }
+  });
+
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      authStatus.textContent = "已退出登录";
+    } catch (error) {
+      authStatus.textContent = "退出失败：" + error.message;
+      console.error(error);
+    }
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      authStatus.textContent = "当前已登录：" + user.email;
+      console.log("当前用户 UID:", user.uid);
+    } else {
+      authStatus.textContent = "当前未登录";
+    }
+  });
 
   console.log("Firebase 已连接成功");
 </script>
