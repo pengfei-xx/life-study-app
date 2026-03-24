@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>生活学习管理系统（健身房笔记版）</title>
+  <title>生活学习管理系统（全模块云同步版）</title>
   <style>
     * { box-sizing: border-box; }
     :root{
       --bg:#f6f7fb;
-      --panel:rgba(255,255,255,.88);
+      --panel:rgba(255,255,255,.9);
       --line:rgba(15,23,42,.08);
       --text:#111827;
       --muted:#6b7280;
       --shadow:0 10px 30px rgba(15,23,42,.08);
-      --radius:24px;
       --primary:#111827;
       --safe-bottom:max(16px, env(safe-area-inset-bottom));
       --safe-top:max(16px, env(safe-area-inset-top));
+      --radius:24px;
     }
     html, body { min-height:100%; }
     body{
@@ -29,7 +29,7 @@
         linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
     }
     .wrap{
-      max-width:1100px;
+      max-width:1140px;
       margin:0 auto;
       padding:calc(12px + var(--safe-top)) 14px calc(98px + var(--safe-bottom));
     }
@@ -63,7 +63,7 @@
       color:var(--muted);
       font-size:14px;
       line-height:1.8;
-      max-width:720px;
+      max-width:760px;
     }
     .btns{
       display:flex;
@@ -93,6 +93,29 @@
       color:#fff;
       border-color:transparent;
     }
+    .auth-box{
+      margin:16px 0;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(255,255,255,.9);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+    .auth-grid{
+      display:grid;
+      gap:10px;
+      max-width:460px;
+    }
+    .text-input{
+      width:100%;
+      height:46px;
+      padding:0 12px;
+      border-radius:12px;
+      border:1px solid rgba(15,23,42,.12);
+      font:inherit;
+      background:#fff;
+      outline:none;
+    }
     .hero{
       padding:18px;
       border-radius:24px;
@@ -112,6 +135,12 @@
       color:var(--muted);
       line-height:1.8;
       font-size:14px;
+    }
+    .statusbar{
+      margin-top:12px;
+      color:#4b5563;
+      font-size:13px;
+      line-height:1.7;
     }
     .crumbs{
       display:flex;
@@ -136,7 +165,7 @@
       gap:14px;
     }
     .card{
-      min-height:210px;
+      min-height:200px;
       padding:20px;
       border-radius:24px;
       background:var(--panel);
@@ -212,6 +241,12 @@
       font-size:24px;
       line-height:1.25;
     }
+    .section p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.8;
+      font-size:14px;
+    }
     .mini-grid{
       display:grid;
       grid-template-columns:repeat(3, minmax(0,1fr));
@@ -253,7 +288,7 @@
       color:#374151;
     }
     .single{
-      max-width:780px;
+      max-width:960px;
     }
     .page-actions{
       display:flex;
@@ -281,7 +316,7 @@
     }
     textarea{
       width:100%;
-      min-height:220px;
+      min-height:180px;
       resize:vertical;
       border:none;
       outline:none;
@@ -296,72 +331,85 @@
       line-height:1.8;
     }
     .small-textarea{
-      min-height:110px;
+      min-height:100px;
     }
     .hint{
       color:var(--muted);
       font-size:13px;
       line-height:1.7;
     }
-    .statusbar{
-      margin-top:12px;
-      color:#4b5563;
-      font-size:13px;
-      line-height:1.7;
-    }
-    .note-composer{
+    .item-form{
       display:grid;
       gap:10px;
-      margin-top:6px;
     }
-    .note-add-btn{
-      align-self:flex-start;
-      min-height:42px;
-      padding:10px 14px;
+    .item-input{
+      width:100%;
+      min-height:44px;
+      padding:12px 14px;
       border-radius:14px;
-      background:#111827;
-      color:#fff;
-      box-shadow:0 8px 18px rgba(17,24,39,.12);
+      background:#fff;
+      border:1px solid var(--line);
+      font:inherit;
+      outline:none;
     }
-    .notes-list{
+    .item-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .items-list{
       display:grid;
       gap:10px;
       margin-top:6px;
     }
-    .note-item{
+    .item-card{
       background:rgba(255,255,255,.96);
       border:1px solid var(--line);
       border-radius:18px;
-      padding:14px 14px 12px;
+      padding:14px;
     }
-    .note-item-top{
+    .item-card-top{
       display:flex;
       justify-content:space-between;
-      align-items:center;
-      gap:10px;
+      gap:12px;
+      align-items:flex-start;
       margin-bottom:8px;
     }
-    .note-time{
+    .item-title{
+      font-weight:700;
+      font-size:15px;
+      line-height:1.5;
+    }
+    .item-time{
       color:var(--muted);
       font-size:12px;
-      line-height:1.4;
+      margin-top:4px;
     }
-    .note-delete{
+    .item-content{
+      white-space:pre-wrap;
+      color:var(--text);
+      font-size:14px;
+      line-height:1.8;
+      margin-top:4px;
+    }
+    .item-buttons{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .small-btn{
       min-height:34px;
       padding:6px 10px;
       border-radius:12px;
       background:#fff;
       border:1px solid var(--line);
-      color:#b91c1c;
+      color:#374151;
       box-shadow:none;
     }
-    .note-content{
-      white-space:pre-wrap;
-      font-size:14px;
-      line-height:1.8;
-      color:var(--text);
+    .small-btn.danger{
+      color:#b91c1c;
     }
-    .empty-note{
+    .empty-box{
       padding:16px;
       border:1px dashed rgba(15,23,42,.12);
       border-radius:16px;
@@ -392,7 +440,6 @@
       transform:translate(-50%, 0);
     }
     input[type="file"]{ display:none; }
-
     .mobile-bar{
       position:fixed;
       left:12px;
@@ -413,306 +460,106 @@
       font-weight:600;
       backdrop-filter:blur(14px);
     }
-
     @media (max-width: 900px){
       .grid, .mini-grid{ grid-template-columns:1fr; }
     }
     @media (max-width: 720px){
-      .wrap{
-        padding-left:12px;
-        padding-right:12px;
-      }
+      .wrap{ padding-left:12px; padding-right:12px; }
       h1{ font-size:28px; }
-      .top{
-        align-items:stretch;
-      }
-      .btns{
-        width:100%;
-        justify-content:stretch;
-        display:grid;
-        grid-template-columns:1fr 1fr 1fr;
-      }
-      .btn{
-        width:100%;
-        min-height:48px;
-        padding:10px 12px;
-        font-size:14px;
-      }
-      .hero, .section, .card{
-        padding:16px;
-        border-radius:22px;
-      }
-      .hero-title{
-        font-size:20px;
-      }
-      .card{
-        min-height:180px;
-      }
-      .page-actions{
-        display:none;
-      }
-      .mobile-bar{
-        display:grid;
-      }
-      textarea{
-        min-height:180px;
-      }
-      .small-textarea{
-        min-height:100px;
-      }
+      .top{ align-items:stretch; }
+      .btns{ width:100%; justify-content:stretch; display:grid; grid-template-columns:1fr 1fr; }
+      .btn{ width:100%; min-height:48px; padding:10px 12px; font-size:14px; }
+      .hero, .section, .card{ padding:16px; border-radius:22px; }
+      .hero-title{ font-size:20px; }
+      .card{ min-height:180px; }
+      .page-actions{ display:none; }
+      .mobile-bar{ display:grid; }
+      textarea{ min-height:150px; }
+      .small-textarea{ min-height:90px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-
-    <div id="authBox" style="margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(15,23,42,.08);">
-      <div style="display:grid;gap:10px;max-width:420px;">
-        <input id="emailInput" type="email" placeholder="请输入邮箱"
-          style="height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);font:inherit;">
-        <input id="passwordInput" type="password" placeholder="请输入密码"
-          style="height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(15,23,42,.12);font:inherit;">
+    <div id="authBox" class="auth-box">
+      <div class="auth-grid">
+        <input id="emailInput" class="text-input" type="email" placeholder="请输入邮箱">
+        <input id="passwordInput" class="text-input" type="password" placeholder="请输入密码（至少 6 位）">
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button id="registerBtn" style="height:42px;padding:0 14px;border:none;border-radius:12px;background:#111827;color:#fff;cursor:pointer;">注册</button>
-          <button id="loginBtn" style="height:42px;padding:0 14px;border:1px solid rgba(15,23,42,.12);border-radius:12px;background:#fff;cursor:pointer;">登录</button>
-          <button id="logoutBtn" style="height:42px;padding:0 14px;border:1px solid rgba(15,23,42,.12);border-radius:12px;background:#fff;cursor:pointer;">退出登录</button>
+          <button id="registerBtn" class="btn primary">注册</button>
+          <button id="loginBtn" class="btn">登录</button>
+          <button id="logoutBtn" class="btn">退出登录</button>
         </div>
         <div id="authStatus" style="font-size:14px;color:#6b7280;">当前未登录</div>
       </div>
     </div>
+
     <div class="top">
       <div class="title">
-        <small>📱 生活学习管理系统（健身房笔记版）</small>
+        <small>☁️ 生活学习管理系统（全模块云同步版）</small>
         <h1>我的主页</h1>
-        <p class="sub">手机和电脑都能顺手使用。现在健身房模块已经支持单独添加笔记。</p>
+        <p class="sub">现在五个模块都支持账号级同步。文本内容自动同步；每个模块的条目列表也支持新增、编辑、删除，并在手机和电脑之间同步。</p>
       </div>
       <div class="btns">
         <button class="btn" onclick="showView('home')">首页</button>
-        <button class="btn" id="importBtn">导入</button>
-        <button class="btn primary" id="exportBtn">导出</button>
+        <button class="btn" onclick="showView('pingpong')">乒乓球</button>
       </div>
     </div>
 
     <div class="hero">
       <h2 class="hero-title" id="heroTitle">三个主模块</h2>
-      <p class="hero-desc" id="heroDesc">乒乓球、Anki 卡牌、论文。点击进入即可。数据会自动保存在本机，也可以导出成文件带到其他电脑或手机。</p>
+      <p class="hero-desc" id="heroDesc">乒乓球、Anki 卡牌、论文。登录同一账号后，所有模块内容会自动同步。</p>
       <div class="statusbar" id="saveStatus">状态：已就绪</div>
     </div>
 
     <div class="crumbs" id="crumbs"></div>
-    <input type="file" id="fileInput" accept=".json" />
 
     <section class="view active" id="homeView">
       <div class="grid">
-        <div class="card">
-          <div>
-            <div class="icon">🏓</div>
-            <h3>乒乓球</h3>
-            <p>训练相关内容。</p>
-          </div>
-          <button class="enter" onclick="showView('pingpong')">进入</button>
-        </div>
-
-        <div class="card">
-          <div>
-            <div class="icon">🧠</div>
-            <h3>Anki 卡牌</h3>
-            <p>记忆与复习。</p>
-          </div>
-          <button class="enter" onclick="showView('anki')">进入</button>
-        </div>
-
-        <div class="card">
-          <div>
-            <div class="icon">📄</div>
-            <h3>论文</h3>
-            <p>阅读与写作。</p>
-          </div>
-          <button class="enter" onclick="showView('paper')">进入</button>
-        </div>
+        <div class="card"><div><div class="icon">🏓</div><h3>乒乓球</h3><p>训练相关内容。</p></div><button class="enter" onclick="showView('pingpong')">进入</button></div>
+        <div class="card"><div><div class="icon">🧠</div><h3>Anki 卡牌</h3><p>记忆与复习。</p></div><button class="enter" onclick="showView('anki')">进入</button></div>
+        <div class="card"><div><div class="icon">📄</div><h3>论文</h3><p>阅读与写作。</p></div><button class="enter" onclick="showView('paper')">进入</button></div>
       </div>
     </section>
 
     <section class="view" id="pingpongView">
       <div class="section">
         <h2>乒乓球</h2>
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div>
-              <div class="mini-icon">🏋️</div>
-              <h4>健身房</h4>
-              <p>力量与体能。</p>
-            </div>
-            <button class="ghost" onclick="showView('gym')">进入</button>
-          </div>
-
-          <div class="mini-card">
-            <div>
-              <div class="mini-icon">🎯</div>
-              <h4>发球机</h4>
-              <p>线路与训练。</p>
-            </div>
-            <button class="ghost" onclick="showView('machine')">进入</button>
-          </div>
-
-          <div class="mini-card">
-            <div>
-              <div class="mini-icon">📘</div>
-              <h4>教学大纲</h4>
-              <p>内容与结构。</p>
-            </div>
-            <button class="ghost" onclick="showView('syllabus')">进入</button>
-          </div>
+        <p>进入后分成三个子模块。每个子模块现在都支持文本内容同步和条目列表同步。</p>
+        <div class="mini-grid" style="margin-top:14px;">
+          <div class="mini-card"><div><div class="mini-icon">🏋️</div><h4>健身房</h4><p>力量与体能。</p></div><button class="ghost" onclick="showView('gym')">进入</button></div>
+          <div class="mini-card"><div><div class="mini-icon">🎯</div><h4>发球机</h4><p>线路与训练。</p></div><button class="ghost" onclick="showView('machine')">进入</button></div>
+          <div class="mini-card"><div><div class="mini-icon">📘</div><h4>教学大纲</h4><p>内容与结构。</p></div><button class="ghost" onclick="showView('syllabus')">进入</button></div>
         </div>
-        <div class="page-actions">
-          <button class="back-btn" onclick="showView('home')">返回首页</button>
-        </div>
+        <div class="page-actions"><button class="back-btn" onclick="showView('home')">返回首页</button></div>
       </div>
     </section>
 
-    <section class="view" id="gymView">
-      <div class="section single">
-        <h2>健身房</h2>
-        <p class="hero-desc">可以记录训练计划、动作安排、完成情况，也可以单独添加训练笔记。</p>
-
-        <div class="editor">
-          <div class="label">训练计划 / 总体记录</div>
-          <textarea data-key="gym" placeholder="例如：&#10;周一：深蹲 4×6&#10;周三：核心 + 灵活性&#10;周五：下肢爆发"></textarea>
-          <div class="hint">这里适合写长期计划或总体安排。</div>
-        </div>
-
-        <div class="editor">
-          <div class="label">新增训练笔记</div>
-          <div class="note-composer">
-            <textarea id="gymNoteInput" class="small-textarea" placeholder="例如：&#10;今天深蹲状态一般，最后两组明显吃力。&#10;下次先热身髋部，再做主项。"></textarea>
-            <button class="note-add-btn" id="addGymNoteBtn">添加笔记</button>
-          </div>
-          <div class="hint">适合记录当天感受、动作问题、重量反馈、恢复状态等。</div>
-        </div>
-
-        <div class="editor">
-          <div class="label">训练笔记列表</div>
-          <div id="gymNotesList" class="notes-list"></div>
-        </div>
-
-        <div class="page-actions">
-          <button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button>
-          <button class="back-btn" onclick="showView('home')">返回首页</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="view" id="machineView">
-      <div class="section single">
-        <h2>发球机</h2>
-        <p class="hero-desc">可以记录训练线路、频率、时长和反馈。</p>
-        <div class="editor">
-          <div class="label">我的内容</div>
-          <textarea data-key="machine" placeholder="例如：&#10;正手位上旋 10 分钟&#10;两点步法 8 组&#10;随机落点 6 组"></textarea>
-          <div class="hint">这里适合记录常用模板和当天效果。</div>
-        </div>
-        <div class="page-actions">
-          <button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button>
-          <button class="back-btn" onclick="showView('home')">返回首页</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="view" id="syllabusView">
-      <div class="section single">
-        <h2>乒乓球教学大纲</h2>
-        <p class="hero-desc">可以记录技术结构、重点动作和训练层级。</p>
-        <div class="editor">
-          <div class="label">我的内容</div>
-          <textarea data-key="syllabus" placeholder="例如：&#10;1. 基础站位&#10;2. 正手攻球&#10;3. 反手拨球&#10;4. 发接发衔接"></textarea>
-          <div class="hint">这里适合长期沉淀你的教学或训练框架。</div>
-        </div>
-        <div class="page-actions">
-          <button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button>
-          <button class="back-btn" onclick="showView('home')">返回首页</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="view" id="ankiView">
-      <div class="section single">
-        <h2>Anki 卡牌</h2>
-        <p class="hero-desc">可以记录牌组安排、今日复习内容和记忆重点。</p>
-        <div class="editor">
-          <div class="label">我的内容</div>
-          <textarea data-key="anki" placeholder="例如：&#10;英语词汇 30 张&#10;论文术语 15 张&#10;今日难卡回顾：..."></textarea>
-          <div class="hint">这里可以当成你的 Anki 计划页。</div>
-        </div>
-        <div class="page-actions">
-          <button class="back-btn" onclick="showView('home')">返回首页</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="view" id="paperView">
-      <div class="section single">
-        <h2>论文</h2>
-        <p class="hero-desc">可以记录待读论文、摘要、问题和写作推进。</p>
-        <div class="editor">
-          <div class="label">我的内容</div>
-          <textarea data-key="paper" placeholder="例如：&#10;本周阅读：Paper A / Paper B&#10;问题：实验设计部分还要再看&#10;写作：Related Work 完成 40%"></textarea>
-          <div class="hint">这里可以用来持续记录你的阅读和写作进度。</div>
-        </div>
-        <div class="page-actions">
-          <button class="back-btn" onclick="showView('home')">返回首页</button>
-        </div>
-      </div>
-    </section>
+    <section class="view" id="gymView"><div class="section single" id="module-gym"></div></section>
+    <section class="view" id="machineView"><div class="section single" id="module-machine"></div></section>
+    <section class="view" id="syllabusView"><div class="section single" id="module-syllabus"></div></section>
+    <section class="view" id="ankiView"><div class="section single" id="module-anki"></div></section>
+    <section class="view" id="paperView"><div class="section single" id="module-paper"></div></section>
   </div>
 
   <div class="mobile-bar">
     <button class="mobile-btn" id="mobileBackBtn">返回</button>
     <button class="mobile-btn" onclick="showView('home')">首页</button>
   </div>
-
   <div id="toast"></div>
 
   <script>
-    const STORAGE_KEY = 'life-study-mobile-notes-v1';
-
-    const defaultData = {
-      gym: '',
-      gymNotes: [],
-      machine: '',
-      syllabus: '',
-      anki: '',
-      paper: '',
-      updatedAt: ''
+    const MODULE_META = {
+      gym: { title:'健身房', desc:'记录训练计划、完成情况和训练条目。', icon:'🏋️', parent:'pingpong', listLabel:'训练条目', textLabel:'训练计划 / 总体记录' },
+      machine: { title:'发球机', desc:'记录训练线路、频率、模板和复盘。', icon:'🎯', parent:'pingpong', listLabel:'训练模板', textLabel:'发球机总内容' },
+      syllabus: { title:'乒乓球教学大纲', desc:'记录技术结构、章节与阶段安排。', icon:'📘', parent:'pingpong', listLabel:'大纲条目', textLabel:'教学大纲总内容' },
+      anki: { title:'Anki 卡牌', desc:'记录牌组安排、复习计划和错卡整理。', icon:'🧠', parent:'home', listLabel:'复习条目', textLabel:'Anki 总内容' },
+      paper: { title:'论文', desc:'记录待读论文、笔记和写作推进。', icon:'📄', parent:'home', listLabel:'论文条目', textLabel:'论文总内容' }
     };
 
-    function loadData() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return { ...defaultData };
-        const parsed = JSON.parse(raw);
-        return {
-          ...defaultData,
-          ...parsed,
-          gymNotes: Array.isArray(parsed.gymNotes) ? parsed.gymNotes : []
-        };
-      } catch (e) {
-        return { ...defaultData };
-      }
-    }
-
-    let appData = loadData();
     let currentView = 'home';
 
-    const parentMap = {
-      home: 'home',
-      pingpong: 'home',
-      gym: 'pingpong',
-      machine: 'pingpong',
-      syllabus: 'pingpong',
-      anki: 'home',
-      paper: 'home'
-    };
-
+    const parentMap = { home:'home', pingpong:'home', gym:'pingpong', machine:'pingpong', syllabus:'pingpong', anki:'home', paper:'home' };
     const views = {
       home: document.getElementById('homeView'),
       pingpong: document.getElementById('pingpongView'),
@@ -722,34 +569,61 @@
       anki: document.getElementById('ankiView'),
       paper: document.getElementById('paperView')
     };
-
     const meta = {
-      home: { title: '三个主模块', desc: '乒乓球、Anki 卡牌、论文。点击进入即可。数据会自动保存在本机，也可以导出成文件带到其他电脑或手机。', crumbs: ['首页'] },
-      pingpong: { title: '乒乓球', desc: '包含健身房、发球机、教学大纲。', crumbs: ['首页', '乒乓球'] },
-      gym: { title: '健身房', desc: '在这里记录训练计划，并单独添加训练笔记。', crumbs: ['首页', '乒乓球', '健身房'] },
-      machine: { title: '发球机', desc: '在这里记录发球机训练模板。', crumbs: ['首页', '乒乓球', '发球机'] },
-      syllabus: { title: '乒乓球教学大纲', desc: '在这里整理你的训练结构。', crumbs: ['首页', '乒乓球', '教学大纲'] },
-      anki: { title: 'Anki 卡牌', desc: '在这里记录今日复习与牌组安排。', crumbs: ['首页', 'Anki 卡牌'] },
-      paper: { title: '论文', desc: '在这里记录阅读和写作推进。', crumbs: ['首页', '论文'] }
+      home: { title:'三个主模块', desc:'乒乓球、Anki 卡牌、论文。登录同一账号后，所有模块内容会自动同步。', crumbs:['首页'] },
+      pingpong: { title:'乒乓球', desc:'包含健身房、发球机、教学大纲。', crumbs:['首页','乒乓球'] },
+      gym: { title:'健身房', desc:'健身房模块中的文本和条目列表都会同步。', crumbs:['首页','乒乓球','健身房'] },
+      machine: { title:'发球机', desc:'发球机模块中的文本和条目列表都会同步。', crumbs:['首页','乒乓球','发球机'] },
+      syllabus: { title:'乒乓球教学大纲', desc:'教学大纲模块中的文本和条目列表都会同步。', crumbs:['首页','乒乓球','教学大纲'] },
+      anki: { title:'Anki 卡牌', desc:'Anki 模块中的文本和条目列表都会同步。', crumbs:['首页','Anki 卡牌'] },
+      paper: { title:'论文', desc:'论文模块中的文本和条目列表都会同步。', crumbs:['首页','论文'] }
     };
 
-    function renderCrumbs(arr){
-      document.getElementById('crumbs').innerHTML = arr.map(i => `<span class="crumb">${i}</span>`).join('');
+    function buildModulePages() {
+      Object.entries(MODULE_META).forEach(([key, item]) => {
+        const container = document.getElementById(`module-${key}`);
+        container.innerHTML = `
+          <h2>${item.title}</h2>
+          <p>${item.desc}</p>
+
+          <div class="editor">
+            <div class="label">${item.textLabel}（自动同步）</div>
+            <textarea id="${key}-text" placeholder="请输入 ${item.title} 的总内容..."></textarea>
+            <div class="hint">停止输入约 800ms 后会自动保存到云端。</div>
+          </div>
+
+          <div class="editor">
+            <div class="label">${item.listLabel}（增删改查，自动同步）</div>
+            <div class="item-form">
+              <input id="${key}-item-title" class="item-input" type="text" placeholder="请输入标题">
+              <textarea id="${key}-item-content" class="small-textarea" placeholder="请输入内容"></textarea>
+              <div class="item-actions">
+                <button class="btn primary" id="${key}-item-submit">添加条目</button>
+                <button class="btn" id="${key}-item-cancel">取消编辑</button>
+              </div>
+            </div>
+            <div class="hint">每个模块都带一个同步条目列表，你可以新增、编辑、删除。</div>
+          </div>
+
+          <div class="editor">
+            <div class="label">${item.listLabel}列表</div>
+            <div id="${key}-items-list" class="items-list"></div>
+          </div>
+
+          <div class="page-actions">
+            <button class="back-btn" onclick="showView('${item.parent}')">返回${item.parent === 'pingpong' ? '乒乓球' : '首页'}</button>
+            <button class="back-btn" onclick="showView('home')">返回首页</button>
+          </div>
+        `;
+      });
     }
 
+    function renderCrumbs(arr){ document.getElementById('crumbs').innerHTML = arr.map(i => `<span class="crumb">${i}</span>`).join(''); }
     function updateMobileBack(){
       const btn = document.getElementById('mobileBackBtn');
-      if (currentView === 'home') {
-        btn.textContent = '当前首页';
-        btn.disabled = true;
-        btn.style.opacity = '.55';
-      } else {
-        btn.textContent = '返回';
-        btn.disabled = false;
-        btn.style.opacity = '1';
-      }
+      if (currentView === 'home') { btn.textContent = '当前首页'; btn.disabled = true; btn.style.opacity = '.55'; }
+      else { btn.textContent = '返回'; btn.disabled = false; btn.style.opacity = '1'; }
     }
-
     function showView(name){
       currentView = name;
       Object.values(views).forEach(v => v.classList.remove('active'));
@@ -760,15 +634,6 @@
       updateMobileBack();
       window.scrollTo({top:0, behavior:'smooth'});
     }
-
-    function saveData(showSavedStatus = true) {
-      appData.updatedAt = new Date().toLocaleString('zh-CN');
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-      if (showSavedStatus) {
-        document.getElementById('saveStatus').textContent = '状态：已保存 ' + appData.updatedAt;
-      }
-    }
-
     function showToast(text) {
       const toast = document.getElementById('toast');
       toast.textContent = text;
@@ -777,118 +642,16 @@
       showToast._timer = setTimeout(() => toast.classList.remove('show'), 1800);
     }
 
-    function bindEditors() {
-      const textareas = document.querySelectorAll('textarea[data-key]');
-      textareas.forEach(el => {
-        const key = el.dataset.key;
-        el.value = appData[key] || '';
-        el.oninput = () => {
-          appData[key] = el.value;
-          saveData();
-        };
-      });
-    }
-
-  function renderGymNotes(notes = []) {
-  const list = document.getElementById('gymNotesList');
-
-  if (!notes.length) {
-    list.innerHTML = '<div class="empty-note">还没有训练笔记，先添加第一条吧。</div>';
-    return;
-  }
-
-  list.innerHTML = notes.map((note) => {
-    const safeContent = String(note.content || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-
-    const timeText = note.createdAt
-      ? new Date(note.createdAt).toLocaleString('zh-CN')
-      : '刚刚';
-
-    return `
-      <div class="note-item">
-        <div class="note-item-top">
-          <div class="note-time">${timeText}</div>
-          <button class="note-delete" onclick="window.deleteGymNote('${note.id}')">删除</button>
-        </div>
-        <div class="note-content">${safeContent.replace(/\n/g, '<br>')}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-    function exportData() {
-      saveData(false);
-      const dataStr = JSON.stringify(appData, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      const time = new Date();
-      const pad = n => String(n).padStart(2, '0');
-      const fileName = `生活学习管理系统数据_${time.getFullYear()}${pad(time.getMonth()+1)}${pad(time.getDate())}_${pad(time.getHours())}${pad(time.getMinutes())}.json`;
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      URL.revokeObjectURL(url);
-      document.getElementById('saveStatus').textContent = '状态：已导出数据 ' + appData.updatedAt;
-      showToast('数据已导出');
-    }
-
-    function importDataFromFile(file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const parsed = JSON.parse(reader.result);
-          appData = {
-            ...defaultData,
-            ...parsed,
-            gymNotes: Array.isArray(parsed.gymNotes) ? parsed.gymNotes : []
-          };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-          bindEditors();
-          renderGymNotes();
-          document.getElementById('saveStatus').textContent = '状态：已导入数据';
-          showToast('数据已导入');
-        } catch (e) {
-          alert('导入失败：文件格式不正确');
-        }
-      };
-      reader.readAsText(file, 'utf-8');
-    }
-
-    document.getElementById('exportBtn').addEventListener('click', exportData);
-    document.getElementById('importBtn').addEventListener('click', () => {
-      document.getElementById('fileInput').click();
-    });
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) importDataFromFile(file);
-      e.target.value = '';
-    });
     document.getElementById('mobileBackBtn').addEventListener('click', () => {
       if (currentView !== 'home') showView(parentMap[currentView] || 'home');
     });
-document.getElementById('addGymNoteBtn').addEventListener('click', () => {
-  if (window.addGymNote) window.addGymNote();
-});
 
-document.getElementById('gymNoteInput').addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    if (window.addGymNote) window.addGymNote();
-  }
-});
+    window.showView = showView;
+    window.showToast = showToast;
 
-      window.showView = showView;
-
+    buildModulePages();
     renderCrumbs(meta.home.crumbs);
-    bindEditors();
-    renderGymNotes();
     updateMobileBack();
-    if (appData.updatedAt) {
-      document.getElementById('saveStatus').textContent = '状态：已加载上次数据 ' + appData.updatedAt;
-    }
   </script>
 
   <script type="module">
@@ -900,16 +663,18 @@ document.getElementById('gymNoteInput').addEventListener('keydown', (e) => {
       signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  query,
-  orderBy,
-  onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      collection,
+      addDoc,
+      deleteDoc,
+      query,
+      orderBy,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCKXYFGsmoHNQKgB4-dJJf-aBhYj3zvNkQ",
       authDomain: "life-study-app.firebaseapp.com",
@@ -920,15 +685,22 @@ import {
       measurementId: "G-6S5GMKQ7EV"
     };
 
+    const MODULE_KEYS = Object.keys(MODULE_META);
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-let currentUid = null;
-let unsubscribeGymNotes = null;
-    
-    window.firebaseApp = app;
-    window.firebaseAuth = auth;
-    window.firebaseDb = db;
+
+    let currentUid = null;
+    const unsubDocMap = {};
+    const unsubItemsMap = {};
+    const textSaveTimers = {};
+    const localState = {};
+    const editState = {};
+
+    MODULE_KEYS.forEach(key => {
+      localState[key] = { text:'', items:[] };
+      editState[key] = { editingId:null };
+    });
 
     const emailInput = document.getElementById("emailInput");
     const passwordInput = document.getElementById("passwordInput");
@@ -936,40 +708,190 @@ let unsubscribeGymNotes = null;
     const loginBtn = document.getElementById("loginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const authStatus = document.getElementById("authStatus");
+    const saveStatus = document.getElementById("saveStatus");
+
+    function moduleDocRef(uid, key) {
+      return doc(db, "users", uid, "modules", key);
+    }
+    function moduleItemsCollection(uid, key) {
+      return collection(db, "users", uid, "modules", key, "items");
+    }
+
+    function setStatus(text) {
+      saveStatus.textContent = text;
+    }
+
+    function safeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function fillModuleText(key, value) {
+      const textarea = document.getElementById(`${key}-text`);
+      if (!textarea) return;
+      if (document.activeElement !== textarea) {
+        textarea.value = value || '';
+      }
+    }
+
+    function fillModuleItems(key, items) {
+      const list = document.getElementById(`${key}-items-list`);
+      if (!list) return;
+      if (!items.length) {
+        list.innerHTML = '<div class="empty-box">还没有条目，先添加第一条吧。</div>';
+        return;
+      }
+
+      list.innerHTML = items.map(item => {
+        const timeText = item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚';
+        return `
+          <div class="item-card">
+            <div class="item-card-top">
+              <div>
+                <div class="item-title">${safeHtml(item.title || '未命名条目')}</div>
+                <div class="item-time">${timeText}</div>
+              </div>
+              <div class="item-buttons">
+                <button class="small-btn" onclick="window.editModuleItem('${key}','${item.id}')">编辑</button>
+                <button class="small-btn danger" onclick="window.deleteModuleItem('${key}','${item.id}')">删除</button>
+              </div>
+            </div>
+            <div class="item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function resetItemForm(key) {
+      editState[key].editingId = null;
+      const title = document.getElementById(`${key}-item-title`);
+      const content = document.getElementById(`${key}-item-content`);
+      const submit = document.getElementById(`${key}-item-submit`);
+      if (title) title.value = '';
+      if (content) content.value = '';
+      if (submit) submit.textContent = '添加条目';
+    }
+
+    function bindModuleUI() {
+      MODULE_KEYS.forEach(key => {
+        const textarea = document.getElementById(`${key}-text`);
+        textarea.addEventListener('input', () => {
+          if (!currentUid) {
+            setStatus('状态：请先登录后再同步');
+            return;
+          }
+          clearTimeout(textSaveTimers[key]);
+          textSaveTimers[key] = setTimeout(async () => {
+            try {
+              await setDoc(moduleDocRef(currentUid, key), {
+                text: textarea.value,
+                updatedAt: Date.now()
+              }, { merge: true });
+              setStatus(`状态：${MODULE_META[key].title} 已同步`);
+            } catch (error) {
+              console.error(error);
+              setStatus(`状态：${MODULE_META[key].title} 同步失败`);
+              window.showToast(`${MODULE_META[key].title} 同步失败`);
+            }
+          }, 800);
+        });
+
+        document.getElementById(`${key}-item-submit`).addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const titleInput = document.getElementById(`${key}-item-title`);
+          const contentInput = document.getElementById(`${key}-item-content`);
+          const title = titleInput.value.trim();
+          const content = contentInput.value.trim();
+
+          if (!title && !content) return window.showToast('先输入一点内容');
+
+          try {
+            if (editState[key].editingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", key, "items", editState[key].editingId), {
+                title,
+                content,
+                updatedAt: Date.now()
+              }, { merge: true });
+              window.showToast('已更新条目');
+            } else {
+              await addDoc(moduleItemsCollection(currentUid, key), {
+                title,
+                content,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+              });
+              window.showToast('已添加条目');
+            }
+            resetItemForm(key);
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存条目失败');
+          }
+        });
+
+        document.getElementById(`${key}-item-cancel`).addEventListener('click', () => {
+          resetItemForm(key);
+        });
+      });
+    }
+
+    function stopAllWatchers() {
+      MODULE_KEYS.forEach(key => {
+        if (unsubDocMap[key]) { unsubDocMap[key](); unsubDocMap[key] = null; }
+        if (unsubItemsMap[key]) { unsubItemsMap[key](); unsubItemsMap[key] = null; }
+      });
+    }
+
+    function watchAllModules(uid) {
+      stopAllWatchers();
+      MODULE_KEYS.forEach(key => {
+        unsubDocMap[key] = onSnapshot(moduleDocRef(uid, key), (snap) => {
+          const data = snap.exists() ? snap.data() : {};
+          localState[key].text = data.text || '';
+          fillModuleText(key, localState[key].text);
+        });
+
+        const q = query(moduleItemsCollection(uid, key), orderBy("updatedAt", "desc"));
+        unsubItemsMap[key] = onSnapshot(q, (snapshot) => {
+          const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          localState[key].items = items;
+          fillModuleItems(key, items);
+        });
+      });
+      setStatus('状态：已连接云端同步');
+    }
 
     registerBtn.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
-
       if (!email || !password) {
         authStatus.textContent = "请先输入邮箱和密码";
         return;
       }
-
       try {
         await createUserWithEmailAndPassword(auth, email, password);
         authStatus.textContent = "注册成功，已自动登录";
       } catch (error) {
-        authStatus.textContent = "注册失败：" + error.message;
-        console.error(error);
+        authStatus.textContent = "注册失败：" + error.code + " / " + error.message;
+        console.error("注册失败", error.code, error.message, error);
       }
     });
 
     loginBtn.addEventListener("click", async () => {
       const email = emailInput.value.trim();
       const password = passwordInput.value.trim();
-
       if (!email || !password) {
         authStatus.textContent = "请先输入邮箱和密码";
         return;
       }
-
       try {
         await signInWithEmailAndPassword(auth, email, password);
         authStatus.textContent = "登录成功";
       } catch (error) {
-        authStatus.textContent = "登录失败：" + error.message;
-        console.error(error);
+        authStatus.textContent = "登录失败：" + error.code + " / " + error.message;
+        console.error("登录失败", error.code, error.message, error);
       }
     });
 
@@ -978,97 +900,53 @@ let unsubscribeGymNotes = null;
         await signOut(auth);
         authStatus.textContent = "已退出登录";
       } catch (error) {
-        authStatus.textContent = "退出失败：" + error.message;
-        console.error(error);
+        authStatus.textContent = "退出失败：" + error.code + " / " + error.message;
+        console.error("退出失败", error.code, error.message, error);
       }
     });
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    currentUid = user.uid;
-    authStatus.textContent = "当前已登录：" + user.email;
-    console.log("当前用户 UID:", user.uid);
-    watchGymNotes(user.uid);
-  } else {
-    currentUid = null;
-    authStatus.textContent = "当前未登录";
-
-    if (unsubscribeGymNotes) {
-      unsubscribeGymNotes();
-      unsubscribeGymNotes = null;
-    }
-
-window.renderGymNotes([]);
-  }
-});
-
-    function getGymNotesCollection(uid) {
-  return collection(db, "users", uid, "gymNotes");
-}
-
-function watchGymNotes(uid) {
-  if (unsubscribeGymNotes) {
-    unsubscribeGymNotes();
-    unsubscribeGymNotes = null;
-  }
-
-  const q = query(getGymNotesCollection(uid), orderBy("createdAt", "desc"));
-
-  unsubscribeGymNotes = onSnapshot(q, (snapshot) => {
-    const notes = snapshot.docs.map(item => ({
-      id: item.id,
-      ...item.data()
-    }));
-    window.renderGymNotes(notes);
-  });
-}
-
-async function addGymNote() {
-  const input = document.getElementById('gymNoteInput');
-  const value = input.value.trim();
-
-  if (!currentUid) {
-    showToast('请先登录');
-    return;
-  }
-
-  if (!value) {
-    showToast('先输入一点笔记内容');
-    return;
-  }
-
-  try {
-    await addDoc(getGymNotesCollection(currentUid), {
-      content: value,
-      createdAt: Date.now()
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUid = user.uid;
+        authStatus.textContent = "当前已登录：" + user.email;
+        console.log("当前用户 UID:", user.uid);
+        watchAllModules(user.uid);
+      } else {
+        currentUid = null;
+        authStatus.textContent = "当前未登录";
+        stopAllWatchers();
+        MODULE_KEYS.forEach(key => {
+          fillModuleText(key, '');
+          fillModuleItems(key, []);
+          resetItemForm(key);
+        });
+        setStatus('状态：未登录，尚未连接云端');
+      }
     });
 
-    input.value = '';
-    showToast('已添加笔记');
-  } catch (error) {
-    console.error(error);
-    showToast('添加失败');
-  }
-}
+    window.editModuleItem = function(key, itemId) {
+      const item = (localState[key]?.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      editState[key].editingId = itemId;
+      document.getElementById(`${key}-item-title`).value = item.title || '';
+      document.getElementById(`${key}-item-content`).value = item.content || '';
+      document.getElementById(`${key}-item-submit`).textContent = '保存修改';
+      window.showToast('已载入条目，可直接修改');
+    };
 
-async function deleteGymNote(noteId) {
-  if (!currentUid) {
-    showToast('请先登录');
-    return;
-  }
+    window.deleteModuleItem = async function(key, itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", key, "items", itemId));
+        if (editState[key].editingId === itemId) resetItemForm(key);
+        window.showToast('已删除条目');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
 
-  try {
-    await deleteDoc(doc(db, "users", currentUid, "gymNotes", noteId));
-    showToast('已删除笔记');
-  } catch (error) {
-    console.error(error);
-    showToast('删除失败');
-  }
-}
-
-window.addGymNote = addGymNote;
-window.deleteGymNote = deleteGymNote;
-    
+    bindModuleUI();
     console.log("Firebase 已连接成功");
   </script>
 </body>
