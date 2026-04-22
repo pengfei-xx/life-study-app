@@ -3,543 +3,1600 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>生活学习管理系统（全模块云同步版）</title>
+  <title>生活学习管理系统（乒乓球模块重设计版）</title>
   <style>
     * { box-sizing: border-box; }
     :root{
-      --bg:#f6f7fb;
-      --panel:rgba(255,255,255,.9);
+      --bg:#f4f7fb;
+      --panel:rgba(255,255,255,.80);
       --line:rgba(15,23,42,.08);
-      --text:#111827;
-      --muted:#6b7280;
-      --shadow:0 10px 30px rgba(15,23,42,.08);
-      --primary:#111827;
+      --text:#0f172a;
+      --muted:#64748b;
+      --shadow:0 20px 50px rgba(15,23,42,.10);
+      --shadow-soft:0 12px 28px rgba(15,23,42,.06);
       --safe-bottom:max(16px, env(safe-area-inset-bottom));
       --safe-top:max(16px, env(safe-area-inset-top));
-      --radius:24px;
     }
     html, body { min-height:100%; }
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
       color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
       background:
-        radial-gradient(circle at 0% 0%, rgba(191,219,254,.45), transparent 28%),
-        radial-gradient(circle at 100% 0%, rgba(221,214,254,.38), transparent 24%),
-        linear-gradient(180deg, #fbfcff 0%, var(--bg) 100%);
+        radial-gradient(circle at 0% 0%, rgba(59,130,246,.18), transparent 30%),
+        radial-gradient(circle at 100% 0%, rgba(139,92,246,.16), transparent 25%),
+        radial-gradient(circle at 100% 100%, rgba(16,185,129,.10), transparent 24%),
+        linear-gradient(180deg, #fbfdff 0%, #f4f7fb 100%);
+      background-attachment: fixed;
     }
-    .wrap{
-      max-width:1140px;
-      margin:0 auto;
-      padding:calc(12px + var(--safe-top)) 14px calc(98px + var(--safe-bottom));
-    }
-    .top{
+    .wrap{max-width:1200px;margin:0 auto;padding:calc(14px + var(--safe-top)) 14px calc(98px + var(--safe-bottom));}
+    .glass{background:var(--panel);border:1px solid rgba(15,23,42,.08);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:var(--shadow);}
+    .top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+    .title small{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid rgba(15,23,42,.08);color:#475569;margin-bottom:10px;font-size:13px;box-shadow:var(--shadow-soft);}
+    h1{margin:0;font-size:38px;letter-spacing:-.04em;line-height:1.05;}
+    .sub{margin:10px 0 0;color:var(--muted);font-size:15px;line-height:1.85;max-width:820px;}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+    button{font:inherit;border:none;cursor:pointer;transition:.2s ease;-webkit-tap-highlight-color: transparent;}
+    .btn{min-height:46px;padding:11px 16px;border-radius:16px;background:rgba(255,255,255,.88);border:1px solid rgba(15,23,42,.08);color:#334155;box-shadow:var(--shadow-soft);}
+    .btn.primary,.primary-btn{background:linear-gradient(135deg, #111827 0%, #1f2937 100%);color:#fff;border-color:transparent;}
+    .btn:hover,.enter:hover,.ghost:hover,.primary-btn:hover,.back-btn:hover,.small-btn:hover{transform:translateY(-1px);}
+    .auth-box{margin:16px 0;padding:18px;border-radius:24px;display:grid;grid-template-columns:1.05fr .95fr;gap:16px;}
+    .auth-copy h3{margin:0 0 8px;font-size:22px;letter-spacing:-.02em;}
+    .auth-copy p{margin:0;color:var(--muted);line-height:1.8;font-size:14px;}
+    .auth-grid{display:grid;gap:10px;align-content:start;}
+    .text-input,.field{width:100%;min-height:46px;padding:12px 14px;border-radius:14px;border:1px solid rgba(15,23,42,.08);background:rgba(255,255,255,.96);outline:none;font:inherit;box-shadow: inset 0 1px 1px rgba(15,23,42,.02);}
+    .text-input{height:46px;}
+    .text-input:focus,textarea:focus,.field:focus{border-color:rgba(59,130,246,.35);box-shadow:0 0 0 4px rgba(59,130,246,.08);}
+    .hero{border-radius:28px;padding:20px;display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-bottom:16px;}
+    .hero-main h2{margin:0 0 10px;font-size:28px;letter-spacing:-.03em;line-height:1.12;}
+    .hero-main p{margin:0;color:var(--muted);line-height:1.9;font-size:14px;}
+    .hero-stats{display:grid;gap:10px;}
+    .stat{padding:16px;border-radius:20px;background:rgba(255,255,255,.80);border:1px solid rgba(15,23,42,.08);box-shadow:var(--shadow-soft);}
+    .stat-label{font-size:12px;color:var(--muted);margin-bottom:8px;}
+    .stat-value{font-size:22px;font-weight:700;letter-spacing:-.03em;}
+    .crumbs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px;}
+    .crumb{padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(15,23,42,.08);color:#475569;font-size:13px;box-shadow:var(--shadow-soft);}
+    .view{display:none;} .view.active{display:block;}
+    .grid{display:grid;grid-template-columns:repeat(4, minmax(220px, 260px));
+      justify-content:center;
+      align-items:stretch;gap:16px;}
+    .card{min-height:218px;padding:22px;border-radius:26px;background:var(--panel);border:1px solid rgba(15,23,42,.08);backdrop-filter:blur(16px);box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+    .card::before{content:"";position:absolute;width:140px;height:140px;right:-32px;top:-34px;border-radius:50%;background:linear-gradient(135deg, rgba(99,102,241,.10), rgba(14,165,233,.08));}
+    .icon{width:56px;height:56px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.96);border:1px solid rgba(15,23,42,.06);font-size:26px;margin-bottom:16px;position:relative;z-index:1;box-shadow:var(--shadow-soft);}
+    .card h3{margin:0 0 8px;font-size:24px;letter-spacing:-.03em;position:relative;z-index:1;}
+    .card p{margin:0;color:var(--muted);line-height:1.85;font-size:14px;position:relative;z-index:1;}
+    .enter{margin-top:18px;align-self:flex-start;min-height:44px;padding:10px 14px;border-radius:14px;background:linear-gradient(135deg, #111827 0%, #1f2937 100%);color:#fff;position:relative;z-index:1;box-shadow:0 12px 24px rgba(17,24,39,.14);}
+    .section{padding:20px;border-radius:28px;}
+    .section-topbar{
       display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:16px;
+      align-items:center;
+      justify-content:flex-start;
+      margin-bottom:14px;
     }
-    .title small{
-      display:inline-block;
-      padding:8px 12px;
+    .section-back{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-height:42px;
+      padding:8px 14px 8px 10px;
       border-radius:999px;
-      background:rgba(255,255,255,.72);
-      border:1px solid var(--line);
-      color:#4b5563;
-      margin-bottom:10px;
-      backdrop-filter:blur(10px);
-      font-size:13px;
-    }
-    h1{
-      margin:0;
-      font-size:32px;
-      letter-spacing:-.03em;
-      line-height:1.1;
-    }
-    .sub{
-      margin:8px 0 0;
-      color:var(--muted);
+      background:rgba(255,255,255,.95);
+      border:1px solid rgba(15,23,42,.08);
+      color:#334155;
+      box-shadow:0 10px 22px rgba(15,23,42,.08);
       font-size:14px;
-      line-height:1.8;
-      max-width:760px;
+      font-weight:700;
+      letter-spacing:.01em;
     }
-    .btns{
+    .section-back::before{
+      content:"←";
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      background:#f8fafc;
+      color:#111827;
+      font-size:14px;
+      line-height:1;
+      border:1px solid rgba(15,23,42,.06);
+    }
+    .section h2{margin:0 0 10px;font-size:26px;letter-spacing:-.03em;line-height:1.1;}
+    .section p{margin:0;color:var(--muted);line-height:1.8;font-size:14px;}
+    .mini-grid{display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:14px;margin-top:16px;}
+    .mini-card{padding:18px;border-radius:22px;background:rgba(255,255,255,.86);border:1px solid rgba(15,23,42,.08);min-height:170px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow-soft);}
+    .mini-icon{font-size:26px;margin-bottom:10px;}
+    .mini-card h4{margin:0 0 6px;font-size:19px;letter-spacing:-.02em;}
+    .mini-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.8;}
+    .ghost{margin-top:14px;align-self:flex-start;min-height:42px;padding:9px 13px;border-radius:13px;background:white;border:1px solid rgba(15,23,42,.08);color:#334155;box-shadow:var(--shadow-soft);}
+    .single{max-width:1160px;}
+    .module-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+    .module-panel{padding:18px;border-radius:24px;background:rgba(255,255,255,.80);border:1px solid rgba(15,23,42,.08);box-shadow:var(--shadow-soft);}
+    .module-panel h3{margin:0 0 10px;font-size:19px;letter-spacing:-.02em;}
+    .module-wide{margin-top:16px;}
+    .focus-panel{
+      border:1px solid rgba(59,130,246,.16);
+      background:linear-gradient(135deg, rgba(255,255,255,.96) 0%, rgba(239,246,255,.92) 100%);
+      box-shadow:0 16px 36px rgba(59,130,246,.10);
+    }
+    .focus-panel h3{
       display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
+      align-items:center;
+      gap:8px;
     }
-    button{
-      font:inherit;
-      border:none;
-      cursor:pointer;
-      transition:.2s ease;
-      -webkit-tap-highlight-color: transparent;
+    .focus-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#dbeafe;
+      color:#1d4ed8;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:10px;
     }
-    .btn{
-      min-height:46px;
-      padding:11px 16px;
-      border-radius:16px;
-      background:rgba(255,255,255,.88);
-      border:1px solid var(--line);
-      color:#374151;
-      backdrop-filter:blur(10px);
-      box-shadow:var(--shadow);
+    .archive-panel{
+      background:rgba(255,255,255,.72);
     }
-    .btn.primary{
-      background:var(--primary);
-      color:#fff;
-      border-color:transparent;
+    .weekly-focus-card{
+      border:1px solid rgba(59,130,246,.18);
+      background:linear-gradient(135deg, rgba(255,255,255,.98) 0%, rgba(239,246,255,.94) 100%);
+      box-shadow:0 18px 40px rgba(59,130,246,.10);
     }
-    .auth-box{
-      margin:16px 0;
+    .weekly-empty{
       padding:16px;
-      border-radius:20px;
-      background:rgba(255,255,255,.9);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-    }
-    .auth-grid{
-      display:grid;
-      gap:10px;
-      max-width:460px;
-    }
-    .text-input{
-      width:100%;
-      height:46px;
-      padding:0 12px;
-      border-radius:12px;
-      border:1px solid rgba(15,23,42,.12);
-      font:inherit;
-      background:#fff;
-      outline:none;
-    }
-    .hero{
-      padding:18px;
-      border-radius:24px;
-      background:var(--panel);
-      border:1px solid var(--line);
-      backdrop-filter:blur(12px);
-      box-shadow:var(--shadow);
-      margin-bottom:16px;
-    }
-    .hero-title{
-      font-size:22px;
-      margin:0 0 8px;
-      line-height:1.25;
-    }
-    .hero-desc{
-      margin:0;
+      border-radius:16px;
+      border:1px dashed rgba(59,130,246,.20);
+      background:rgba(255,255,255,.72);
       color:var(--muted);
-      line-height:1.8;
-      font-size:14px;
-    }
-    .statusbar{
-      margin-top:12px;
-      color:#4b5563;
       font-size:13px;
-      line-height:1.7;
     }
-    .crumbs{
+    .tag-row{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      margin:14px 0 18px;
+      margin-top:8px;
+      margin-bottom:8px;
     }
-    .crumb{
-      padding:7px 12px;
+    .mini-tag{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 10px;
       border-radius:999px;
-      background:rgba(255,255,255,.72);
-      border:1px solid var(--line);
-      color:#4b5563;
-      font-size:13px;
-      backdrop-filter:blur(10px);
+      font-size:12px;
+      font-weight:700;
+      background:#f8fafc;
+      border:1px solid rgba(15,23,42,.08);
+      color:#334155;
     }
-    .view{ display:none; }
-    .view.active{ display:block; }
-    .grid{
+    .mini-tag.priority-high{ background:#fee2e2; color:#b91c1c; }
+    .mini-tag.priority-medium{ background:#fef3c7; color:#b45309; }
+    .mini-tag.priority-low{ background:#dcfce7; color:#15803d; }
+    .mini-tag.progress-red{ background:#fee2e2; color:#b91c1c; }
+    .mini-tag.progress-yellow{ background:#fef3c7; color:#b45309; }
+    .mini-tag.progress-green{ background:#dcfce7; color:#15803d; }
+    .mini-tag.focused{ background:#dbeafe; color:#1d4ed8; }
+    .page-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+    .back-btn{min-height:44px;padding:10px 14px;border-radius:14px;background:#fff;border:1px solid rgba(15,23,42,.08);color:#334155;box-shadow:var(--shadow-soft);}
+    .editor{display:grid;gap:12px;}
+    .label{color:#475569;font-size:13px;font-weight:700;letter-spacing:.01em;}
+    textarea{width:100%;min-height:180px;resize:vertical;border:none;outline:none;padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.97);border:1px solid rgba(15,23,42,.08);font:inherit;font-size:15px;color:var(--text);line-height:1.85;box-shadow: inset 0 1px 1px rgba(15,23,42,.02);}
+    .small-textarea{min-height:96px;}
+    .hint{color:var(--muted);font-size:13px;line-height:1.7;}
+    .item-actions{display:flex;gap:10px;flex-wrap:wrap;}
+    .items-list{display:grid;gap:10px;margin-top:4px;}
+    .item-card{background:rgba(255,255,255,.96);border:1px solid rgba(15,23,42,.08);border-radius:20px;padding:14px;box-shadow:var(--shadow-soft);}
+    .item-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px;}
+    .item-title{font-weight:700;font-size:15px;line-height:1.5;}
+    .item-badge{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#eef2ff;color:#4338ca;margin-top:6px;}
+    .item-time{color:var(--muted);font-size:12px;margin-top:4px;}
+    .item-content{white-space:pre-wrap;color:var(--text);font-size:14px;line-height:1.8;margin-top:6px;}
+    .item-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+    .small-btn{min-height:34px;padding:6px 10px;border-radius:12px;background:#fff;border:1px solid rgba(15,23,42,.08);color:#334155;box-shadow:none;}
+    .small-btn.danger{color:#b91c1c;}
+    .small-btn.success{color:#047857;}
+    .dual-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .empty-box{padding:16px;border:1px dashed rgba(15,23,42,.12);border-radius:16px;color:var(--muted);font-size:13px;background:rgba(255,255,255,.55);}
+    .statusbar{margin-top:12px;color:#475569;font-size:13px;line-height:1.7;}
+    #toast{position:fixed;left:50%;bottom:calc(76px + var(--safe-bottom));transform:translate(-50%, 8px);background:#111827;color:#fff;padding:12px 14px;border-radius:14px;box-shadow:0 10px 24px rgba(17,24,39,.18);font-size:14px;opacity:0;pointer-events:none;transition:.25s ease;max-width:90vw;text-align:center;z-index:30;}
+    #toast.show{opacity:1;transform:translate(-50%, 0);}
+    .mobile-bar{position:fixed;left:12px;right:12px;bottom:calc(12px + var(--safe-bottom));display:none;grid-template-columns:1fr 1fr;gap:10px;z-index:25;}
+    .mobile-btn{min-height:52px;border-radius:18px;background:rgba(255,255,255,.94);border:1px solid rgba(15,23,42,.08);box-shadow:0 10px 26px rgba(15,23,42,.10);color:#111827;font-weight:600;backdrop-filter:blur(14px);}
+    .tasks-compact{
       display:grid;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
+      gap:14px;
+      margin-top:10px;
+    }
+    .tasks-hidden-summary{
+      display:none;
+    }
+    .tasks-form{
+      display:grid;
+      gap:10px;
+    }
+    .task-drop-zone{
+      min-height:90px;
+      border-radius:16px;
+      transition:.18s ease;
+    }
+    .task-drop-zone.drop-active{
+      background:rgba(219,234,254,.38);
+      box-shadow:inset 0 0 0 2px rgba(59,130,246,.18);
+    }
+    .task-card-draggable{
+      cursor:grab;
+    }
+    .task-card-draggable.dragging{
+      opacity:.58;
+      transform:scale(.985);
+      cursor:grabbing;
+    }
+
+    .task-drag-hint{
+      color:#6b7280;
+      font-size:12px;
+      margin:-2px 0 10px;
+      padding:6px 10px;
+      border-radius:10px;
+      background:#f8fafc;
+      border:1px solid rgba(15,23,42,.05);
+      display:inline-block;
+    }
+    .tasks-board{
+      display:grid;
       gap:14px;
     }
-    .card{
-      min-height:200px;
+    .task-column{
+      position:relative;
+      border-radius:20px;
+      overflow:hidden;
+      background:#ffffff;
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 10px 24px rgba(15,23,42,.05);
+      padding-top:2px;
+    }
+    .task-column::before{
+      content:"";
+      position:absolute;
+      inset:0 auto auto 0;
+      width:100%;
+      height:3px;
+      background:#d1d5db;
+    }
+    .task-column.task-today::before{ background:#3b82f6; }
+    .task-column.task-tomorrow::before{ background:#8b5cf6; }
+    .task-column.task-todo::before{ background:#f59e0b; }
+    .task-column.task-progress::before{ background:#f97316; }
+    .task-column.task-active::before{ background:#10b981; }
+    .task-column.task-completed::before{ background:#94a3b8; }
+    .task-panel-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+      padding:2px 0 8px;
+      border-bottom:1px solid rgba(15,23,42,.05);
+    }
+    .task-head-left{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+    }
+    .task-panel-head h3{
+      margin:0;
+      font-size:15px;
+      letter-spacing:-.01em;
+      color:#111827;
+      font-weight:700;
+    }
+    .task-count{
+      min-width:22px;
+      height:22px;
+      padding:0 7px;
+      border-radius:999px;
+      background:#f3f4f6;
+      color:#4b5563;
+      font-size:11px;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+    .task-add-btn{
+      min-height:30px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.06);
+      background:#f9fafb;
+      color:#374151;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .task-drop-zone{
+      min-height:120px;
+      border-radius:14px;
+      transition:.18s ease;
+      padding:2px;
+    }
+    .task-drop-zone.drop-active{
+      background:rgba(219,234,254,.28);
+      box-shadow:inset 0 0 0 1.5px rgba(59,130,246,.18);
+    }
+    .task-card-draggable{
+      cursor:grab;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.05);
+      box-shadow:0 4px 10px rgba(15,23,42,.03);
+    }
+    .task-card-draggable:hover{
+      transform:translateY(-1px);
+    }
+    .item-card.task-card-draggable{
+      padding:12px;
+    }
+    .item-title-row{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+    }
+    .item-seq{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      background:#f3f4f6;
+      color:#6b7280;
+      font-size:11px;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      margin-top:1px;
+      border:1px solid rgba(15,23,42,.04);
+    }
+    .task-progress-visual{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:linear-gradient(180deg, rgba(236,253,245,.95) 0%, rgba(240,253,250,.92) 100%);
+      border:1px solid rgba(16,185,129,.12);
+      display:grid;
+      gap:8px;
+    }
+    .task-progress-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .task-progress-count{
+      display:flex;
+      align-items:baseline;
+      gap:6px;
+      color:#065f46;
+    }
+    .task-progress-number{
+      font-size:22px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+    .task-progress-label{
+      font-size:12px;
+      color:#047857;
+      font-weight:700;
+    }
+    .task-progress-mini{
+      display:grid;
+      grid-template-columns:repeat(8, 1fr);
+      gap:6px;
+    }
+    .task-progress-dot{
+      height:8px;
+      border-radius:999px;
+      background:#d1fae5;
+      border:1px solid rgba(16,185,129,.08);
+    }
+    .task-progress-dot.filled{
+      background:#10b981;
+      border-color:#10b981;
+    }
+    .task-progress-dates{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .task-progress-date{
+      padding:4px 8px;
+      border-radius:999px;
+      background:#ffffff;
+      border:1px solid rgba(16,185,129,.10);
+      color:#065f46;
+      font-size:11px;
+      font-weight:700;
+      line-height:1;
+    }
+
+
+    .task-panel-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .task-panel-head h3{
+      margin:0;
+    }
+    .task-add-btn{
+      min-height:30px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      color:#334155;
+      font-size:12px;
+      font-weight:700;
+      box-shadow:var(--shadow-soft);
+      cursor:pointer;
+    }
+    .task-editor-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.28);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
       padding:20px;
+      z-index:95;
+    }
+    .task-editor-modal.show{
+      display:flex;
+    }
+    .task-editor-card{
+      width:min(500px, calc(100vw - 24px));
+      border-radius:20px;
+      background:#ffffff;
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 18px 40px rgba(15,23,42,.12);
+      padding:18px;
+    }
+    .task-editor-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .task-editor-title{
+      margin:0;
+      font-size:19px;
+      letter-spacing:-.02em;
+      color:#111827;
+      font-weight:700;
+    }
+    .task-editor-sub{
+      margin:6px 0 0;
+      color:#64748b;
+      font-size:13px;
+    }
+    .task-editor-body{
+      display:grid;
+      gap:10px;
+    }
+    .item-title-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .item-seq{
+      width:24px;
+      height:24px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:12px;
+      font-weight:800;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      margin-top:1px;
+    }
+    .task-card-draggable.drop-before{
+      box-shadow:inset 0 3px 0 rgba(59,130,246,.9), var(--shadow-soft);
+    }
+    .task-card-draggable.drop-after{
+      box-shadow:inset 0 -3px 0 rgba(59,130,246,.9), var(--shadow-soft);
+    }
+
+    .completed-calendar{
+      display:grid;
+      gap:14px;
+    }
+    .completed-year{
+      border:1px solid rgba(15,23,42,.08);
+      background:rgba(255,255,255,.72);
+      border-radius:18px;
+      overflow:hidden;
+    }
+    .completed-year > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:14px 16px;
+      font-weight:800;
+      color:#1f2937;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+    }
+    .completed-year > summary::-webkit-details-marker{
+      display:none;
+    }
+    .completed-year > summary::before{
+      content:"▸";
+      font-size:12px;
+      color:#475569;
+      transition:.18s ease;
+    }
+    .completed-year[open] > summary::before{
+      transform:rotate(90deg);
+    }
+    .completed-year-body{
+      padding:0 14px 14px;
+      display:grid;
+      gap:12px;
+      grid-template-columns:1fr;
+    }
+    .month-box-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));
+      gap:10px;
+    }
+    .month-box{
+      border:1px solid rgba(15,23,42,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(239,246,255,.85) 100%);
+      border-radius:16px;
+      padding:14px 10px;
+      text-align:center;
+      cursor:pointer;
+      box-shadow:var(--shadow-soft);
+      transition:.18s ease;
+    }
+    .month-box:hover{
+      transform:translateY(-1px);
+    }
+    .month-box-title{
+      font-weight:800;
+      color:#111827;
+      margin-bottom:6px;
+    }
+    .month-box-meta{
+      color:#64748b;
+      font-size:12px;
+      line-height:1.5;
+    }
+    .calendar-card{
+      border:1px solid rgba(15,23,42,.08);
+      background:rgba(255,255,255,.9);
+      border-radius:16px;
+      padding:12px;
+    }
+    .calendar-month-title{
+      font-weight:800;
+      color:#111827;
+      margin-bottom:10px;
+    }
+    .calendar-weekdays{
+      display:grid;
+      grid-template-columns:repeat(7, 1fr);
+      gap:6px;
+      margin-bottom:6px;
+      color:#64748b;
+      font-size:12px;
+      text-align:center;
+    }
+    .calendar-grid{
+      display:grid;
+      grid-template-columns:repeat(7, 1fr);
+      gap:6px;
+    }
+    .calendar-day,
+    .calendar-blank{
+      min-height:44px;
+      border-radius:12px;
+    }
+    .calendar-blank{
+      background:transparent;
+    }
+    .calendar-day{
+      border:1px solid rgba(15,23,42,.06);
+      background:#f8fafc;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:2px;
+      padding:4px;
+      font-size:12px;
+      color:#334155;
+    }
+    .calendar-day.has-task{
+      cursor:pointer;
+      background:linear-gradient(180deg, #eef2ff 0%, #dbeafe 100%);
+      border-color:rgba(59,130,246,.18);
+      color:#1d4ed8;
+      font-weight:700;
+    }
+    .calendar-day.has-task:hover{
+      transform:translateY(-1px);
+    }
+    .calendar-day-count{
+      font-size:10px;
+      color:#1d4ed8;
+      opacity:.85;
+    }
+    .day-overview-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.28);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:90;
+    }
+    .day-overview-modal.show{
+      display:flex;
+    }
+    .day-overview-card{
+      width:min(760px, calc(100vw - 24px));
+      max-height:min(82vh, 900px);
+      overflow:auto;
       border-radius:24px;
-      background:var(--panel);
+      background:rgba(255,255,255,.96);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:0 24px 60px rgba(15,23,42,.18);
+      padding:18px;
+    }
+    .day-overview-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .day-overview-title{
+      margin:0;
+      font-size:24px;
+      letter-spacing:-.03em;
+      color:#0f172a;
+    }
+    .day-overview-sub{
+      margin:6px 0 0;
+      color:#64748b;
+      font-size:13px;
+    }
+    .day-overview-list{
+      display:grid;
+      gap:8px;
+    }
+    .day-overview-item{
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      border-radius:12px;
+      padding:8px 10px;
+    }
+    .day-overview-item-title{
+      font-weight:700;
+      color:#111827;
+      font-size:13px;
+      line-height:1.45;
+      margin:0;
+    }
+    .day-overview-item-meta{
+      color:#64748b;
+      font-size:12px;
+      margin:0 0 4px;
+    }
+    .day-overview-item-content{
+      color:#334155;
+      font-size:13px;
+      line-height:1.45;
+      white-space:normal;
+    }
+    .month-task-lines{
+      display:grid;
+      gap:2px;
+      margin-top:2px;
+    }
+    .month-task-line{
+      padding:6px 0;
+      border-top:1px solid rgba(15,23,42,.05);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .month-task-line:first-child{
+      border-top:none;
+      padding-top:2px;
+    }
+    .month-task-line-title{
+      color:#111827;
+      font-size:13px;
+      line-height:1.4;
+      flex:1;
+      min-width:0;
+      word-break:break-word;
+    }
+    .month-task-line-actions{
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-shrink:0;
+    }
+    .month-line-btn{
+      min-height:28px;
+      padding:4px 8px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      color:#334155;
+      font-size:12px;
+      line-height:1;
+      cursor:pointer;
+    }
+    .month-line-btn.danger{
+      color:#b91c1c;
+    }
+    .gym-plan-card{
+      border:1px solid rgba(15,23,42,.06);
+      background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(248,250,252,.94) 100%);
+      border-radius:18px;
+      padding:14px;
+      box-shadow:0 8px 20px rgba(15,23,42,.04);
+    }
+    .gym-plan-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .gym-plan-title{
+      font-weight:800;
+      color:#111827;
+      font-size:15px;
+      line-height:1.5;
+      margin-bottom:6px;
+    }
+    .gym-plan-target{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:12px;
+      font-weight:700;
+    }
+    .gym-plan-content{
+      color:#475569;
+      font-size:14px;
+      line-height:1.75;
+      white-space:pre-wrap;
+      margin:8px 0 12px;
+    }
+    .gym-progress-wrap{
+      display:grid;
+      gap:8px;
+      margin:10px 0 12px;
+    }
+    .gym-progress-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-size:13px;
+      color:#334155;
+      font-weight:700;
+    }
+    .gym-progress-bar{
+      height:10px;
+      border-radius:999px;
+      background:#e5e7eb;
+      overflow:hidden;
+    }
+    .gym-progress-fill{
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, #3b82f6 0%, #10b981 100%);
+    }
+    .gym-status{
+      font-size:12px;
+      color:#047857;
+      font-weight:700;
+    }
+    .gym-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .gym-target-input{
+      width:100%;
+    }
+    .gym-plan-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:6px;
+    }
+    .gym-meta-chip{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#f8fafc;
+      border:1px solid rgba(15,23,42,.06);
+      color:#475569;
+      font-size:12px;
+      font-weight:700;
+    }
+    .gym-log-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.28);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:96;
+    }
+    .gym-log-modal.show{
+      display:flex;
+    }
+    .gym-log-card{
+      width:min(560px, calc(100vw - 24px));
+      max-height:min(82vh, 900px);
+      overflow:auto;
+      border-radius:24px;
+      background:rgba(255,255,255,.98);
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 24px 60px rgba(15,23,42,.16);
+      padding:18px;
+    }
+    .gym-log-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .gym-log-title{
+      margin:0;
+      font-size:22px;
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:#111827;
+    }
+    .gym-log-sub{
+      margin:6px 0 0;
+      color:#6b7280;
+      font-size:13px;
+    }
+    .gym-log-list{
+      display:grid;
+      gap:10px;
+    }
+    .gym-log-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.06);
+    }
+    .gym-log-date{
+      color:#111827;
+      font-size:14px;
+      font-weight:700;
+    }
+    .gym-log-count{
+      color:#047857;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    
+    .auth-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.22);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      display:none;
+      align-items:flex-start;
+      justify-content:flex-end;
+      padding:20px;
+      z-index:80;
+    }
+    .auth-modal.show{ display:flex; }
+    .auth-box{
+      width:min(420px, calc(100vw - 24px));
+      margin:0;
+      padding:18px;
+      border-radius:24px;
+      display:block;
+    }
+    .auth-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .auth-kicker{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .auth-head h3{
+      margin:0;
+      font-size:22px;
+      letter-spacing:-.02em;
+    }
+    .auth-copy-text{
+      margin:0 0 12px;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:14px;
+    }
+    .icon-btn{
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.08);
+      color:#334155;
+      box-shadow:var(--shadow-soft);
+      font-size:18px;
+      line-height:1;
+    }
+    .hero-compact{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px 16px;
+      border-radius:22px;
+      margin-bottom:16px;
+    }
+    .hero-compact-main{
+      min-width:0;
+    }
+    .hero-compact-title{
+      margin:0 0 4px;
+      font-size:20px;
+      letter-spacing:-.03em;
+    }
+    .hero-compact-desc{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.75;
+    }
+    .hero-status-pill{
+      white-space:nowrap;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.86);
       border:1px solid var(--line);
-      backdrop-filter:blur(12px);
-      box-shadow:var(--shadow);
+      color:#475569;
+      font-size:13px;
+      box-shadow:var(--shadow-soft);
+    }
+    .home-grid-emphasis{
+      margin-top:24px;
+      display:grid;
+      grid-template-columns:repeat(4, 240px);
+      justify-content:center;
+      gap:22px;
+      width:100%;
+    }
+    .home-card{
+      min-height:238px;
+      padding:24px 20px 20px;
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(255,255,255,.96) 0%, rgba(255,255,255,.84) 100%);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:0 24px 50px rgba(15,23,42,.10);
+      position:relative;
+      overflow:hidden;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      position:relative;
-      overflow:hidden;
+      align-items:flex-start;
     }
-    .card:before{
+    .home-card::before{
       content:"";
       position:absolute;
-      inset:auto -30px -30px auto;
+      right:-28px;
+      top:-28px;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:linear-gradient(135deg, rgba(99,102,241,.12), rgba(14,165,233,.10));
+    }
+    .home-card::after{
+      content:"";
+      position:absolute;
+      left:-20px;
+      bottom:-20px;
       width:110px;
       height:110px;
       border-radius:50%;
-      background:rgba(15,23,42,.04);
+      background:rgba(15,23,42,.03);
     }
-    .icon{
-      width:52px;
-      height:52px;
-      border-radius:18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(255,255,255,.95);
-      border:1px solid rgba(15,23,42,.06);
-      font-size:25px;
-      margin-bottom:16px;
-      position:relative;
-      z-index:1;
+    .home-card .icon{
+      width:64px;
+      height:64px;
+      font-size:30px;
+      border-radius:22px;
+      margin-bottom:20px;
     }
-    .card h3{
-      margin:0 0 8px;
-      font-size:24px;
-      line-height:1.2;
-      position:relative;
-      z-index:1;
-    }
-    .card p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.8;
-      position:relative;
-      z-index:1;
-    }
-    .enter{
-      margin-top:18px;
-      align-self:flex-start;
-      min-height:44px;
-      padding:10px 14px;
-      border-radius:14px;
-      background:#111827;
-      color:white;
-      box-shadow:0 10px 20px rgba(17,24,39,.12);
-      position:relative;
-      z-index:1;
-    }
-    .section{
-      padding:18px;
-      border-radius:24px;
-      background:var(--panel);
-      border:1px solid var(--line);
-      backdrop-filter:blur(12px);
-      box-shadow:var(--shadow);
-    }
-    .section h2{
+    .home-card h3{
+      font-size:30px;
       margin:0 0 10px;
-      font-size:24px;
-      line-height:1.25;
     }
-    .section p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.8;
-      font-size:14px;
+    .home-card p{
+      font-size:15px;
+      line-height:1.9;
+      max-width:280px;
     }
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:12px;
-    }
-    .mini-card{
-      padding:16px;
-      border-radius:20px;
-      background:rgba(255,255,255,.9);
-      border:1px solid var(--line);
-      min-height:148px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-    .mini-card .mini-icon{
-      font-size:24px;
-      margin-bottom:10px;
-    }
-    .mini-card h4{
-      margin:0 0 6px;
-      font-size:18px;
-      line-height:1.25;
-    }
-    .mini-card p{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-    }
-    .ghost{
-      margin-top:14px;
-      align-self:flex-start;
-      min-height:42px;
-      padding:9px 13px;
-      border-radius:13px;
-      background:white;
-      border:1px solid var(--line);
-      color:#374151;
-    }
-    .single{
-      max-width:960px;
-    }
-    .page-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .back-btn{
-      min-height:44px;
-      padding:10px 14px;
-      border-radius:14px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:#374151;
-    }
-    .editor{
-      margin-top:16px;
-      display:grid;
-      gap:12px;
-    }
-    .label{
-      color:#4b5563;
-      font-size:14px;
-      font-weight:600;
-    }
-    textarea{
-      width:100%;
-      min-height:180px;
-      resize:vertical;
-      border:none;
-      outline:none;
-      padding:16px 18px;
-      border-radius:18px;
-      background:rgba(255,255,255,.97);
-      border:1px solid var(--line);
-      box-shadow: inset 0 1px 1px rgba(15,23,42,.02);
-      font:inherit;
-      font-size:16px;
-      color:var(--text);
-      line-height:1.8;
-    }
-    .small-textarea{
-      min-height:100px;
-    }
-    .hint{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.7;
-    }
-    .item-form{
-      display:grid;
-      gap:10px;
-    }
-    .item-input{
-      width:100%;
-      min-height:44px;
-      padding:12px 14px;
-      border-radius:14px;
-      background:#fff;
-      border:1px solid var(--line);
-      font:inherit;
-      outline:none;
-    }
-    .item-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .items-list{
-      display:grid;
-      gap:10px;
-      margin-top:6px;
-    }
-    .item-card{
-      background:rgba(255,255,255,.96);
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:14px;
-    }
-    .item-card-top{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-      margin-bottom:8px;
-    }
-    .item-title{
+    .home-card .enter{
+      min-height:48px;
+      padding:12px 16px;
+      border-radius:16px;
       font-weight:700;
       font-size:15px;
-      line-height:1.5;
     }
-    .item-time{
-      color:var(--muted);
-      font-size:12px;
-      margin-top:4px;
+    .home-only-hidden{
+      display:none !important;
     }
-    .item-content{
-      white-space:pre-wrap;
-      color:var(--text);
-      font-size:14px;
-      line-height:1.8;
-      margin-top:4px;
-    }
-    .item-buttons{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .small-btn{
-      min-height:34px;
-      padding:6px 10px;
-      border-radius:12px;
-      background:#fff;
-      border:1px solid var(--line);
-      color:#374151;
-      box-shadow:none;
-    }
-    .small-btn.danger{
-      color:#b91c1c;
-    }
-    .empty-box{
-      padding:16px;
-      border:1px dashed rgba(15,23,42,.12);
-      border-radius:16px;
-      color:var(--muted);
-      font-size:13px;
-      background:rgba(255,255,255,.55);
-    }
-    #toast{
-      position:fixed;
-      left:50%;
-      bottom:calc(76px + var(--safe-bottom));
-      transform:translate(-50%, 8px);
-      background:#111827;
-      color:#fff;
-      padding:12px 14px;
-      border-radius:14px;
-      box-shadow:0 10px 24px rgba(17,24,39,.18);
-      font-size:14px;
-      opacity:0;
-      pointer-events:none;
-      transition:.25s ease;
-      max-width:90vw;
-      text-align:center;
-      z-index:30;
-    }
-    #toast.show{
-      opacity:1;
-      transform:translate(-50%, 0);
-    }
-    input[type="file"]{ display:none; }
-    .mobile-bar{
-      position:fixed;
-      left:12px;
-      right:12px;
-      bottom:calc(12px + var(--safe-bottom));
-      display:none;
+    .home-summary-grid{
+      display:grid;
       grid-template-columns:1fr 1fr;
-      gap:10px;
-      z-index:25;
+      gap:14px;
+      margin-top:16px;
     }
-    .mobile-btn{
-      min-height:52px;
-      border-radius:18px;
-      background:rgba(255,255,255,.94);
-      border:1px solid var(--line);
-      box-shadow:0 10px 26px rgba(15,23,42,.10);
+    .home-yesterday-panel{
+      border-radius:20px;
+      background:rgba(255,255,255,.9);
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 12px 28px rgba(15,23,42,.05);
+      padding:16px 18px;
+    }
+    .home-yesterday-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .home-yesterday-title{
+      margin:0;
+      font-size:16px;
       color:#111827;
-      font-weight:600;
-      backdrop-filter:blur(14px);
+      font-weight:700;
+      letter-spacing:-.01em;
     }
-    @media (max-width: 900px){
-      .grid, .mini-grid{ grid-template-columns:1fr; }
+    .home-yesterday-date{
+      color:#6b7280;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .home-yesterday-list{
+      display:grid;
+      gap:6px;
+    }
+    .home-yesterday-item{
+      min-height:34px;
+      padding:8px 10px;
+      border-radius:12px;
+      background:#f8fafc;
+      border:1px solid rgba(15,23,42,.05);
+      color:#1f2937;
+      font-size:13px;
+      line-height:1.45;
+    }
+@media (max-width: 980px){
+      .grid,.mini-grid,.module-grid,.dual-columns{grid-template-columns:1fr;}
+      .hero,.auth-box{grid-template-columns:1fr;}
     }
     @media (max-width: 720px){
-      .wrap{ padding-left:12px; padding-right:12px; }
-      h1{ font-size:28px; }
-      .top{ align-items:stretch; }
-      .btns{ width:100%; justify-content:stretch; display:grid; grid-template-columns:1fr 1fr; }
-      .btn{ width:100%; min-height:48px; padding:10px 12px; font-size:14px; }
-      .hero, .section, .card{ padding:16px; border-radius:22px; }
-      .hero-title{ font-size:20px; }
-      .card{ min-height:180px; }
-      .page-actions{ display:none; }
-      .mobile-bar{ display:grid; }
-      textarea{ min-height:150px; }
-      .small-textarea{ min-height:90px; }
+      .wrap{padding-left:12px;padding-right:12px;}
+      h1{font-size:30px;}
+      .top{align-items:stretch;}
+      .btns{width:100%;justify-content:stretch;display:grid;grid-template-columns:1fr 1fr;}
+      .btn{width:100%;min-height:48px;font-size:14px;}
+      .hero,.section,.card,.auth-box{padding:16px;border-radius:22px;}
+      .hero-main h2{font-size:24px;}
+      .page-actions{display:none;}
+      .mobile-bar{display:grid;}
+      textarea{min-height:150px;}
+      .small-textarea{min-height:88px;}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div id="authBox" class="auth-box">
-      <div class="auth-grid">
-        <input id="emailInput" class="text-input" type="email" placeholder="请输入邮箱">
-        <input id="passwordInput" class="text-input" type="password" placeholder="请输入密码（至少 6 位）">
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button id="registerBtn" class="btn primary">注册</button>
-          <button id="loginBtn" class="btn">登录</button>
-          <button id="logoutBtn" class="btn">退出登录</button>
+    
+
+  <div class="day-overview-modal" id="completedDayModal">
+    <div class="day-overview-card">
+      <div class="day-overview-head">
+        <div>
+          <h3 class="day-overview-title" id="completedDayModalTitle">某月已完成任务总览</h3>
+          <p class="day-overview-sub">点击某个月后，会在这里总览这个月每天完成了什么。</p>
         </div>
-        <div id="authStatus" style="font-size:14px;color:#6b7280;">当前未登录</div>
+        <button class="icon-btn" id="closeCompletedDayModal" type="button">✕</button>
+      </div>
+      <div class="day-overview-list" id="completedDayModalBody"></div>
+    </div>
+  </div>
+
+  
+  <div class="task-editor-modal" id="taskEditorModal">
+    <div class="task-editor-card">
+      <div class="task-editor-head">
+        <div>
+          <h3 class="task-editor-title" id="taskEditorTitle">添加任务</h3>
+          <p class="task-editor-sub">在弹窗里输入任务内容，会自动保存到对应任务栏。</p>
+        </div>
+        <button class="icon-btn" id="closeTaskEditorModal" type="button">✕</button>
+      </div>
+      <div class="task-editor-body">
+        <input id="tasks-title" class="field" type="text" placeholder="输入任务标题">
+        <select id="tasks-type" class="field">
+          <option value="today">今日任务</option>
+          <option value="tomorrow">明日任务</option>
+          <option value="todo">近期待完成的任务</option>
+          <option value="progress">待推进的任务</option>
+          <option value="activeProgress">正在推进的任务</option>
+        </select>
+        <textarea id="tasks-content" class="small-textarea" placeholder="备注（可不填）"></textarea>
+        <div class="item-actions">
+          <button class="primary-btn" id="tasks-submit">保存</button>
+          <button class="btn" id="tasks-cancel">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gym-log-modal" id="gymLogModal">
+    <div class="gym-log-card">
+      <div class="gym-log-head">
+        <div>
+          <h3 class="gym-log-title" id="gymLogTitle">训练日志</h3>
+          <p class="gym-log-sub">这里会记录哪天练了，以及当天完成了多少次。</p>
+        </div>
+        <button class="icon-btn" id="closeGymLogModal" type="button">✕</button>
+      </div>
+      <div class="gym-log-list" id="gymLogBody"></div>
+    </div>
+  </div>
+
+  <div class="auth-modal" id="authModal">
+      <div id="authBox" class="auth-box glass">
+        <div class="auth-head">
+          <div>
+            <div class="auth-kicker">账号与同步</div>
+            <h3>登录账号</h3>
+          </div>
+          <button class="icon-btn" id="closeAuthBtn" type="button">✕</button>
+        </div>
+        <p class="auth-copy-text">登录同一账号后，手机和电脑会自动同步。这里收起来，不再占主界面。</p>
+        <div class="auth-grid">
+          <input id="emailInput" class="text-input" type="email" placeholder="请输入邮箱">
+          <input id="passwordInput" class="text-input" type="password" placeholder="请输入密码（至少 6 位）">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button id="registerBtn" class="btn primary">注册</button>
+            <button id="loginBtn" class="btn">登录</button>
+            <button id="logoutBtn" class="btn">退出登录</button>
+          </div>
+          <div id="authStatus" style="font-size:14px;color:#64748b;">当前未登录</div>
+        </div>
       </div>
     </div>
 
-    <div class="top">
-      <div class="title">
-        <small>☁️ 生活学习管理系统（全模块云同步版）</small>
-        <h1>我的主页</h1>
-        <p class="sub">现在五个模块都支持账号级同步。文本内容自动同步；每个模块的条目列表也支持新增、编辑、删除，并在手机和电脑之间同步。</p>
-      </div>
+    
+<div class="top" style="justify-content:flex-end; margin-bottom:10px;">
       <div class="btns">
         <button class="btn" onclick="showView('home')">首页</button>
         <button class="btn" onclick="showView('pingpong')">乒乓球</button>
+        <button class="btn" id="openAuthBtn" type="button">账号</button>
       </div>
     </div>
 
-    <div class="hero">
-      <h2 class="hero-title" id="heroTitle">三个主模块</h2>
-      <p class="hero-desc" id="heroDesc">乒乓球、Anki 卡牌、论文。登录同一账号后，所有模块内容会自动同步。</p>
-      <div class="statusbar" id="saveStatus">状态：已就绪</div>
+    <div class="hero-compact glass">
+      <div class="hero-compact-main">
+        <h2 class="hero-compact-title" id="heroTitle">模块</h2>
+        <p class="hero-compact-desc" id="heroDesc">登录后内容自动同步。</p>
+      </div>
+      <div class="hero-status-pill" id="saveStatus">状态：已就绪</div>
     </div>
 
     <div class="crumbs" id="crumbs"></div>
 
     <section class="view active" id="homeView">
-      <div class="grid">
-        <div class="card"><div><div class="icon">🏓</div><h3>乒乓球</h3><p>训练相关内容。</p></div><button class="enter" onclick="showView('pingpong')">进入</button></div>
-        <div class="card"><div><div class="icon">🧠</div><h3>Anki 卡牌</h3><p>记忆与复习。</p></div><button class="enter" onclick="showView('anki')">进入</button></div>
-        <div class="card"><div><div class="icon">📄</div><h3>论文</h3><p>阅读与写作。</p></div><button class="enter" onclick="showView('paper')">进入</button></div>
+      <div class="home-grid-emphasis" style="margin-top:24px;">
+        <div class="card home-card">
+          <div>
+            <div class="icon">✅</div>
+            <h3>任务清单</h3>
+          </div>
+          <button class="enter" onclick="showView('tasks')">进入模块</button>
+        </div>
+        <div class="card home-card">
+          <div>
+            <div class="icon">🏓</div>
+            <h3>乒乓球</h3>
+          </div>
+          <button class="enter" onclick="showView('pingpong')">进入模块</button>
+        </div>
+        <div class="card home-card">
+          <div>
+            <div class="icon">💪</div>
+            <h3>健身房</h3>
+          </div>
+          <button class="enter" onclick="showView('gymcenter')">进入模块</button>
+        </div>
+        <div class="card home-card">
+          <div>
+            <div class="icon">📄</div>
+            <h3>论文</h3>
+          </div>
+          <button class="enter" onclick="showView('paper')">进入模块</button>
+        </div>
+      </div>
+
+      <div class="home-summary-grid">
+        <div class="home-yesterday-panel">
+          <div class="home-yesterday-head">
+            <h3 class="home-yesterday-title">昨日完成的任务</h3>
+            <div class="home-yesterday-date" id="homeYesterdayDate">--</div>
+          </div>
+          <div class="home-yesterday-list" id="homeYesterdayList">
+            <div class="empty-box">昨天还没有已完成任务。</div>
+          </div>
+        </div>
+
+        <div class="home-yesterday-panel">
+          <div class="home-yesterday-head">
+            <h3 class="home-yesterday-title">昨日推进的任务</h3>
+            <div class="home-yesterday-date" id="homeYesterdayProgressDate">--</div>
+          </div>
+          <div class="home-yesterday-list" id="homeYesterdayProgressList">
+            <div class="empty-box">昨天还没有推进任务。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="view" id="tasksView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('home')">返回上一级</button>
+        </div>
+        <h2>任务清单</h2>
+        <div class="task-drag-hint">可拖动排序，也可直接拖到其他任务栏。</div>
+
+        <div class="tasks-compact tasks-board">
+          <textarea id="tasks-text" class="tasks-hidden-summary" placeholder="任务总览"></textarea>
+
+          <div class="module-grid">
+            <div class="module-panel task-column task-today">
+              <div class="task-panel-head">
+                <div class="task-head-left">
+                  <h3>今日任务</h3>
+                  <span class="task-count" id="tasks-today-count">0</span>
+                </div>
+                <button class="task-add-btn" onclick="window.openTaskEditor('today')">添加</button>
+              </div>
+              <div id="tasks-today-list" class="items-list task-drop-zone" data-task-type="today"></div>
+            </div>
+            <div class="module-panel task-column task-tomorrow">
+              <div class="task-panel-head">
+                <div class="task-head-left">
+                  <h3>明日任务</h3>
+                  <span class="task-count" id="tasks-tomorrow-count">0</span>
+                </div>
+                <button class="task-add-btn" onclick="window.openTaskEditor('tomorrow')">添加</button>
+              </div>
+              <div id="tasks-tomorrow-list" class="items-list task-drop-zone" data-task-type="tomorrow"></div>
+            </div>
+            <div class="module-panel task-column task-todo">
+              <div class="task-panel-head">
+                <div class="task-head-left">
+                  <h3>待完成</h3>
+                  <span class="task-count" id="tasks-todo-count">0</span>
+                </div>
+                <button class="task-add-btn" onclick="window.openTaskEditor('todo')">添加</button>
+              </div>
+              <div id="tasks-todo-list" class="items-list task-drop-zone" data-task-type="todo"></div>
+            </div>
+            <div class="module-panel task-column task-progress">
+              <div class="task-panel-head">
+                <div class="task-head-left">
+                  <h3>待推进</h3>
+                  <span class="task-count" id="tasks-progress-count">0</span>
+                </div>
+                <button class="task-add-btn" onclick="window.openTaskEditor('progress')">添加</button>
+              </div>
+              <div id="tasks-progress-list" class="items-list task-drop-zone" data-task-type="progress"></div>
+            </div>
+            <div class="module-panel task-column task-active">
+              <div class="task-panel-head">
+                <div class="task-head-left">
+                  <h3>正在推进</h3>
+                  <span class="task-count" id="tasks-active-progress-count">0</span>
+                </div>
+                <button class="task-add-btn" onclick="window.openTaskEditor('activeProgress')">添加</button>
+              </div>
+              <div id="tasks-active-progress-list" class="items-list task-drop-zone" data-task-type="activeProgress"></div>
+            </div>
+            <div class="module-panel task-column task-completed">
+              <div class="task-panel-head">
+                <div class="task-head-left">
+                  <h3>已完成</h3>
+                  <span class="task-count" id="tasks-completed-count">0</span>
+                </div>
+              </div>
+              <div id="tasks-completed-list" class="items-list task-drop-zone" data-task-type="completed"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="view" id="pingpongView">
-      <div class="section">
-        <h2>乒乓球</h2>
-        <p>进入后分成三个子模块。每个子模块现在都支持文本内容同步和条目列表同步。</p>
-        <div class="mini-grid" style="margin-top:14px;">
-          <div class="mini-card"><div><div class="mini-icon">🏋️</div><h4>健身房</h4><p>力量与体能。</p></div><button class="ghost" onclick="showView('gym')">进入</button></div>
-          <div class="mini-card"><div><div class="mini-icon">🎯</div><h4>发球机</h4><p>线路与训练。</p></div><button class="ghost" onclick="showView('machine')">进入</button></div>
-          <div class="mini-card"><div><div class="mini-icon">📘</div><h4>教学大纲</h4><p>内容与结构。</p></div><button class="ghost" onclick="showView('syllabus')">进入</button></div>
+      <div class="section glass">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('home')">返回上一级</button>
+        </div>
+        <h2>乒乓球模块</h2>
+        <p>重构成 3 个明确工作区：第一块面向你自己改技术，第二块沉淀比赛技战术，第三块服务你的教学和学员管理。</p>
+        <div class="mini-grid">
+          <div class="mini-card">
+            <div><div class="mini-icon">🎯</div><h4>技术改进</h4><p>记录想改进和正在改进的技术，补充改进方案、知识点、训练计划，并能把技术标记为已改进。</p></div>
+            <button class="ghost" onclick="showView('techImprove')">进入</button>
+          </div>
+          <div class="mini-card">
+            <div><div class="mini-icon">♟️</div><h4>比赛技战术</h4><p>记录自己常用套路、不同对手特征、比赛中有效的应对方案和复盘内容。</p></div>
+            <button class="ghost" onclick="showView('tactics')">进入</button>
+          </div>
+          <div class="mini-card">
+            <div><div class="mini-icon">🧑‍🏫</div><h4>教练教学</h4><p>记录教学技术库，也管理学员信息、阶段水平和目前存在的问题。</p></div>
+            <button class="ghost" onclick="showView('coaching')">进入</button>
+          </div>
         </div>
         <div class="page-actions"><button class="back-btn" onclick="showView('home')">返回首页</button></div>
       </div>
     </section>
 
-    <section class="view" id="gymView"><div class="section single" id="module-gym"></div></section>
-    <section class="view" id="machineView"><div class="section single" id="module-machine"></div></section>
-    <section class="view" id="syllabusView"><div class="section single" id="module-syllabus"></div></section>
-    <section class="view" id="ankiView"><div class="section single" id="module-anki"></div></section>
-    <section class="view" id="paperView"><div class="section single" id="module-paper"></div></section>
+    <section class="view" id="techImproveView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>技术改进</h2>
+        <p>把你想改、正在改、已经改好的技术分开管理。每项技术都可以记录改进思路、细节、知识点和训练计划。</p>
+
+        <div class="module-panel module-wide focus-panel weekly-focus-card">
+          <div class="focus-badge">⭐ 本周重点技术</div>
+          <h3>优先处理的一项技术</h3>
+          <p style="margin:0 0 12px;color:#64748b;">这里会优先展示你标记为“本周重点”的技术；如果没有手动标记，就自动显示优先级最高的正在改进技术。</p>
+          <div id="techImprove-weekly-focus"></div>
+        </div>
+
+        <div class="module-panel module-wide focus-panel">
+          <div class="focus-badge">⭐ 当前重点</div>
+          <h3>正在改进的技术</h3>
+          <p style="margin:0 0 12px;color:#64748b;">这一块放在最上面，方便你每次打开页面时第一眼就看到目前真正要改的技术重点。</p>
+          <div id="techImprove-active-list" class="items-list"></div>
+        </div>
+
+        <div class="module-grid">
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">技术改进总览（自动同步）</div>
+              <textarea id="techImprove-text" placeholder="例如：目前最优先改的是反手拧拉稳定性、正手衔接重心转换、接发抢上手意识……"></textarea>
+              <div class="hint">这里适合写总体方向、阶段重点、近期优先级。</div>
+            </div>
+          </div>
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">新增 / 编辑技术条目</div>
+              <input id="techImprove-name" class="field" type="text" placeholder="技术名称，例如：反手拧拉、正手前冲弧圈">
+              <div class="form-grid">
+                <select id="techImprove-status" class="field">
+                  <option value="active">正在改进</option>
+                  <option value="completed">已改进</option>
+                </select>
+                <select id="techImprove-priority" class="field">
+                  <option value="high">高优先级</option>
+                  <option value="medium" selected>中优先级</option>
+                  <option value="low">低优先级</option>
+                </select>
+              </div>
+              <div class="form-grid">
+                <select id="techImprove-progress" class="field">
+                  <option value="red">红灯：刚开始调整</option>
+                  <option value="yellow" selected>黄灯：推进中</option>
+                  <option value="green">绿灯：基本稳定</option>
+                </select>
+                <select id="techImprove-focus" class="field">
+                  <option value="false" selected>不是本周重点</option>
+                  <option value="true">设为本周重点</option>
+                </select>
+              </div>
+              <textarea id="techImprove-goal" class="small-textarea" placeholder="改进目标 / 准备怎么改进"></textarea>
+              <textarea id="techImprove-details" class="small-textarea" placeholder="细节、知识点、动作理解"></textarea>
+              <textarea id="techImprove-plan" class="small-textarea" placeholder="训练计划 / 频次 / 方法"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="techImprove-submit">添加技术</button>
+                <button class="btn" id="techImprove-cancel">取消编辑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-panel module-wide archive-panel">
+          <h3>已改进的技术</h3>
+          <p style="margin:0 0 12px;color:#64748b;">这里作为你的技术成果归档区，用来回看已经解决或明显改善的技术。</p>
+          <div id="techImprove-completed-list" class="items-list"></div>
+        </div>
+
+        <div class="page-actions"><button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button><button class="back-btn" onclick="showView('home')">返回首页</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="tacticsView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>比赛技战术</h2>
+        <p>这里用来沉淀比赛里真正有效的东西：常用套路、对手特征、适用场景、比赛复盘与调整方向。</p>
+        <div class="module-grid">
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">技战术总览（自动同步）</div>
+              <textarea id="tactics-text" placeholder="例如：我对下旋短球上手时更适合先控短再上手；遇到快节奏正反手衔接型对手时，先顶住反手位再找正手位……"></textarea>
+              <div class="hint">这里适合写你自己的总策略、比赛原则和常见思路。</div>
+            </div>
+          </div>
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">新增 / 编辑技战术条目</div>
+              <input id="tactics-title" class="field" type="text" placeholder="标题，例如：对左手横板反手拧拉型选手">
+              <textarea id="tactics-opponent" class="small-textarea" placeholder="对手特征 / 使用场景"></textarea>
+              <textarea id="tactics-content" class="small-textarea" placeholder="常用技战术 / 应对方案"></textarea>
+              <textarea id="tactics-review" class="small-textarea" placeholder="复盘备注 / 下次调整"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="tactics-submit">添加条目</button>
+                <button class="btn" id="tactics-cancel">取消编辑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="module-panel module-wide"><h3>技战术条目列表</h3><div id="tactics-list" class="items-list"></div></div>
+        <div class="page-actions"><button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button><button class="back-btn" onclick="showView('home')">返回首页</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="coachingView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>教练教学</h2>
+        <p>一边沉淀教学技术库，一边管理学员。你可以记录某项技术怎么教，也能添加学员信息、阶段问题和教学建议。</p>
+        <div class="module-panel">
+          <div class="editor">
+            <div class="label">教学总览（自动同步）</div>
+            <textarea id="coaching-text" placeholder="例如：本阶段重点先解决学员引拍过大、重心过高、还原慢的问题；教学上先稳动作框架，再上质量……"></textarea>
+            <div class="hint">这里适合写教学总体思路、阶段重点或本周教学安排。</div>
+          </div>
+        </div>
+        <div class="module-grid">
+          <div class="module-panel">
+            <h3>教学技术库</h3>
+            <div class="editor">
+              <input id="coaching-tech-title" class="field" type="text" placeholder="技术名称，例如：正手攻球、反手拨球">
+              <textarea id="coaching-tech-points" class="small-textarea" placeholder="教学要点 / 核心讲法"></textarea>
+              <textarea id="coaching-tech-mistakes" class="small-textarea" placeholder="常见错误 / 易错点"></textarea>
+              <textarea id="coaching-tech-drills" class="small-textarea" placeholder="训练方法 / 课堂安排"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="coaching-tech-submit">添加技术</button>
+                <button class="btn" id="coaching-tech-cancel">取消编辑</button>
+              </div>
+            </div>
+            <div id="coaching-tech-list" class="items-list" style="margin-top:12px;"></div>
+          </div>
+          <div class="module-panel">
+            <h3>学员管理</h3>
+            <div class="editor">
+              <input id="coaching-student-name" class="field" type="text" placeholder="学员姓名">
+              <input id="coaching-student-stage" class="field" type="text" placeholder="当前阶段 / 水平 / 年龄等">
+              <textarea id="coaching-student-issues" class="small-textarea" placeholder="目前存在的问题"></textarea>
+              <textarea id="coaching-student-plan" class="small-textarea" placeholder="教学建议 / 改进安排"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="coaching-student-submit">添加学员</button>
+                <button class="btn" id="coaching-student-cancel">取消编辑</button>
+              </div>
+            </div>
+            <div id="coaching-student-list" class="items-list" style="margin-top:12px;"></div>
+          </div>
+        </div>
+        <div class="page-actions"><button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button><button class="back-btn" onclick="showView('home')">返回首页</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="gymcenterView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('home')">返回上一级</button>
+        </div>
+        <h2>健身房</h2>
+        <p>这里用来记录每日训练计划。每个训练计划都会按天自动重置，并保留训练日志。</p>
+        <div class="module-grid">
+          <div class="module-panel"><div class="editor"><div class="label">健身房总内容（自动同步）</div><textarea id="anki-text" placeholder="例如：本周训练安排为周一推、周三拉、周五腿；有氧安排在力量训练后；核心训练每周两次……"></textarea><div class="hint">停止输入约 800ms 后会自动保存。</div></div></div>
+          <div class="module-panel"><div class="editor"><div class="label">新增 / 编辑训练计划</div><input id="anki-title" class="field" type="text" placeholder="训练计划标题，例如：转胯训练"><input id="anki-target-count" class="field gym-target-input" type="number" min="1" step="1" placeholder="目标次数，例如：3"><textarea id="anki-content" class="small-textarea" placeholder="训练内容 / 动作安排 / 注意点"></textarea><div class="item-actions"><button class="primary-btn" id="anki-submit">添加训练计划</button><button class="btn" id="anki-cancel">取消编辑</button></div></div></div>
+        </div>
+        <div class="module-panel module-wide"><h3>训练计划列表</h3><div id="anki-list" class="items-list"></div></div>
+        <div class="page-actions"><button class="back-btn" onclick="showView('home')">返回首页</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="paperView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('home')">返回上一级</button>
+        </div>
+        <h2>论文</h2>
+        <p>这里保留通用同步结构，适合记录阅读、写作推进和研究条目。</p>
+        <div class="module-grid">
+          <div class="module-panel"><div class="editor"><div class="label">论文总内容（自动同步）</div><textarea id="paper-text" placeholder="例如：本周阅读 3 篇方法论文，重点整理实验设计和变量控制……"></textarea><div class="hint">停止输入约 800ms 后会自动保存。</div></div></div>
+          <div class="module-panel"><div class="editor"><div class="label">新增 / 编辑条目</div><input id="paper-title" class="field" type="text" placeholder="标题"><textarea id="paper-content" class="small-textarea" placeholder="内容"></textarea><div class="item-actions"><button class="primary-btn" id="paper-submit">添加条目</button><button class="btn" id="paper-cancel">取消编辑</button></div></div></div>
+        </div>
+        <div class="module-panel module-wide"><h3>论文条目列表</h3><div id="paper-list" class="items-list"></div></div>
+        <div class="page-actions"><button class="back-btn" onclick="showView('home')">返回首页</button></div>
+      </div>
+    </section>
   </div>
 
   <div class="mobile-bar">
@@ -549,75 +1606,28 @@
   <div id="toast"></div>
 
   <script>
-    const MODULE_META = {
-      gym: { title:'健身房', desc:'记录训练计划、完成情况和训练条目。', icon:'🏋️', parent:'pingpong', listLabel:'训练条目', textLabel:'训练计划 / 总体记录' },
-      machine: { title:'发球机', desc:'记录训练线路、频率、模板和复盘。', icon:'🎯', parent:'pingpong', listLabel:'训练模板', textLabel:'发球机总内容' },
-      syllabus: { title:'乒乓球教学大纲', desc:'记录技术结构、章节与阶段安排。', icon:'📘', parent:'pingpong', listLabel:'大纲条目', textLabel:'教学大纲总内容' },
-      anki: { title:'Anki 卡牌', desc:'记录牌组安排、复习计划和错卡整理。', icon:'🧠', parent:'home', listLabel:'复习条目', textLabel:'Anki 总内容' },
-      paper: { title:'论文', desc:'记录待读论文、笔记和写作推进。', icon:'📄', parent:'home', listLabel:'论文条目', textLabel:'论文总内容' }
-    };
-
     let currentView = 'home';
-
-    const parentMap = { home:'home', pingpong:'home', gym:'pingpong', machine:'pingpong', syllabus:'pingpong', anki:'home', paper:'home' };
+    const parentMap = { home:'home', tasks:'home', pingpong:'home', techImprove:'pingpong', tactics:'pingpong', coaching:'pingpong', gymcenter:'home', paper:'home' };
     const views = {
       home: document.getElementById('homeView'),
+      tasks: document.getElementById('tasksView'),
       pingpong: document.getElementById('pingpongView'),
-      gym: document.getElementById('gymView'),
-      machine: document.getElementById('machineView'),
-      syllabus: document.getElementById('syllabusView'),
-      anki: document.getElementById('ankiView'),
+      techImprove: document.getElementById('techImproveView'),
+      tactics: document.getElementById('tacticsView'),
+      coaching: document.getElementById('coachingView'),
+      gymcenter: document.getElementById('gymcenterView'),
       paper: document.getElementById('paperView')
     };
     const meta = {
-      home: { title:'三个主模块', desc:'乒乓球、Anki 卡牌、论文。登录同一账号后，所有模块内容会自动同步。', crumbs:['首页'] },
-      pingpong: { title:'乒乓球', desc:'包含健身房、发球机、教学大纲。', crumbs:['首页','乒乓球'] },
-      gym: { title:'健身房', desc:'健身房模块中的文本和条目列表都会同步。', crumbs:['首页','乒乓球','健身房'] },
-      machine: { title:'发球机', desc:'发球机模块中的文本和条目列表都会同步。', crumbs:['首页','乒乓球','发球机'] },
-      syllabus: { title:'乒乓球教学大纲', desc:'教学大纲模块中的文本和条目列表都会同步。', crumbs:['首页','乒乓球','教学大纲'] },
-      anki: { title:'Anki 卡牌', desc:'Anki 模块中的文本和条目列表都会同步。', crumbs:['首页','Anki 卡牌'] },
-      paper: { title:'论文', desc:'论文模块中的文本和条目列表都会同步。', crumbs:['首页','论文'] }
+      home: { title:'四个主模块', desc:'任务清单、乒乓球、Anki 卡牌、论文。登录同一账号后，所有模块内容都会自动同步。', crumbs:['首页'] },
+      tasks: { title:'任务清单', desc:'记录待办事项、近期安排和任务条目。', crumbs:['首页','任务清单'] },
+      pingpong: { title:'乒乓球模块', desc:'围绕技术改进、比赛技战术和教学管理重新设计。', crumbs:['首页','乒乓球'] },
+      techImprove: { title:'技术改进', desc:'管理正在改和已经改好的技术，记录方案、知识点和训练计划。', crumbs:['首页','乒乓球','技术改进'] },
+      tactics: { title:'比赛技战术', desc:'沉淀常用套路、对手特征、应对方案与复盘。', crumbs:['首页','乒乓球','比赛技战术'] },
+      coaching: { title:'教练教学', desc:'记录教学技术库与学员管理信息。', crumbs:['首页','乒乓球','教练教学'] },
+      gymcenter: { title:'健身房', desc:'记录训练计划和训练条目。', crumbs:['首页','健身房'] },
+      paper: { title:'论文', desc:'记录阅读、写作推进和研究条目。', crumbs:['首页','论文'] }
     };
-
-    function buildModulePages() {
-      Object.entries(MODULE_META).forEach(([key, item]) => {
-        const container = document.getElementById(`module-${key}`);
-        container.innerHTML = `
-          <h2>${item.title}</h2>
-          <p>${item.desc}</p>
-
-          <div class="editor">
-            <div class="label">${item.textLabel}（自动同步）</div>
-            <textarea id="${key}-text" placeholder="请输入 ${item.title} 的总内容..."></textarea>
-            <div class="hint">停止输入约 800ms 后会自动保存到云端。</div>
-          </div>
-
-          <div class="editor">
-            <div class="label">${item.listLabel}（增删改查，自动同步）</div>
-            <div class="item-form">
-              <input id="${key}-item-title" class="item-input" type="text" placeholder="请输入标题">
-              <textarea id="${key}-item-content" class="small-textarea" placeholder="请输入内容"></textarea>
-              <div class="item-actions">
-                <button class="btn primary" id="${key}-item-submit">添加条目</button>
-                <button class="btn" id="${key}-item-cancel">取消编辑</button>
-              </div>
-            </div>
-            <div class="hint">每个模块都带一个同步条目列表，你可以新增、编辑、删除。</div>
-          </div>
-
-          <div class="editor">
-            <div class="label">${item.listLabel}列表</div>
-            <div id="${key}-items-list" class="items-list"></div>
-          </div>
-
-          <div class="page-actions">
-            <button class="back-btn" onclick="showView('${item.parent}')">返回${item.parent === 'pingpong' ? '乒乓球' : '首页'}</button>
-            <button class="back-btn" onclick="showView('home')">返回首页</button>
-          </div>
-        `;
-      });
-    }
-
     function renderCrumbs(arr){ document.getElementById('crumbs').innerHTML = arr.map(i => `<span class="crumb">${i}</span>`).join(''); }
     function updateMobileBack(){
       const btn = document.getElementById('mobileBackBtn');
@@ -631,49 +1641,171 @@
       document.getElementById('heroTitle').textContent = meta[name].title;
       document.getElementById('heroDesc').textContent = meta[name].desc;
       renderCrumbs(meta[name].crumbs);
+
+      const hero = document.querySelector('.hero-compact');
+      const crumbs = document.getElementById('crumbs');
+      if (name === 'home') {
+        hero.classList.add('home-only-hidden');
+        crumbs.classList.add('home-only-hidden');
+      } else {
+        hero.classList.remove('home-only-hidden');
+        crumbs.classList.remove('home-only-hidden');
+      }
+
       updateMobileBack();
       window.scrollTo({top:0, behavior:'smooth'});
     }
-    function showToast(text) {
+    function showToast(text){
       const toast = document.getElementById('toast');
       toast.textContent = text;
       toast.classList.add('show');
       clearTimeout(showToast._timer);
       showToast._timer = setTimeout(() => toast.classList.remove('show'), 1800);
     }
-
     document.getElementById('mobileBackBtn').addEventListener('click', () => {
       if (currentView !== 'home') showView(parentMap[currentView] || 'home');
     });
 
+    const authModal = document.getElementById('authModal');
+    const openAuthBtn = document.getElementById('openAuthBtn');
+    const closeAuthBtn = document.getElementById('closeAuthBtn');
+    const completedDayModal = document.getElementById('completedDayModal');
+    const closeCompletedDayModal = document.getElementById('closeCompletedDayModal');
+    const taskEditorModal = document.getElementById('taskEditorModal');
+    const closeTaskEditorModal = document.getElementById('closeTaskEditorModal');
+    const gymLogModal = document.getElementById('gymLogModal');
+    const closeGymLogModal = document.getElementById('closeGymLogModal');
+
+    window.openTaskEditor = function(taskType = 'today') {
+      const title = document.getElementById('taskEditorTitle');
+      const typeField = document.getElementById('tasks-type');
+      const submitBtn = document.getElementById('tasks-submit');
+      if (title) title.textContent = '添加任务';
+      if (submitBtn) submitBtn.textContent = '保存';
+      if (typeField) typeField.value = taskType;
+      taskEditorModal.classList.add('show');
+    };
+
+    window.closeTaskEditor = function() {
+      if (taskEditorModal) taskEditorModal.classList.remove('show');
+    };
+
+    function escapeCompletedHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    window.openCompletedMonthModal = function(monthKey) {
+      const modal = document.getElementById('completedDayModal');
+      const title = document.getElementById('completedDayModalTitle');
+      const body = document.getElementById('completedDayModalBody');
+      const items = (window.completedTaskMonthMap && window.completedTaskMonthMap[monthKey]) ? window.completedTaskMonthMap[monthKey] : [];
+
+      title.textContent = `${monthKey} 任务总览`;
+
+      if (!items.length) {
+        body.innerHTML = '<div class="empty-box">这个月还没有已完成任务。</div>';
+      } else {
+        const grouped = {};
+        items.forEach(item => {
+          const ts = item.completedAt || item.updatedAt || Date.now();
+          const d = new Date(ts);
+          const dayKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          grouped[dayKey] ||= [];
+          grouped[dayKey].push(item);
+        });
+
+        const days = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+        body.innerHTML = days.map(dayKey => `
+          <div class="day-overview-item">
+            <div class="day-overview-item-meta">${dayKey} · ${grouped[dayKey].length} 项</div>
+            <div class="month-task-lines">
+              ${grouped[dayKey].map(item => `
+                <div class="month-task-line">
+                  <div class="month-task-line-title">${escapeCompletedHtml(item.title || '未命名任务')}</div>
+                  <div class="month-task-line-actions">
+                    <button class="month-line-btn" onclick="window.editTaskFromMonthOverview('${item.id}')">修改</button>
+                    <button class="month-line-btn danger" onclick="window.deleteTaskFromMonthOverview('${item.id}')">删除</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      modal.classList.add('show');
+    };
+
+    if (closeCompletedDayModal && completedDayModal) {
+      closeCompletedDayModal.addEventListener('click', () => completedDayModal.classList.remove('show'));
+      completedDayModal.addEventListener('click', (e) => {
+        if (e.target === completedDayModal) completedDayModal.classList.remove('show');
+      });
+    }
+
+    if (closeTaskEditorModal && taskEditorModal) {
+      closeTaskEditorModal.addEventListener('click', () => window.closeTaskEditor());
+      taskEditorModal.addEventListener('click', (e) => {
+        if (e.target === taskEditorModal) window.closeTaskEditor();
+      });
+    }
+
+    window.closeGymLog = function() {
+      if (gymLogModal) gymLogModal.classList.remove('show');
+    };
+
+    if (closeGymLogModal && gymLogModal) {
+      closeGymLogModal.addEventListener('click', () => window.closeGymLog());
+      gymLogModal.addEventListener('click', (e) => {
+        if (e.target === gymLogModal) window.closeGymLog();
+      });
+    }
+
+    window.editTaskFromMonthOverview = function(itemId) {
+      if (completedDayModal) completedDayModal.classList.remove('show');
+      if (typeof window.editTaskItem === 'function') {
+        window.editTaskItem(itemId);
+      }
+    };
+
+    window.deleteTaskFromMonthOverview = async function(itemId) {
+      if (completedDayModal) completedDayModal.classList.remove('show');
+      if (typeof window.deleteTaskItem === 'function') {
+        await window.deleteTaskItem(itemId);
+      }
+    };
+
+    if (openAuthBtn && authModal) {
+      openAuthBtn.addEventListener('click', () => {
+        authModal.classList.add('show');
+      });
+    }
+    if (closeAuthBtn && authModal) {
+      closeAuthBtn.addEventListener('click', () => {
+        authModal.classList.remove('show');
+      });
+    }
+    if (authModal) {
+      authModal.addEventListener('click', (e) => {
+        if (e.target === authModal) authModal.classList.remove('show');
+      });
+    }
+
     window.showView = showView;
     window.showToast = showToast;
-
-    buildModulePages();
     renderCrumbs(meta.home.crumbs);
+    document.querySelector('.hero-compact').classList.add('home-only-hidden');
+    document.getElementById('crumbs').classList.add('home-only-hidden');
     updateMobileBack();
   </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-    import {
-      getFirestore,
-      doc,
-      setDoc,
-      collection,
-      addDoc,
-      deleteDoc,
-      query,
-      orderBy,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, addDoc, deleteDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCKXYFGsmoHNQKgB4-dJJf-aBhYj3zvNkQ",
@@ -685,22 +1817,9 @@
       measurementId: "G-6S5GMKQ7EV"
     };
 
-    const MODULE_KEYS = Object.keys(MODULE_META);
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-
-    let currentUid = null;
-    const unsubDocMap = {};
-    const unsubItemsMap = {};
-    const textSaveTimers = {};
-    const localState = {};
-    const editState = {};
-
-    MODULE_KEYS.forEach(key => {
-      localState[key] = { text:'', items:[] };
-      editState[key] = { editingId:null };
-    });
 
     const emailInput = document.getElementById("emailInput");
     const passwordInput = document.getElementById("passwordInput");
@@ -710,235 +1829,1279 @@
     const authStatus = document.getElementById("authStatus");
     const saveStatus = document.getElementById("saveStatus");
 
-    function moduleDocRef(uid, key) {
-      return doc(db, "users", uid, "modules", key);
-    }
-    function moduleItemsCollection(uid, key) {
-      return collection(db, "users", uid, "modules", key, "items");
-    }
+    let currentUid = null;
+    const unsub = {};
+    const textTimers = {};
+    const state = {
+      tasks: { items: [], editingId: null },
+      techImprove: { items: [], editingId: null },
+      tactics: { items: [], editingId: null },
+      coaching: { techItems: [], studentItems: [], techEditingId: null, studentEditingId: null },
+      anki: { items: [], editingId: null },
+      paper: { items: [], editingId: null }
+    };
 
-    function setStatus(text) {
-      saveStatus.textContent = text;
-    }
-
+    function setStatus(text) { saveStatus.textContent = text; }
     function safeHtml(text) {
-      return String(text || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      return String(text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
-
-    function fillModuleText(key, value) {
-      const textarea = document.getElementById(`${key}-text`);
-      if (!textarea) return;
-      if (document.activeElement !== textarea) {
-        textarea.value = value || '';
-      }
+    function moduleDocRef(uid, key) { return doc(db, "users", uid, "modules", key); }
+    function collectionRef(uid, moduleKey, collectionKey="items") { return collection(db, "users", uid, "modules", moduleKey, collectionKey); }
+    function resetWatchers() {
+      Object.values(unsub).forEach(fn => { if (typeof fn === 'function') fn(); });
+      Object.keys(unsub).forEach(k => delete unsub[k]);
     }
-
-    function fillModuleItems(key, items) {
-      const list = document.getElementById(`${key}-items-list`);
-      if (!list) return;
-      if (!items.length) {
-        list.innerHTML = '<div class="empty-box">还没有条目，先添加第一条吧。</div>';
-        return;
-      }
-
-      list.innerHTML = items.map(item => {
-        const timeText = item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚';
-        return `
-          <div class="item-card">
-            <div class="item-card-top">
-              <div>
-                <div class="item-title">${safeHtml(item.title || '未命名条目')}</div>
-                <div class="item-time">${timeText}</div>
-              </div>
-              <div class="item-buttons">
-                <button class="small-btn" onclick="window.editModuleItem('${key}','${item.id}')">编辑</button>
-                <button class="small-btn danger" onclick="window.deleteModuleItem('${key}','${item.id}')">删除</button>
-              </div>
-            </div>
-            <div class="item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
-          </div>
-        `;
-      }).join('');
+    function clearUiOnLogout() {
+      ['tasks-text','techImprove-text','tactics-text','coaching-text','anki-text','paper-text'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
+      renderTasks([]); renderTechImprove([]); renderTactics([]); renderCoachingTech([]); renderCoachingStudents([]); renderSimpleList('anki', []); renderSimpleList('paper', []);
+      const homeYesterdayDate = document.getElementById('homeYesterdayDate');
+      const homeYesterdayList = document.getElementById('homeYesterdayList');
+      const homeYesterdayProgressDate = document.getElementById('homeYesterdayProgressDate');
+      const homeYesterdayProgressList = document.getElementById('homeYesterdayProgressList');
+      if (homeYesterdayDate) homeYesterdayDate.textContent = '--';
+      if (homeYesterdayList) homeYesterdayList.innerHTML = '<div class="empty-box">昨天还没有已完成任务。</div>';
+      if (homeYesterdayProgressDate) homeYesterdayProgressDate.textContent = '--';
+      if (homeYesterdayProgressList) homeYesterdayProgressList.innerHTML = '<div class="empty-box">昨天还没有推进任务。</div>';
+      resetTasksForm(); resetTechImproveForm(); resetTacticsForm(); resetCoachingTechForm(); resetCoachingStudentForm(); resetSimpleForm('anki'); resetSimpleForm('paper');
+      setStatus('状态：未登录，尚未连接云端');
     }
-
-    function resetItemForm(key) {
-      editState[key].editingId = null;
-      const title = document.getElementById(`${key}-item-title`);
-      const content = document.getElementById(`${key}-item-content`);
-      const submit = document.getElementById(`${key}-item-submit`);
-      if (title) title.value = '';
-      if (content) content.value = '';
-      if (submit) submit.textContent = '添加条目';
+    function watchModuleText(moduleKey, textareaId) {
+      unsub[`doc:${moduleKey}`] = onSnapshot(moduleDocRef(currentUid, moduleKey), snap => {
+        const data = snap.exists() ? snap.data() : {};
+        const textarea = document.getElementById(textareaId);
+        if (textarea && document.activeElement !== textarea) textarea.value = data.text || '';
+      });
     }
-
-    function bindModuleUI() {
-      MODULE_KEYS.forEach(key => {
-        const textarea = document.getElementById(`${key}-text`);
-        textarea.addEventListener('input', () => {
-          if (!currentUid) {
-            setStatus('状态：请先登录后再同步');
-            return;
+    function bindAutoSaveText(moduleKey, textareaId, label) {
+      const textarea = document.getElementById(textareaId);
+      if (textarea.dataset.bound) return;
+      textarea.dataset.bound = '1';
+      textarea.addEventListener('input', () => {
+        if (!currentUid) { setStatus('状态：请先登录后再同步'); return; }
+        clearTimeout(textTimers[moduleKey]);
+        textTimers[moduleKey] = setTimeout(async () => {
+          try {
+            await setDoc(moduleDocRef(currentUid, moduleKey), { text: textarea.value, updatedAt: Date.now() }, { merge: true });
+            setStatus(`状态：${label} 已同步`);
+          } catch (error) {
+            console.error(error);
+            setStatus(`状态：${label} 同步失败`);
+            window.showToast(`${label} 同步失败`);
           }
-          clearTimeout(textSaveTimers[key]);
-          textSaveTimers[key] = setTimeout(async () => {
-            try {
-              await setDoc(moduleDocRef(currentUid, key), {
-                text: textarea.value,
-                updatedAt: Date.now()
-              }, { merge: true });
-              setStatus(`状态：${MODULE_META[key].title} 已同步`);
-            } catch (error) {
-              console.error(error);
-              setStatus(`状态：${MODULE_META[key].title} 同步失败`);
-              window.showToast(`${MODULE_META[key].title} 同步失败`);
-            }
-          }, 800);
+        }, 800);
+      });
+    }
+
+    
+    function getLocalDateKey(ts = Date.now()) {
+      const d = new Date(ts);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function inferTomorrowOriginDate(item) {
+      if (item.tomorrowOriginDate) return item.tomorrowOriginDate;
+      return getLocalDateKey(item.updatedAt || item.createdAt || Date.now());
+    }
+
+    function shouldPromoteTomorrowTask(item) {
+      if (item.type !== 'tomorrow') return false;
+      const originDate = inferTomorrowOriginDate(item);
+      return getLocalDateKey() > originDate;
+    }
+
+    async function syncPromotedTomorrowTasks(items) {
+      const targets = items.filter(item => shouldPromoteTomorrowTask(item));
+      if (!currentUid || !targets.length) return;
+      for (const item of targets) {
+        try {
+          await setDoc(doc(db, "users", currentUid, "modules", "tasks", "items", item.id), {
+            type: 'today',
+            tomorrowOriginDate: '',
+            updatedAt: Date.now()
+          }, { merge: true });
+        } catch (error) {
+          console.error('自动转入今日任务失败', error);
+        }
+      }
+    }
+
+    function taskTypeLabel(value) {
+      if (value === 'today') return '今日任务';
+      if (value === 'tomorrow') return '明日任务';
+      if (value === 'activeProgress') return '正在推进';
+      if (value === 'completed') return '已完成';
+      if (value === 'progress') return '待推进';
+      return '近期待完成';
+    }
+
+    function buildTaskMovePayload(targetType, item) {
+      const payload = {
+        type: targetType,
+        updatedAt: Date.now()
+      };
+
+      if (targetType === 'tomorrow') {
+        payload.tomorrowOriginDate = getLocalDateKey();
+      } else {
+        payload.tomorrowOriginDate = '';
+      }
+
+      if (targetType === 'completed') {
+        payload.completedAt = Date.now();
+      } else if (item && item.type === 'completed') {
+        payload.completedAt = '';
+      }
+
+      return payload;
+    }
+
+    function getEffectiveTaskType(item) {
+      if (!item) return 'todo';
+      return shouldPromoteTomorrowTask(item) ? 'today' : (item.type || 'todo');
+    }
+
+    function getTaskPositionValue(item) {
+      const n = Number(item && item.position);
+      return Number.isFinite(n) ? n : Number.MAX_SAFE_INTEGER;
+    }
+
+    function sortTaskItemsForType(arr) {
+      return [...arr].sort((a, b) => {
+        const pa = getTaskPositionValue(a);
+        const pb = getTaskPositionValue(b);
+        if (pa !== pb) return pa - pb;
+        return (a.createdAt || a.updatedAt || 0) - (b.createdAt || b.updatedAt || 0);
+      });
+    }
+
+    function getNextTaskPosition(type, items, excludeId = '') {
+      const sameType = (items || []).filter(item => getEffectiveTaskType(item) === type && item.id !== excludeId);
+      if (!sameType.length) return 1;
+      const maxPos = Math.max(...sameType.map(getTaskPositionValue).map(v => Number.isFinite(v) ? v : 0));
+      return (Number.isFinite(maxPos) ? maxPos : 0) + 1;
+    }
+
+    function clearTaskCardDropIndicators() {
+      document.querySelectorAll('.task-card-draggable').forEach(card => {
+        card.classList.remove('drop-before', 'drop-after');
+      });
+    }
+
+    async function reorderTaskItem(draggedId, targetType, targetId = '', insertAfter = false) {
+      if (!currentUid || !draggedId || !targetType) return;
+
+      const items = [...(state.tasks.items || [])];
+      const dragged = items.find(item => item.id === draggedId);
+      if (!dragged) return;
+
+      const sourceType = getEffectiveTaskType(dragged);
+
+      let sourceList = sortTaskItemsForType(items.filter(item => getEffectiveTaskType(item) === sourceType && item.id !== draggedId));
+      let targetList = sourceType === targetType
+        ? sourceList
+        : sortTaskItemsForType(items.filter(item => getEffectiveTaskType(item) === targetType && item.id !== draggedId));
+
+      let insertIndex = targetList.length;
+      if (targetId) {
+        const targetIndex = targetList.findIndex(item => item.id === targetId);
+        if (targetIndex >= 0) insertIndex = insertAfter ? targetIndex + 1 : targetIndex;
+      }
+
+      const draggedClone = { ...dragged, type: targetType };
+      targetList.splice(insertIndex, 0, draggedClone);
+
+      const updates = [];
+
+      if (sourceType === targetType) {
+        targetList.forEach((item, idx) => {
+          updates.push({
+            id: item.id,
+            data: { position: idx + 1 }
+          });
         });
+      } else {
+        sourceList.forEach((item, idx) => {
+          updates.push({
+            id: item.id,
+            data: { position: idx + 1 }
+          });
+        });
+        targetList.forEach((item, idx) => {
+          if (item.id === draggedId) {
+            updates.push({
+              id: item.id,
+              data: { ...buildTaskMovePayload(targetType, dragged), position: idx + 1 }
+            });
+          } else {
+            updates.push({
+              id: item.id,
+              data: { position: idx + 1 }
+            });
+          }
+        });
+      }
 
-        document.getElementById(`${key}-item-submit`).addEventListener('click', async () => {
+      try {
+        await Promise.all(
+          updates.map(update =>
+            setDoc(
+              doc(db, "users", currentUid, "modules", "tasks", "items", update.id),
+              update.data,
+              { merge: true }
+            )
+          )
+        );
+        window.showToast(sourceType === targetType ? '已调整任务顺序' : `已移动到${taskTypeLabel(targetType)}`);
+      } catch (error) {
+        console.error(error);
+        window.showToast('拖动排序失败');
+      }
+    }
+
+    function bindTaskDropZones() {
+      const taskView = document.getElementById('tasksView');
+      if (!taskView || taskView.dataset.dragBound === '1') return;
+      taskView.dataset.dragBound = '1';
+
+      document.querySelectorAll('.task-drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+        });
+        zone.addEventListener('dragenter', (e) => {
+          e.preventDefault();
+          zone.classList.add('drop-active');
+        });
+        zone.addEventListener('dragleave', (e) => {
+          if (!zone.contains(e.relatedTarget)) zone.classList.remove('drop-active');
+        });
+        zone.addEventListener('drop', async (e) => {
+          e.preventDefault();
+          zone.classList.remove('drop-active');
+          clearTaskCardDropIndicators();
+
+          const itemId = window.currentDraggedTaskId || e.dataTransfer.getData('text/plain');
+          const targetType = zone.dataset.taskType;
+          if (!itemId || !targetType || !currentUid) return;
+
+          await reorderTaskItem(itemId, targetType);
+        });
+      });
+    }
+
+    window.startTaskDrag = function(event, itemId) {
+      window.currentDraggedTaskId = itemId;
+      if (event.dataTransfer) {
+        event.dataTransfer.setData('text/plain', itemId);
+        event.dataTransfer.effectAllowed = 'move';
+      }
+      if (event.currentTarget) event.currentTarget.classList.add('dragging');
+    };
+
+    window.endTaskDrag = function(event) {
+      window.currentDraggedTaskId = null;
+      if (event.currentTarget) event.currentTarget.classList.remove('dragging');
+      document.querySelectorAll('.task-drop-zone').forEach(zone => zone.classList.remove('drop-active'));
+      clearTaskCardDropIndicators();
+    };
+
+    window.handleTaskCardDragOver = function(event) {
+      event.preventDefault();
+      const card = event.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const after = event.clientY > rect.top + rect.height / 2;
+      clearTaskCardDropIndicators();
+      card.classList.add(after ? 'drop-after' : 'drop-before');
+    };
+
+    window.dropTaskOnCard = async function(event, targetItemId) {
+      event.preventDefault();
+      event.stopPropagation();
+      const itemId = window.currentDraggedTaskId || (event.dataTransfer ? event.dataTransfer.getData('text/plain') : '');
+      if (!itemId || !targetItemId) return;
+
+      const targetItem = (state.tasks.items || []).find(item => item.id === targetItemId);
+      if (!targetItem) return;
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const insertAfter = event.clientY > rect.top + rect.height / 2;
+
+      clearTaskCardDropIndicators();
+      await reorderTaskItem(itemId, getEffectiveTaskType(targetItem), targetItemId, insertAfter);
+    };
+
+    function updateTaskColumnCounts(counts) {
+      const mapping = {
+        'tasks-today-count': counts.today || 0,
+        'tasks-tomorrow-count': counts.tomorrow || 0,
+        'tasks-todo-count': counts.todo || 0,
+        'tasks-progress-count': counts.progress || 0,
+        'tasks-active-progress-count': counts.activeProgress || 0,
+        'tasks-completed-count': counts.completed || 0,
+      };
+      Object.entries(mapping).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = String(value);
+      });
+    }
+
+    function getYesterdayDateKey() {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function renderHomeYesterdaySummaries(allItems, completedItems) {
+      const yesterdayKey = getYesterdayDateKey();
+
+      const completedDateEl = document.getElementById('homeYesterdayDate');
+      const completedListEl = document.getElementById('homeYesterdayList');
+      const progressDateEl = document.getElementById('homeYesterdayProgressDate');
+      const progressListEl = document.getElementById('homeYesterdayProgressList');
+
+      if (completedDateEl) completedDateEl.textContent = yesterdayKey;
+      if (progressDateEl) progressDateEl.textContent = yesterdayKey;
+
+      if (completedListEl) {
+        const yesterdayCompleted = [...(completedItems || [])]
+          .filter(item => {
+            const ts = item.completedAt || item.updatedAt || 0;
+            if (!ts) return false;
+            const d = new Date(ts);
+            const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+            return key === yesterdayKey;
+          })
+          .sort((a, b) => (b.completedAt || b.updatedAt || 0) - (a.completedAt || a.updatedAt || 0));
+
+        completedListEl.innerHTML = yesterdayCompleted.length
+          ? yesterdayCompleted.map(item => `<div class="home-yesterday-item">${safeHtml(item.title || '未命名任务')}</div>`).join('')
+          : '<div class="empty-box">昨天还没有已完成任务。</div>';
+      }
+
+      if (progressListEl) {
+        const yesterdayProgress = [...(allItems || [])]
+          .filter(item => Array.isArray(item.progressDates) && item.progressDates.includes(yesterdayKey))
+          .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+        progressListEl.innerHTML = yesterdayProgress.length
+          ? yesterdayProgress.map(item => `<div class="home-yesterday-item">${safeHtml(item.title || '未命名任务')}</div>`).join('')
+          : '<div class="empty-box">昨天还没有推进任务。</div>';
+      }
+    }
+
+    function renderTasks(items) {
+      const todayList = document.getElementById('tasks-today-list');
+      const tomorrowList = document.getElementById('tasks-tomorrow-list');
+      const todoList = document.getElementById('tasks-todo-list');
+      const progressList = document.getElementById('tasks-progress-list');
+      const activeProgressList = document.getElementById('tasks-active-progress-list');
+      const completedList = document.getElementById('tasks-completed-list');
+
+      const normalizedItems = items.map(item => shouldPromoteTomorrowTask(item) ? ({ ...item, type: 'today' }) : item);
+
+      const todayItems = sortTaskItemsForType(normalizedItems.filter(item => item.type === 'today'));
+      const tomorrowItems = sortTaskItemsForType(normalizedItems.filter(item => item.type === 'tomorrow'));
+      const todoItems = sortTaskItemsForType(normalizedItems.filter(item => item.type === 'todo' || !item.type));
+      const progressItems = sortTaskItemsForType(normalizedItems.filter(item => item.type === 'progress'));
+      const activeProgressItems = sortTaskItemsForType(normalizedItems.filter(item => item.type === 'activeProgress'));
+      const completedItems = normalizedItems.filter(item => item.type === 'completed');
+
+      function renderGroup(arr) {
+        if (!arr.length) return '<div class="empty-box">这里还没有任务。</div>';
+        return arr.map((item, index) => {
+          const progressDates = Array.isArray(item.progressDates) ? item.progressDates : [];
+          const recentDates = progressDates.slice(-4).reverse();
+          const progressVisual = item.type === 'activeProgress'
+            ? `<div class="task-progress-visual">
+                <div class="task-progress-top">
+                  <div class="task-progress-count">
+                    <span class="task-progress-number">${progressDates.length}</span>
+                    <span class="task-progress-label">次推进</span>
+                  </div>
+                </div>
+                <div class="task-progress-mini">
+                  ${Array.from({ length: 8 }).map((_, i) => `<span class="task-progress-dot ${i < Math.min(progressDates.length, 8) ? 'filled' : ''}"></span>`).join('')}
+                </div>
+                ${recentDates.length ? `<div class="task-progress-dates">${recentDates.map(date => `<span class="task-progress-date">${safeHtml(date)}</span>`).join('')}</div>` : ''}
+              </div>`
+            : '';
+          const progressText = progressDates.length && item.type !== 'activeProgress'
+            ? `<div class="item-content"><strong>推进记录：</strong><br>${safeHtml(progressDates.join('、'))}</div>`
+            : '';
+          const completedText = item.completedAt
+            ? `<div class="item-content"><strong>完成时间：</strong><br>${new Date(item.completedAt).toLocaleString('zh-CN')}</div>`
+            : '';
+          return `
+            <div class="item-card task-card-draggable"
+                 draggable="true"
+                 ondragstart="window.startTaskDrag(event, '${item.id}')"
+                 ondragend="window.endTaskDrag(event)"
+                 ondragover="window.handleTaskCardDragOver(event)"
+                 ondrop="window.dropTaskOnCard(event, '${item.id}')">
+              <div class="item-card-top">
+                <div>
+                  <div class="item-title-row">
+                    <span class="item-seq">${index + 1}</span>
+                    <div class="item-title">${safeHtml(item.title || '未命名任务')}</div>
+                  </div>
+                  <div class="item-badge">${taskTypeLabel(item.type)}</div>
+                  <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+                </div>
+                <div class="item-buttons">
+                  ${item.type === 'progress' ? `<button class="small-btn success" onclick="window.moveTaskToActiveProgress('${item.id}')">开始推进</button>` : ''}
+                  ${item.type === 'activeProgress' ? `<button class="small-btn success" onclick="window.markTaskProgressToday('${item.id}')">今日已推进</button>` : ''}
+                  ${item.type !== 'completed' ? `<button class="small-btn success" onclick="window.completeTask('${item.id}')">已完成</button>` : ''}
+                  <button class="small-btn" onclick="window.editTaskItem('${item.id}')">编辑</button>
+                  <button class="small-btn danger" onclick="window.deleteTaskItem('${item.id}')">删除</button>
+                </div>
+              </div>
+              <div class="item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+              ${progressVisual}
+              ${progressText}
+              ${completedText}
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderCompletedArchive(arr) {
+        if (!arr.length) return '<div class="empty-box">这里还没有已完成任务。</div>';
+
+        const sorted = [...arr].sort((a, b) => (b.completedAt || b.updatedAt || 0) - (a.completedAt || a.updatedAt || 0));
+        const groups = {};
+        window.completedTaskMonthMap = {};
+
+        for (const item of sorted) {
+          const ts = item.completedAt || item.updatedAt || Date.now();
+          const d = new Date(ts);
+          const year = String(d.getFullYear());
+          const monthKey = String(d.getMonth() + 1).padStart(2, '0');
+          const monthFullKey = `${year}-${monthKey}`;
+
+          groups[year] ||= {};
+          groups[year][monthKey] ||= [];
+          groups[year][monthKey].push(item);
+
+          window.completedTaskMonthMap[monthFullKey] ||= [];
+          window.completedTaskMonthMap[monthFullKey].push(item);
+        }
+
+        const years = Object.keys(groups).sort((a, b) => Number(b) - Number(a));
+
+        function renderMonthBoxes(year, monthsObj) {
+          const months = Object.keys(monthsObj).sort((a, b) => Number(b) - Number(a));
+          return `
+            <div class="month-box-grid">
+              ${months.map(monthKey => {
+                const items = monthsObj[monthKey];
+                const days = new Set(
+                  items.map(item => {
+                    const ts = item.completedAt || item.updatedAt || Date.now();
+                    const d = new Date(ts);
+                    return String(d.getDate()).padStart(2, '0');
+                  })
+                );
+                return `
+                  <button class="month-box" onclick="window.openCompletedMonthModal('${year}-${monthKey}')">
+                    <div class="month-box-title">${monthKey} 月</div>
+                    <div class="month-box-meta">完成 ${items.length} 项</div>
+                    <div class="month-box-meta">涉及 ${days.size} 天</div>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        return `<div class="completed-calendar">` + years.map((year, yi) => `
+          <details class="completed-year" ${yi === 0 ? 'open' : ''}>
+            <summary>${year} 年</summary>
+            <div class="completed-year-body">
+              ${renderMonthBoxes(year, groups[year])}
+            </div>
+          </details>
+        `).join('') + `</div>`;
+      }
+
+      if (todayList) todayList.innerHTML = renderGroup(todayItems);
+      if (tomorrowList) tomorrowList.innerHTML = renderGroup(tomorrowItems);
+      if (todoList) todoList.innerHTML = renderGroup(todoItems);
+      if (progressList) progressList.innerHTML = renderGroup(progressItems);
+      if (activeProgressList) activeProgressList.innerHTML = renderGroup(activeProgressItems);
+      if (completedList) completedList.innerHTML = renderCompletedArchive(completedItems);
+
+      updateTaskColumnCounts({
+        today: todayItems.length,
+        tomorrow: tomorrowItems.length,
+        todo: todoItems.length,
+        progress: progressItems.length,
+        activeProgress: activeProgressItems.length,
+        completed: completedItems.length,
+      });
+
+      renderHomeYesterdaySummaries(normalizedItems, completedItems);
+    }
+
+    function resetTasksForm() {
+      state.tasks.editingId = null;
+      document.getElementById('tasks-title').value = '';
+      document.getElementById('tasks-type').value = 'today';
+      document.getElementById('tasks-content').value = '';
+      document.getElementById('tasks-submit').textContent = '保存';
+      const title = document.getElementById('taskEditorTitle');
+      if (title) title.textContent = '添加任务';
+    }
+
+    function bindTasks() {
+      bindAutoSaveText('tasks', 'tasks-text', '任务清单总览');
+      bindTaskDropZones();
+      const submitBtn = document.getElementById('tasks-submit');
+      if (!submitBtn.dataset.bound) {
+        submitBtn.dataset.bound = '1';
+        submitBtn.addEventListener('click', async () => {
           if (!currentUid) return window.showToast('请先登录');
-          const titleInput = document.getElementById(`${key}-item-title`);
-          const contentInput = document.getElementById(`${key}-item-content`);
-          const title = titleInput.value.trim();
-          const content = contentInput.value.trim();
-
+          const title = document.getElementById('tasks-title').value.trim();
+          const type = document.getElementById('tasks-type').value;
+          const content = document.getElementById('tasks-content').value.trim();
           if (!title && !content) return window.showToast('先输入一点内容');
 
           try {
-            if (editState[key].editingId) {
-              await setDoc(doc(db, "users", currentUid, "modules", key, "items", editState[key].editingId), {
-                title,
-                content,
-                updatedAt: Date.now()
-              }, { merge: true });
-              window.showToast('已更新条目');
+            const editingItem = (state.tasks.items || []).find(item => item.id === state.tasks.editingId);
+            const editingType = getEffectiveTaskType(editingItem);
+            const nextPosition = state.tasks.editingId
+              ? (editingType === type
+                  ? (Number.isFinite(Number(editingItem && editingItem.position)) ? Number(editingItem.position) : getNextTaskPosition(type, state.tasks.items, state.tasks.editingId))
+                  : getNextTaskPosition(type, state.tasks.items, state.tasks.editingId))
+              : getNextTaskPosition(type, state.tasks.items);
+
+            const taskPayload = {
+              title,
+              type,
+              content,
+              position: nextPosition,
+              updatedAt: Date.now(),
+              tomorrowOriginDate: type === 'tomorrow' ? getLocalDateKey() : ''
+            };
+
+            if (state.tasks.editingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "tasks", "items", state.tasks.editingId), taskPayload, { merge:true });
+              window.showToast('已更新任务');
             } else {
-              await addDoc(moduleItemsCollection(currentUid, key), {
-                title,
-                content,
-                createdAt: Date.now(),
-                updatedAt: Date.now()
+              await addDoc(collectionRef(currentUid, 'tasks', 'items'), {
+                ...taskPayload,
+                createdAt: Date.now()
               });
-              window.showToast('已添加条目');
+              window.showToast('已添加任务');
             }
-            resetItemForm(key);
+            resetTasksForm();
+            window.closeTaskEditor();
           } catch (error) {
             console.error(error);
-            window.showToast('保存条目失败');
+            window.showToast('保存失败');
           }
         });
 
-        document.getElementById(`${key}-item-cancel`).addEventListener('click', () => {
-          resetItemForm(key);
+        document.getElementById('tasks-cancel').addEventListener('click', () => {
+          resetTasksForm();
+          window.closeTaskEditor();
         });
+      }
+    }
+
+    function watchTaskItems() {
+      if (!currentUid) return;
+      unsub['items:tasks'] = onSnapshot(query(collectionRef(currentUid, 'tasks', 'items'), orderBy('updatedAt','desc')), snapshot => {
+        const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        state.tasks.items = items;
+        renderTasks(items);
+        syncPromotedTomorrowTasks(items);
       });
     }
 
-    function stopAllWatchers() {
-      MODULE_KEYS.forEach(key => {
-        if (unsubDocMap[key]) { unsubDocMap[key](); unsubDocMap[key] = null; }
-        if (unsubItemsMap[key]) { unsubItemsMap[key](); unsubItemsMap[key] = null; }
-      });
-    }
-
-    function watchAllModules(uid) {
-      stopAllWatchers();
-      MODULE_KEYS.forEach(key => {
-        unsubDocMap[key] = onSnapshot(moduleDocRef(uid, key), (snap) => {
-          const data = snap.exists() ? snap.data() : {};
-          localState[key].text = data.text || '';
-          fillModuleText(key, localState[key].text);
-        });
-
-        const q = query(moduleItemsCollection(uid, key), orderBy("updatedAt", "desc"));
-        unsubItemsMap[key] = onSnapshot(q, (snapshot) => {
-          const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-          localState[key].items = items;
-          fillModuleItems(key, items);
-        });
-      });
-      setStatus('状态：已连接云端同步');
-    }
-
-    registerBtn.addEventListener("click", async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-      if (!email || !password) {
-        authStatus.textContent = "请先输入邮箱和密码";
-        return;
-      }
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        authStatus.textContent = "注册成功，已自动登录";
-      } catch (error) {
-        authStatus.textContent = "注册失败：" + error.code + " / " + error.message;
-        console.error("注册失败", error.code, error.message, error);
-      }
-    });
-
-    loginBtn.addEventListener("click", async () => {
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-      if (!email || !password) {
-        authStatus.textContent = "请先输入邮箱和密码";
-        return;
-      }
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        authStatus.textContent = "登录成功";
-      } catch (error) {
-        authStatus.textContent = "登录失败：" + error.code + " / " + error.message;
-        console.error("登录失败", error.code, error.message, error);
-      }
-    });
-
-    logoutBtn.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        authStatus.textContent = "已退出登录";
-      } catch (error) {
-        authStatus.textContent = "退出失败：" + error.code + " / " + error.message;
-        console.error("退出失败", error.code, error.message, error);
-      }
-    });
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        currentUid = user.uid;
-        authStatus.textContent = "当前已登录：" + user.email;
-        console.log("当前用户 UID:", user.uid);
-        watchAllModules(user.uid);
-      } else {
-        currentUid = null;
-        authStatus.textContent = "当前未登录";
-        stopAllWatchers();
-        MODULE_KEYS.forEach(key => {
-          fillModuleText(key, '');
-          fillModuleItems(key, []);
-          resetItemForm(key);
-        });
-        setStatus('状态：未登录，尚未连接云端');
-      }
-    });
-
-    window.editModuleItem = function(key, itemId) {
-      const item = (localState[key]?.items || []).find(x => x.id === itemId);
+    window.editTaskItem = function(itemId) {
+      const item = (state.tasks.items || []).find(x => x.id === itemId);
       if (!item) return;
-      editState[key].editingId = itemId;
-      document.getElementById(`${key}-item-title`).value = item.title || '';
-      document.getElementById(`${key}-item-content`).value = item.content || '';
-      document.getElementById(`${key}-item-submit`).textContent = '保存修改';
-      window.showToast('已载入条目，可直接修改');
+      state.tasks.editingId = itemId;
+      document.getElementById('tasks-title').value = item.title || '';
+      document.getElementById('tasks-type').value = item.type || 'today';
+      document.getElementById('tasks-content').value = item.content || '';
+      document.getElementById('tasks-submit').textContent = '保存修改';
+      document.getElementById('taskEditorTitle').textContent = '编辑任务';
+      window.openTaskEditor(item.type || 'today');
+      document.getElementById('tasks-submit').textContent = '保存修改';
     };
 
-    window.deleteModuleItem = async function(key, itemId) {
+    window.deleteTaskItem = async function(itemId) {
       if (!currentUid) return window.showToast('请先登录');
       try {
-        await deleteDoc(doc(db, "users", currentUid, "modules", key, "items", itemId));
-        if (editState[key].editingId === itemId) resetItemForm(key);
+        await deleteDoc(doc(db, "users", currentUid, "modules", "tasks", "items", itemId));
+        if (state.tasks.editingId === itemId) resetTasksForm();
+        window.showToast('已删除任务');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    function getTodayDateString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    window.moveTaskToActiveProgress = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await setDoc(doc(db, "users", currentUid, "modules", "tasks", "items", itemId), {
+          type: 'activeProgress',
+          updatedAt: Date.now()
+        }, { merge: true });
+        window.showToast('已移动到正在推进的任务');
+      } catch (error) {
+        console.error(error);
+        window.showToast('移动失败');
+      }
+    };
+
+    window.markTaskProgressToday = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      const item = (state.tasks.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      const today = getTodayDateString();
+      const dates = Array.isArray(item.progressDates) ? [...item.progressDates] : [];
+      if (!dates.includes(today)) dates.push(today);
+      try {
+        await setDoc(doc(db, "users", currentUid, "modules", "tasks", "items", itemId), {
+          progressDates: dates,
+          updatedAt: Date.now()
+        }, { merge: true });
+        window.showToast('已记录今日推进');
+      } catch (error) {
+        console.error(error);
+        window.showToast('记录失败');
+      }
+    };
+
+    window.completeTask = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await setDoc(doc(db, "users", currentUid, "modules", "tasks", "items", itemId), {
+          type: 'completed',
+          completedAt: Date.now(),
+          updatedAt: Date.now()
+        }, { merge: true });
+        window.showToast('已标记为完成');
+      } catch (error) {
+        console.error(error);
+        window.showToast('操作失败');
+      }
+    };
+
+function renderSimpleList(moduleKey, items) {
+      const list = document.getElementById(`${moduleKey}-list`);
+      if (!items.length) {
+        list.innerHTML = moduleKey === 'anki'
+          ? '<div class="empty-box">还没有训练计划，先添加第一条吧。</div>'
+          : '<div class="empty-box">还没有条目，先添加第一条吧。</div>';
+        return;
+      }
+
+      if (moduleKey === 'anki') {
+        const todayKey = getLocalDateKey();
+        const sortedItems = [...items].sort((a, b) => {
+          const aCount = a.lastProgressDate === todayKey ? Number(a.currentCount || 0) : 0;
+          const bCount = b.lastProgressDate === todayKey ? Number(b.currentCount || 0) : 0;
+          const aDone = aCount >= Number(a.targetCount || 1) ? 1 : 0;
+          const bDone = bCount >= Number(b.targetCount || 1) ? 1 : 0;
+          if (aDone !== bDone) return aDone - bDone;
+          return (b.updatedAt || 0) - (a.updatedAt || 0);
+        });
+
+        list.innerHTML = sortedItems.map(item => {
+          const targetCount = Math.max(1, Number(item.targetCount || 1));
+          const currentCount = item.lastProgressDate === todayKey ? Math.max(0, Number(item.currentCount || 0)) : 0;
+          const safeCurrent = Math.min(currentCount, targetCount);
+          const percent = Math.round((safeCurrent / targetCount) * 100);
+          const done = safeCurrent >= targetCount;
+          const logs = Array.isArray(item.trainingLogs) ? sortGymLogs(item.trainingLogs) : [];
+          const recentLogs = logs.slice(0, 3);
+
+          return `
+            <div class="gym-plan-card">
+              <div class="gym-plan-top">
+                <div>
+                  <div class="gym-plan-title">${safeHtml(item.title || '未命名训练')}</div>
+                  <div class="gym-plan-meta">
+                    <span class="gym-plan-target">每日目标 ${targetCount} 次</span>
+                    <span class="gym-meta-chip">今日进度 ${safeCurrent}/${targetCount}</span>
+                  </div>
+                  <div class="item-time" style="margin-top:8px;">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+                </div>
+                <div class="item-buttons">
+                  <button class="small-btn" onclick="window.editSimpleItem('anki','${item.id}')">编辑</button>
+                  <button class="small-btn danger" onclick="window.deleteSimpleItem('anki','${item.id}')">删除</button>
+                </div>
+              </div>
+
+              <div class="gym-plan-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+
+              <div class="gym-progress-wrap">
+                <div class="gym-progress-top">
+                  <span>今日完成 ${safeCurrent}/${targetCount}</span>
+                  <span class="gym-status">${done ? '今日已完成' : '今日进行中'}</span>
+                </div>
+                <div class="gym-progress-bar">
+                  <div class="gym-progress-fill" style="width:${percent}%;"></div>
+                </div>
+              </div>
+
+              ${recentLogs.length ? `<div class="gym-plan-meta">${recentLogs.map(log => `<span class="gym-meta-chip">${safeHtml(log.date)} · ${Number(log.count || 0)}次</span>`).join('')}</div>` : ''}
+
+              <div class="gym-actions">
+                <button class="small-btn success" ${done ? 'disabled' : ''} onclick="window.markGymPlanDone('${item.id}')">练完一次</button>
+                <button class="small-btn" ${safeCurrent === 0 ? 'disabled' : ''} onclick="window.undoGymPlanDone('${item.id}')">撤回一次</button>
+                <button class="small-btn" onclick="window.openGymLogModal('${item.id}')">记录日志</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        return;
+      }
+
+      list.innerHTML = items.map(item => `
+        <div class="item-card">
+          <div class="item-card-top">
+            <div>
+              <div class="item-title">${safeHtml(item.title || '未命名条目')}</div>
+              <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+            </div>
+            <div class="item-buttons">
+              <button class="small-btn" onclick="window.editSimpleItem('${moduleKey}','${item.id}')">编辑</button>
+              <button class="small-btn danger" onclick="window.deleteSimpleItem('${moduleKey}','${item.id}')">删除</button>
+            </div>
+          </div>
+          <div class="item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('');
+    }
+    function resetSimpleForm(moduleKey) {
+      state[moduleKey].editingId = null;
+      document.getElementById(`${moduleKey}-title`).value = '';
+      document.getElementById(`${moduleKey}-content`).value = '';
+      if (moduleKey === 'anki') {
+        const targetInput = document.getElementById('anki-target-count');
+        if (targetInput) targetInput.value = '';
+      }
+      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '添加训练计划' : '添加条目';
+    }
+    function bindSimpleModule(moduleKey, label) {
+      bindAutoSaveText(moduleKey, `${moduleKey}-text`, label);
+      if (!document.getElementById(`${moduleKey}-submit`).dataset.bound) {
+        document.getElementById(`${moduleKey}-submit`).dataset.bound = '1';
+        document.getElementById(`${moduleKey}-submit`).addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const title = document.getElementById(`${moduleKey}-title`).value.trim();
+          const content = document.getElementById(`${moduleKey}-content`).value.trim();
+          if (!title && !content) return window.showToast('先输入一点内容');
+
+          try {
+            if (moduleKey === 'anki') {
+              const todayKey = getLocalDateKey();
+              const targetInput = document.getElementById('anki-target-count');
+              const parsedTarget = Math.max(1, Number(targetInput && targetInput.value ? targetInput.value : 1));
+              const existingItem = (state[moduleKey].items || []).find(item => item.id === state[moduleKey].editingId);
+              const existingCurrent = existingItem && existingItem.lastProgressDate === todayKey
+                ? Math.max(0, Number(existingItem.currentCount || 0))
+                : 0;
+              const payload = {
+                title,
+                content,
+                targetCount: parsedTarget,
+                currentCount: Math.min(existingCurrent, parsedTarget),
+                lastProgressDate: todayKey,
+                trainingLogs: Array.isArray(existingItem && existingItem.trainingLogs) ? existingItem.trainingLogs : [],
+                updatedAt: Date.now()
+              };
+
+              if (state[moduleKey].editingId) {
+                await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), payload, { merge:true });
+                window.showToast('已更新训练计划');
+              } else {
+                await addDoc(collectionRef(currentUid, moduleKey, 'items'), {
+                  ...payload,
+                  createdAt: Date.now()
+                });
+                window.showToast('已添加训练计划');
+              }
+            } else {
+              if (state[moduleKey].editingId) {
+                await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), { title, content, updatedAt: Date.now() }, { merge:true });
+                window.showToast('已更新条目');
+              } else {
+                await addDoc(collectionRef(currentUid, moduleKey, 'items'), { title, content, createdAt: Date.now(), updatedAt: Date.now() });
+                window.showToast('已添加条目');
+              }
+            }
+
+            resetSimpleForm(moduleKey);
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+        document.getElementById(`${moduleKey}-cancel`).addEventListener('click', () => resetSimpleForm(moduleKey));
+      }
+    }
+
+    function sortGymLogs(logs) {
+      return [...(Array.isArray(logs) ? logs : [])].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    }
+
+    function upsertGymLog(logs, date, count) {
+      const base = (Array.isArray(logs) ? logs : []).filter(log => log && log.date !== date);
+      if (count > 0) base.push({ date, count });
+      return sortGymLogs(base);
+    }
+
+    async function syncGymPlansDailyReset(items) {
+      if (!currentUid || !Array.isArray(items) || !items.length) return items;
+      const todayKey = getLocalDateKey();
+      const updates = [];
+      const normalized = items.map(item => {
+        if (!item) return item;
+        const targetCount = Math.max(1, Number(item.targetCount || 1));
+        const currentCount = Math.max(0, Number(item.currentCount || 0));
+        const lastProgressDate = item.lastProgressDate || todayKey;
+        const trainingLogs = Array.isArray(item.trainingLogs) ? item.trainingLogs : [];
+        let nextItem = { ...item };
+        let changed = false;
+
+        if (!item.lastProgressDate) {
+          nextItem.lastProgressDate = todayKey;
+          changed = true;
+        }
+
+        if (lastProgressDate !== todayKey) {
+          nextItem.trainingLogs = currentCount > 0
+            ? upsertGymLog(trainingLogs, lastProgressDate, Math.min(currentCount, targetCount))
+            : sortGymLogs(trainingLogs);
+          nextItem.currentCount = 0;
+          nextItem.lastProgressDate = todayKey;
+          changed = true;
+        }
+
+        if (changed) {
+          updates.push({
+            id: item.id,
+            data: {
+              currentCount: nextItem.currentCount,
+              lastProgressDate: nextItem.lastProgressDate,
+              trainingLogs: nextItem.trainingLogs
+            }
+          });
+        }
+
+        return nextItem;
+      });
+
+      if (updates.length) {
+        try {
+          await Promise.all(
+            updates.map(update =>
+              setDoc(
+                doc(db, "users", currentUid, "modules", "anki", "items", update.id),
+                update.data,
+                { merge: true }
+              )
+            )
+          );
+        } catch (error) {
+          console.error('同步健身房训练计划失败', error);
+        }
+      }
+
+      return normalized;
+    }
+
+    function watchSimpleModuleItems(moduleKey) {
+      if (!currentUid) return;
+      unsub[`items:${moduleKey}`] = onSnapshot(query(collectionRef(currentUid, moduleKey, 'items'), orderBy('updatedAt','desc')), async snapshot => {
+        let items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        if (moduleKey === 'anki') {
+          items = await syncGymPlansDailyReset(items);
+        }
+        state[moduleKey].items = items;
+        renderSimpleList(moduleKey, items);
+      });
+    }
+    window.editSimpleItem = function(moduleKey, itemId) {
+      const item = (state[moduleKey].items || []).find(x => x.id === itemId);
+      if (!item) return;
+      state[moduleKey].editingId = itemId;
+      document.getElementById(`${moduleKey}-title`).value = item.title || '';
+      document.getElementById(`${moduleKey}-content`).value = item.content || '';
+      if (moduleKey === 'anki') {
+        const targetInput = document.getElementById('anki-target-count');
+        if (targetInput) targetInput.value = Math.max(1, Number(item.targetCount || 1));
+      }
+      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '保存训练计划' : '保存修改';
+      window.showToast(moduleKey === 'anki' ? '已载入训练计划，可直接修改' : '已载入条目，可直接修改');
+    };
+    window.deleteSimpleItem = async function(moduleKey, itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", itemId));
+        if (state[moduleKey].editingId === itemId) resetSimpleForm(moduleKey);
+        window.showToast(moduleKey === 'anki' ? '已删除训练计划' : '已删除条目');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    window.openGymLogModal = function(itemId) {
+      const item = (state.anki.items || []).find(x => x.id === itemId);
+      if (!item || !gymLogModal) return;
+
+      const todayKey = getLocalDateKey();
+      const targetCount = Math.max(1, Number(item.targetCount || 1));
+      const lastProgressDate = item.lastProgressDate || todayKey;
+      let logs = Array.isArray(item.trainingLogs) ? item.trainingLogs : [];
+      if (lastProgressDate === todayKey && Number(item.currentCount || 0) > 0) {
+        logs = upsertGymLog(logs, todayKey, Math.min(Number(item.currentCount || 0), targetCount));
+      } else {
+        logs = sortGymLogs(logs);
+      }
+
+      document.getElementById('gymLogTitle').textContent = `${item.title || '训练日志'} · 记录日志`;
+      const body = document.getElementById('gymLogBody');
+      body.innerHTML = logs.length
+        ? logs.map(log => `
+            <div class="gym-log-item">
+              <div class="gym-log-date">${safeHtml(log.date || '--')}</div>
+              <div class="gym-log-count">${Number(log.count || 0)} 次</div>
+            </div>
+          `).join('')
+        : '<div class="empty-box">还没有训练日志，先完成一次训练吧。</div>';
+
+      gymLogModal.classList.add('show');
+    };
+
+    window.markGymPlanDone = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      const item = (state.anki.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      const todayKey = getLocalDateKey();
+      const targetCount = Math.max(1, Number(item.targetCount || 1));
+      const baseCount = item.lastProgressDate === todayKey ? Math.max(0, Number(item.currentCount || 0)) : 0;
+      const nextCount = Math.min(targetCount, baseCount + 1);
+      const nextLogs = upsertGymLog(item.trainingLogs, todayKey, nextCount);
+
+      try {
+        await setDoc(doc(db, "users", currentUid, "modules", "anki", "items", itemId), {
+          currentCount: nextCount,
+          lastProgressDate: todayKey,
+          trainingLogs: nextLogs,
+          updatedAt: Date.now()
+        }, { merge: true });
+        window.showToast(nextCount >= targetCount ? '今日训练已完成，明天会自动重置' : `今日已完成 ${nextCount}/${targetCount}`);
+      } catch (error) {
+        console.error(error);
+        window.showToast('记录失败');
+      }
+    };
+
+    window.undoGymPlanDone = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      const item = (state.anki.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      const todayKey = getLocalDateKey();
+      const baseCount = item.lastProgressDate === todayKey ? Math.max(0, Number(item.currentCount || 0)) : 0;
+      const nextCount = Math.max(0, baseCount - 1);
+      const nextLogs = upsertGymLog(item.trainingLogs, todayKey, nextCount);
+
+      try {
+        await setDoc(doc(db, "users", currentUid, "modules", "anki", "items", itemId), {
+          currentCount: nextCount,
+          lastProgressDate: todayKey,
+          trainingLogs: nextLogs,
+          updatedAt: Date.now()
+        }, { merge: true });
+        window.showToast('已撤回一次训练记录');
+      } catch (error) {
+        console.error(error);
+        window.showToast('撤回失败');
+      }
+    };
+
+    function techPriorityRank(value) {
+      return { high: 0, medium: 1, low: 2 }[value] ?? 9;
+    }
+    function progressLabel(value) {
+      return { red: '红灯：刚开始', yellow: '黄灯：推进中', green: '绿灯：基本稳定' }[value] || '黄灯：推进中';
+    }
+    function priorityLabel(value) {
+      return { high: '高优先级', medium: '中优先级', low: '低优先级' }[value] || '中优先级';
+    }
+    function sortTechItems(items) {
+      return [...items].sort((a, b) => {
+        const focusDiff = (b.weeklyFocus ? 1 : 0) - (a.weeklyFocus ? 1 : 0);
+        if (focusDiff) return focusDiff;
+        const priorityDiff = techPriorityRank(a.priority) - techPriorityRank(b.priority);
+        if (priorityDiff) return priorityDiff;
+        return (b.updatedAt || 0) - (a.updatedAt || 0);
+      });
+    }
+    function renderWeeklyFocusCard(item) {
+      const box = document.getElementById('techImprove-weekly-focus');
+      if (!item) {
+        box.innerHTML = '<div class="weekly-empty">还没有正在改进的技术。你可以先添加一项当前最想提升的技术。</div>';
+        return;
+      }
+      box.innerHTML = `
+        <div class="item-card">
+          <div class="item-card-top">
+            <div>
+              <div class="item-title">${safeHtml(item.name || '未命名技术')}</div>
+              <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+              <div class="tag-row">
+                <span class="mini-tag focused">本周重点</span>
+                <span class="mini-tag priority-${item.priority || 'medium'}">${priorityLabel(item.priority)}</span>
+                <span class="mini-tag progress-${item.progress || 'yellow'}">${progressLabel(item.progress)}</span>
+              </div>
+            </div>
+            <div class="item-buttons">
+              <button class="small-btn" onclick="window.editTechItem('${item.id}')">编辑</button>
+              <button class="small-btn success" onclick="window.toggleTechStatus('${item.id}','completed')">标记已改进</button>
+            </div>
+          </div>
+          <div class="item-content"><strong>改进目标：</strong><br>${safeHtml(item.goal || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>细节 / 知识点：</strong><br>${safeHtml(item.details || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>训练计划：</strong><br>${safeHtml(item.plan || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `;
+    }
+    function renderTechImprove(items) {
+      const activeList = document.getElementById('techImprove-active-list');
+      const completedList = document.getElementById('techImprove-completed-list');
+      const active = sortTechItems(items.filter(item => item.status !== 'completed'));
+      const completed = [...items.filter(item => item.status === 'completed')].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      const weeklyItem = active.find(item => item.weeklyFocus) || active[0] || null;
+      renderWeeklyFocusCard(weeklyItem);
+
+      const renderCards = (arr, completedMode=false) => {
+        if (!arr.length) return '<div class="empty-box">这里还没有内容。</div>';
+        return arr.map(item => `
+          <div class="item-card">
+            <div class="item-card-top">
+              <div>
+                <div class="item-title">${safeHtml(item.name || '未命名技术')}</div>
+                <div class="tag-row">
+                  <span class="mini-tag">${completedMode ? '已改进' : '正在改进'}</span>
+                  <span class="mini-tag priority-${item.priority || 'medium'}">${priorityLabel(item.priority)}</span>
+                  <span class="mini-tag progress-${item.progress || 'yellow'}">${progressLabel(item.progress)}</span>
+                  ${item.weeklyFocus && !completedMode ? '<span class="mini-tag focused">本周重点</span>' : ''}
+                </div>
+                <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+              </div>
+              <div class="item-buttons">
+                <button class="small-btn" onclick="window.editTechItem('${item.id}')">编辑</button>
+                <button class="small-btn ${completedMode ? '' : 'success'}" onclick="window.toggleTechStatus('${item.id}','${completedMode ? 'active' : 'completed'}')">${completedMode ? '恢复改进中' : '标记已改进'}</button>
+                <button class="small-btn danger" onclick="window.deleteTechItem('${item.id}')">删除</button>
+              </div>
+            </div>
+            <div class="item-content"><strong>改进目标：</strong><br>${safeHtml(item.goal || '').replace(/\n/g,'<br>')}</div>
+            <div class="item-content"><strong>细节 / 知识点：</strong><br>${safeHtml(item.details || '').replace(/\n/g,'<br>')}</div>
+            <div class="item-content"><strong>训练计划：</strong><br>${safeHtml(item.plan || '').replace(/\n/g,'<br>')}</div>
+          </div>
+        `).join('');
+      };
+      activeList.innerHTML = renderCards(active, false);
+      completedList.innerHTML = renderCards(completed, true);
+    }
+    function resetTechImproveForm() {
+      state.techImprove.editingId = null;
+      document.getElementById('techImprove-name').value = '';
+      document.getElementById('techImprove-status').value = 'active';
+      document.getElementById('techImprove-priority').value = 'medium';
+      document.getElementById('techImprove-progress').value = 'yellow';
+      document.getElementById('techImprove-focus').value = 'false';
+      document.getElementById('techImprove-goal').value = '';
+      document.getElementById('techImprove-details').value = '';
+      document.getElementById('techImprove-plan').value = '';
+      document.getElementById('techImprove-submit').textContent = '添加技术';
+    }
+    function bindTechImprove() {
+      bindAutoSaveText('techImprove', 'techImprove-text', '技术改进总览');
+      if (!document.getElementById('techImprove-submit').dataset.bound) {
+        document.getElementById('techImprove-submit').dataset.bound = '1';
+        document.getElementById('techImprove-submit').addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const name = document.getElementById('techImprove-name').value.trim();
+          const status = document.getElementById('techImprove-status').value;
+          const priority = document.getElementById('techImprove-priority').value;
+          const progress = document.getElementById('techImprove-progress').value;
+          const weeklyFocus = document.getElementById('techImprove-focus').value === 'true';
+          const goal = document.getElementById('techImprove-goal').value.trim();
+          const details = document.getElementById('techImprove-details').value.trim();
+          const plan = document.getElementById('techImprove-plan').value.trim();
+          if (!name && !goal && !details && !plan) return window.showToast('先输入一点内容');
+          try {
+            const payload = { name, status, priority, progress, weeklyFocus, goal, details, plan, updatedAt: Date.now() };
+            if (state.techImprove.editingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "techImprove", "items", state.techImprove.editingId), payload, { merge:true });
+              window.showToast('已更新技术条目');
+            } else {
+              await addDoc(collectionRef(currentUid, 'techImprove', 'items'), { ...payload, createdAt: Date.now() });
+              window.showToast('已添加技术条目');
+            }
+            resetTechImproveForm();
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+        document.getElementById('techImprove-cancel').addEventListener('click', resetTechImproveForm);
+      }
+    }
+    function watchTechImproveItems() {
+      if (!currentUid) return;
+      unsub['items:techImprove'] = onSnapshot(query(collectionRef(currentUid, 'techImprove', 'items'), orderBy('updatedAt','desc')), snapshot => {
+        const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        state.techImprove.items = items;
+        renderTechImprove(items);
+      });
+    }
+    window.editTechItem = function(itemId) {
+      const item = state.techImprove.items.find(x => x.id === itemId);
+      if (!item) return;
+      state.techImprove.editingId = itemId;
+      document.getElementById('techImprove-name').value = item.name || '';
+      document.getElementById('techImprove-status').value = item.status || 'active';
+      document.getElementById('techImprove-priority').value = item.priority || 'medium';
+      document.getElementById('techImprove-progress').value = item.progress || 'yellow';
+      document.getElementById('techImprove-focus').value = item.weeklyFocus ? 'true' : 'false';
+      document.getElementById('techImprove-goal').value = item.goal || '';
+      document.getElementById('techImprove-details').value = item.details || '';
+      document.getElementById('techImprove-plan').value = item.plan || '';
+      document.getElementById('techImprove-submit').textContent = '保存修改';
+      window.showToast('已载入技术条目，可直接修改');
+    };
+    window.toggleTechStatus = async function(itemId, nextStatus) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        const extra = nextStatus === 'completed' ? { weeklyFocus: false } : {};
+        await setDoc(doc(db, "users", currentUid, "modules", "techImprove", "items", itemId), { status: nextStatus, updatedAt: Date.now(), ...extra }, { merge:true });
+        window.showToast(nextStatus === 'completed' ? '已标记为已改进' : '已恢复为改进中');
+      } catch (error) {
+        console.error(error);
+        window.showToast('更新状态失败');
+      }
+    };
+    window.deleteTechItem = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "techImprove", "items", itemId));
+        if (state.techImprove.editingId === itemId) resetTechImproveForm();
+        window.showToast('已删除技术条目');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    function renderTactics(items) {
+      const list = document.getElementById('tactics-list');
+      if (!items.length) { list.innerHTML = '<div class="empty-box">还没有技战术条目，先添加第一条吧。</div>'; return; }
+      list.innerHTML = items.map(item => `
+        <div class="item-card">
+          <div class="item-card-top">
+            <div>
+              <div class="item-title">${safeHtml(item.title || '未命名条目')}</div>
+              <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+            </div>
+            <div class="item-buttons">
+              <button class="small-btn" onclick="window.editTacticsItem('${item.id}')">编辑</button>
+              <button class="small-btn danger" onclick="window.deleteTacticsItem('${item.id}')">删除</button>
+            </div>
+          </div>
+          <div class="item-content"><strong>对手特征 / 场景：</strong><br>${safeHtml(item.opponent || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>技战术方案：</strong><br>${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>复盘备注：</strong><br>${safeHtml(item.review || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('');
+    }
+    function resetTacticsForm() {
+      state.tactics.editingId = null;
+      document.getElementById('tactics-title').value = '';
+      document.getElementById('tactics-opponent').value = '';
+      document.getElementById('tactics-content').value = '';
+      document.getElementById('tactics-review').value = '';
+      document.getElementById('tactics-submit').textContent = '添加条目';
+    }
+    function bindTactics() {
+      bindAutoSaveText('tactics', 'tactics-text', '比赛技战术总览');
+      if (!document.getElementById('tactics-submit').dataset.bound) {
+        document.getElementById('tactics-submit').dataset.bound = '1';
+        document.getElementById('tactics-submit').addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const title = document.getElementById('tactics-title').value.trim();
+          const opponent = document.getElementById('tactics-opponent').value.trim();
+          const content = document.getElementById('tactics-content').value.trim();
+          const review = document.getElementById('tactics-review').value.trim();
+          if (!title && !opponent && !content && !review) return window.showToast('先输入一点内容');
+          try {
+            const payload = { title, opponent, content, review, updatedAt: Date.now() };
+            if (state.tactics.editingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "tactics", "items", state.tactics.editingId), payload, { merge:true });
+              window.showToast('已更新条目');
+            } else {
+              await addDoc(collectionRef(currentUid, 'tactics', 'items'), { ...payload, createdAt: Date.now() });
+              window.showToast('已添加条目');
+            }
+            resetTacticsForm();
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+        document.getElementById('tactics-cancel').addEventListener('click', resetTacticsForm);
+      }
+    }
+    function watchTacticsItems() {
+      if (!currentUid) return;
+      unsub['items:tactics'] = onSnapshot(query(collectionRef(currentUid, 'tactics', 'items'), orderBy('updatedAt','desc')), snapshot => {
+        const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        state.tactics.items = items;
+        renderTactics(items);
+      });
+    }
+    window.editTacticsItem = function(itemId) {
+      const item = state.tactics.items.find(x => x.id === itemId);
+      if (!item) return;
+      state.tactics.editingId = itemId;
+      document.getElementById('tactics-title').value = item.title || '';
+      document.getElementById('tactics-opponent').value = item.opponent || '';
+      document.getElementById('tactics-content').value = item.content || '';
+      document.getElementById('tactics-review').value = item.review || '';
+      document.getElementById('tactics-submit').textContent = '保存修改';
+      window.showToast('已载入技战术条目，可直接修改');
+    };
+    window.deleteTacticsItem = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "tactics", "items", itemId));
+        if (state.tactics.editingId === itemId) resetTacticsForm();
         window.showToast('已删除条目');
       } catch (error) {
         console.error(error);
@@ -946,7 +3109,245 @@
       }
     };
 
-    bindModuleUI();
+    function renderCoachingTech(items) {
+      const list = document.getElementById('coaching-tech-list');
+      if (!items.length) { list.innerHTML = '<div class="empty-box">还没有教学技术条目。</div>'; return; }
+      list.innerHTML = items.map(item => `
+        <div class="item-card">
+          <div class="item-card-top">
+            <div>
+              <div class="item-title">${safeHtml(item.title || '未命名技术')}</div>
+              <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+            </div>
+            <div class="item-buttons">
+              <button class="small-btn" onclick="window.editCoachingTechItem('${item.id}')">编辑</button>
+              <button class="small-btn danger" onclick="window.deleteCoachingTechItem('${item.id}')">删除</button>
+            </div>
+          </div>
+          <div class="item-content"><strong>教学要点：</strong><br>${safeHtml(item.points || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>常见错误：</strong><br>${safeHtml(item.mistakes || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>训练方法：</strong><br>${safeHtml(item.drills || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('');
+    }
+    function renderCoachingStudents(items) {
+      const list = document.getElementById('coaching-student-list');
+      if (!items.length) { list.innerHTML = '<div class="empty-box">还没有学员信息。</div>'; return; }
+      list.innerHTML = items.map(item => `
+        <div class="item-card">
+          <div class="item-card-top">
+            <div>
+              <div class="item-title">${safeHtml(item.name || '未命名学员')}</div>
+              <div class="item-badge">${safeHtml(item.stage || '未填写阶段')}</div>
+              <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+            </div>
+            <div class="item-buttons">
+              <button class="small-btn" onclick="window.editStudentItem('${item.id}')">编辑</button>
+              <button class="small-btn danger" onclick="window.deleteStudentItem('${item.id}')">删除</button>
+            </div>
+          </div>
+          <div class="item-content"><strong>目前问题：</strong><br>${safeHtml(item.issues || '').replace(/\n/g,'<br>')}</div>
+          <div class="item-content"><strong>教学建议：</strong><br>${safeHtml(item.plan || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('');
+    }
+    function resetCoachingTechForm() {
+      state.coaching.techEditingId = null;
+      document.getElementById('coaching-tech-title').value = '';
+      document.getElementById('coaching-tech-points').value = '';
+      document.getElementById('coaching-tech-mistakes').value = '';
+      document.getElementById('coaching-tech-drills').value = '';
+      document.getElementById('coaching-tech-submit').textContent = '添加技术';
+    }
+    function resetCoachingStudentForm() {
+      state.coaching.studentEditingId = null;
+      document.getElementById('coaching-student-name').value = '';
+      document.getElementById('coaching-student-stage').value = '';
+      document.getElementById('coaching-student-issues').value = '';
+      document.getElementById('coaching-student-plan').value = '';
+      document.getElementById('coaching-student-submit').textContent = '添加学员';
+    }
+    function bindCoaching() {
+      bindAutoSaveText('coaching', 'coaching-text', '教练教学总览');
+      if (!document.getElementById('coaching-tech-submit').dataset.bound) {
+        document.getElementById('coaching-tech-submit').dataset.bound = '1';
+        document.getElementById('coaching-tech-submit').addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const title = document.getElementById('coaching-tech-title').value.trim();
+          const points = document.getElementById('coaching-tech-points').value.trim();
+          const mistakes = document.getElementById('coaching-tech-mistakes').value.trim();
+          const drills = document.getElementById('coaching-tech-drills').value.trim();
+          if (!title && !points && !mistakes && !drills) return window.showToast('先输入一点内容');
+          try {
+            const payload = { title, points, mistakes, drills, updatedAt: Date.now() };
+            if (state.coaching.techEditingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "coaching", "tech_items", state.coaching.techEditingId), payload, { merge:true });
+              window.showToast('已更新教学技术');
+            } else {
+              await addDoc(collectionRef(currentUid, 'coaching', 'tech_items'), { ...payload, createdAt: Date.now() });
+              window.showToast('已添加教学技术');
+            }
+            resetCoachingTechForm();
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+        document.getElementById('coaching-tech-cancel').addEventListener('click', resetCoachingTechForm);
+        document.getElementById('coaching-student-submit').addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const name = document.getElementById('coaching-student-name').value.trim();
+          const stage = document.getElementById('coaching-student-stage').value.trim();
+          const issues = document.getElementById('coaching-student-issues').value.trim();
+          const plan = document.getElementById('coaching-student-plan').value.trim();
+          if (!name && !stage && !issues && !plan) return window.showToast('先输入一点内容');
+          try {
+            const payload = { name, stage, issues, plan, updatedAt: Date.now() };
+            if (state.coaching.studentEditingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "coaching", "students", state.coaching.studentEditingId), payload, { merge:true });
+              window.showToast('已更新学员信息');
+            } else {
+              await addDoc(collectionRef(currentUid, 'coaching', 'students'), { ...payload, createdAt: Date.now() });
+              window.showToast('已添加学员');
+            }
+            resetCoachingStudentForm();
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+        document.getElementById('coaching-student-cancel').addEventListener('click', resetCoachingStudentForm);
+      }
+    }
+    function watchCoachingItems() {
+      if (!currentUid) return;
+      unsub['items:coaching:tech'] = onSnapshot(query(collectionRef(currentUid, 'coaching', 'tech_items'), orderBy('updatedAt','desc')), snapshot => {
+        const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        state.coaching.techItems = items;
+        renderCoachingTech(items);
+      });
+      unsub['items:coaching:students'] = onSnapshot(query(collectionRef(currentUid, 'coaching', 'students'), orderBy('updatedAt','desc')), snapshot => {
+        const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        state.coaching.studentItems = items;
+        renderCoachingStudents(items);
+      });
+    }
+    window.editCoachingTechItem = function(itemId) {
+      const item = state.coaching.techItems.find(x => x.id === itemId);
+      if (!item) return;
+      state.coaching.techEditingId = itemId;
+      document.getElementById('coaching-tech-title').value = item.title || '';
+      document.getElementById('coaching-tech-points').value = item.points || '';
+      document.getElementById('coaching-tech-mistakes').value = item.mistakes || '';
+      document.getElementById('coaching-tech-drills').value = item.drills || '';
+      document.getElementById('coaching-tech-submit').textContent = '保存修改';
+      window.showToast('已载入教学技术，可直接修改');
+    };
+    window.deleteCoachingTechItem = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "coaching", "tech_items", itemId));
+        if (state.coaching.techEditingId === itemId) resetCoachingTechForm();
+        window.showToast('已删除教学技术');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+    window.editStudentItem = function(itemId) {
+      const item = state.coaching.studentItems.find(x => x.id === itemId);
+      if (!item) return;
+      state.coaching.studentEditingId = itemId;
+      document.getElementById('coaching-student-name').value = item.name || '';
+      document.getElementById('coaching-student-stage').value = item.stage || '';
+      document.getElementById('coaching-student-issues').value = item.issues || '';
+      document.getElementById('coaching-student-plan').value = item.plan || '';
+      document.getElementById('coaching-student-submit').textContent = '保存修改';
+      window.showToast('已载入学员信息，可直接修改');
+    };
+    window.deleteStudentItem = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "coaching", "students", itemId));
+        if (state.coaching.studentEditingId === itemId) resetCoachingStudentForm();
+        window.showToast('已删除学员信息');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    function bindAllUiOnce() {
+      bindTasks();
+      bindTechImprove();
+      bindTactics();
+      bindCoaching();
+      bindSimpleModule('anki','健身房总内容');
+      bindSimpleModule('paper','论文总内容');
+    }
+    function startWatchers() {
+      watchModuleText('tasks','tasks-text'); watchTaskItems();
+      watchModuleText('techImprove','techImprove-text'); watchTechImproveItems();
+      watchModuleText('tactics','tactics-text'); watchTacticsItems();
+      watchModuleText('coaching','coaching-text'); watchCoachingItems();
+      watchModuleText('anki','anki-text'); watchSimpleModuleItems('anki');
+      watchModuleText('paper','paper-text'); watchSimpleModuleItems('paper');
+      setStatus('状态：已连接云端同步');
+    }
+
+    registerBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      if (!email || !password) { authStatus.textContent = "请先输入邮箱和密码"; return; }
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        authStatus.textContent = "注册成功，已自动登录";
+        if (authModal) authModal.classList.remove('show');
+      } catch (error) {
+        authStatus.textContent = "注册失败：" + error.code + " / " + error.message;
+        console.error("注册失败", error.code, error.message, error);
+      }
+    });
+    loginBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      if (!email || !password) { authStatus.textContent = "请先输入邮箱和密码"; return; }
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        authStatus.textContent = "登录成功";
+        if (authModal) authModal.classList.remove('show');
+      } catch (error) {
+        authStatus.textContent = "登录失败：" + error.code + " / " + error.message;
+        console.error("登录失败", error.code, error.message, error);
+      }
+    });
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        authStatus.textContent = "已退出登录";
+        if (authModal) authModal.classList.remove('show');
+      } catch (error) {
+        authStatus.textContent = "退出失败：" + error.code + " / " + error.message;
+        console.error("退出失败", error.code, error.message, error);
+      }
+    });
+
+    bindAllUiOnce();
+
+    onAuthStateChanged(auth, (user) => {
+      resetWatchers();
+      if (user) {
+        currentUid = user.uid;
+        authStatus.textContent = "当前已登录：" + user.email;
+        console.log("当前用户 UID:", user.uid);
+        startWatchers();
+      } else {
+        currentUid = null;
+        authStatus.textContent = "当前未登录";
+        clearUiOnLogout();
+      }
+    });
+
     console.log("Firebase 已连接成功");
   </script>
 </body>
