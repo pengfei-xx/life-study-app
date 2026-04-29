@@ -307,6 +307,89 @@
       justify-content:center;
       flex-shrink:0;
     }
+    #tasks-today-completed-count{
+      background:#ecfdf5;
+      color:#047857;
+      border:1px solid rgba(16,185,129,.10);
+      min-width:auto;
+      padding:0 9px;
+      cursor:pointer;
+      pointer-events:auto;
+    }
+    #tasks-today-completed-count:hover{
+      transform:translateY(-1px);
+      box-shadow:0 6px 16px rgba(16,185,129,.10);
+    }
+    .today-completed-modal{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.28);
+      backdrop-filter:blur(6px);
+      -webkit-backdrop-filter:blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      z-index:97;
+    }
+    .today-completed-modal.show{
+      display:flex;
+    }
+    .today-completed-card{
+      width:min(560px, calc(100vw - 24px));
+      max-height:min(80vh, 900px);
+      overflow:auto;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 24px 60px rgba(15,23,42,.16);
+      padding:18px;
+    }
+    .today-completed-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .today-completed-title{
+      margin:0;
+      font-size:21px;
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:#111827;
+    }
+    .today-completed-sub{
+      margin:6px 0 0;
+      color:#6b7280;
+      font-size:13px;
+    }
+    .today-completed-list{
+      display:grid;
+      gap:8px;
+    }
+    .today-completed-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.06);
+    }
+    .today-completed-item-title{
+      color:#111827;
+      font-size:14px;
+      font-weight:700;
+      line-height:1.45;
+    }
+    .today-completed-item-time{
+      color:#64748b;
+      font-size:12px;
+      white-space:nowrap;
+      flex-shrink:0;
+    }
     .task-add-btn{
       min-height:30px;
       padding:6px 10px;
@@ -762,6 +845,248 @@
     .month-line-btn.danger{
       color:#b91c1c;
     }
+    .zone-grid{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+    }
+    .zone-card{
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:var(--shadow-soft);
+      min-height:170px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .zone-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(15,23,42,.06);
+    }
+    .zone-head-right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-shrink:0;
+    }
+    .zone-add-btn{
+      min-height:28px;
+      padding:4px 9px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      color:#334155;
+      font-size:12px;
+      font-weight:700;
+      box-shadow:0 4px 10px rgba(15,23,42,.04);
+      cursor:pointer;
+    }
+    .zone-title{
+      font-size:17px;
+      font-weight:700;
+      color:#0f172a;
+    }
+    .zone-count{
+      min-width:24px;
+      height:24px;
+      padding:0 8px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:12px;
+      font-weight:800;
+    }
+    .zone-list{
+      display:grid;
+      gap:8px;
+    }
+    .zone-item{
+      padding:10px 12px;
+      border-radius:14px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 4px 10px rgba(15,23,42,.03);
+    }
+    .zone-item-title{
+      font-size:14px;
+      font-weight:700;
+      color:#111827;
+      line-height:1.45;
+      margin-bottom:6px;
+    }
+    .zone-item-content{
+      color:#475569;
+      font-size:13px;
+      line-height:1.65;
+      white-space:pre-wrap;
+      margin-bottom:8px;
+    }
+    .zone-form-grid{
+      display:grid;
+      gap:16px;
+      margin-top:16px;
+      grid-template-columns:1.05fr .95fr;
+    }
+    .opp-layout{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    .opp-card{
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:var(--shadow-soft);
+      min-height:220px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .opp-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(15,23,42,.06);
+    }
+    .opp-title{
+      font-size:18px;
+      font-weight:700;
+      color:#0f172a;
+    }
+    .opp-add-btn{
+      min-height:30px;
+      padding:5px 10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.08);
+      background:#fff;
+      color:#334155;
+      font-size:12px;
+      font-weight:700;
+      box-shadow:0 4px 10px rgba(15,23,42,.04);
+      cursor:pointer;
+    }
+    .opp-type-list,
+    .opp-tactic-list{
+      display:grid;
+      gap:10px;
+    }
+    .opp-type-item,
+    .opp-tactic-item{
+      padding:12px 14px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 4px 10px rgba(15,23,42,.03);
+    }
+    .opp-type-item.active{
+      border-color:rgba(59,130,246,.28);
+      background:linear-gradient(180deg, rgba(239,246,255,.96) 0%, rgba(255,255,255,.95) 100%);
+      box-shadow:0 8px 18px rgba(59,130,246,.08);
+    }
+    .opp-type-main{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .opp-type-name,
+    .opp-tactic-title{
+      font-size:14px;
+      font-weight:700;
+      color:#111827;
+      line-height:1.45;
+    }
+    .opp-type-meta{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      color:#64748b;
+      font-size:12px;
+    }
+    .opp-badge{
+      min-width:24px;
+      height:24px;
+      padding:0 8px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:12px;
+      font-weight:800;
+    }
+    .opp-empty{
+      padding:18px;
+      border-radius:16px;
+      background:#fff;
+      border:1px dashed rgba(15,23,42,.10);
+      color:#64748b;
+      font-size:13px;
+      text-align:center;
+    }
+    .opp-inline-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    
+    .opp-subtitle{
+      color:#64748b;
+      font-size:13px;
+      line-height:1.7;
+      margin-top:-2px;
+    }
+    
+    .opp-collapsible-toggle{
+      min-height:30px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.06);
+      background:#f8fafc;
+      color:#475569;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .opp-collapsible-toggle.active{
+      background:#eef2ff;
+      color:#4338ca;
+      border-color:rgba(67,56,202,.10);
+    }
+    .opp-collapsible-body{
+      margin-top:8px;
+      padding:12px 14px;
+      color:#475569;
+      font-size:13px;
+      line-height:1.8;
+      white-space:pre-wrap;
+      border:1px solid rgba(15,23,42,.06);
+      background:#fff;
+      border-radius:14px;
+      display:none;
+    }
+    .opp-collapsible-body.show{
+      display:block;
+    }
+
     .gym-plan-card{
       border:1px solid rgba(15,23,42,.06);
       background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(248,250,252,.94) 100%);
@@ -837,6 +1162,77 @@
     }
     .gym-target-input{
       width:100%;
+    }
+    .serves-zone-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:16px;
+      margin-top:16px;
+    }
+    .serve-zone-card{
+      border:1px solid rgba(15,23,42,.06);
+      background:linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(248,250,252,.94) 100%);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:0 8px 20px rgba(15,23,42,.04);
+    }
+    .serve-zone-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .serve-zone-title{
+      margin:0;
+      font-size:16px;
+      font-weight:800;
+      color:#111827;
+      letter-spacing:-.02em;
+    }
+    .serve-zone-add{
+      min-height:30px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px solid rgba(15,23,42,.06);
+      background:#fff;
+      color:#374151;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .serve-zone-select{
+      width:100%;
+    }
+    .serve-item-card{
+      border:1px solid rgba(15,23,42,.06);
+      background:#fff;
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 6px 14px rgba(15,23,42,.03);
+    }
+    .serve-item-title{
+      font-size:14px;
+      font-weight:800;
+      color:#111827;
+      margin-bottom:6px;
+      line-height:1.45;
+    }
+    .serve-item-zone{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:11px;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    @media (max-width: 980px){
+      .serves-zone-grid{
+        grid-template-columns:1fr;
+      }
     }
     .gym-plan-meta{
       display:flex;
@@ -1208,6 +1604,19 @@
     </div>
   </div>
 
+  <div class="today-completed-modal" id="todayCompletedModal">
+    <div class="today-completed-card">
+      <div class="today-completed-head">
+        <div>
+          <h3 class="today-completed-title" id="todayCompletedTitle">今日已完成任务</h3>
+          <p class="today-completed-sub">这里会显示今天已经完成的任务列表。</p>
+        </div>
+        <button class="icon-btn" id="closeTodayCompletedModal" type="button">✕</button>
+      </div>
+      <div class="today-completed-list" id="todayCompletedBody"></div>
+    </div>
+  </div>
+
   <div class="auth-modal" id="authModal">
       <div id="authBox" class="auth-box glass">
         <div class="auth-head">
@@ -1323,6 +1732,7 @@
                 <div class="task-head-left">
                   <h3>今日任务</h3>
                   <span class="task-count" id="tasks-today-count">0</span>
+                  <button type="button" class="task-count today-completed-trigger" id="tasks-today-completed-count" title="点击查看今日完成了哪些任务" >已完成 0</button>
                 </div>
                 <button class="task-add-btn" onclick="window.openTaskEditor('today')">添加</button>
               </div>
@@ -1388,181 +1798,188 @@
           <button class="section-back" onclick="showView('home')">返回上一级</button>
         </div>
         <h2>乒乓球模块</h2>
-        <p>重构成 3 个明确工作区：第一块面向你自己改技术，第二块沉淀比赛技战术，第三块服务你的教学和学员管理。</p>
-        <div class="mini-grid">
+        <p>保留已掌握的发球模块不动，并新增一个“对手接球能力判断”模块，用来整理比赛中的判断信息。</p>
+        <div class="mini-grid" style="grid-template-columns:repeat(3, minmax(0,1fr));">
           <div class="mini-card">
-            <div><div class="mini-icon">🎯</div><h4>技术改进</h4><p>记录想改进和正在改进的技术，补充改进方案、知识点、训练计划，并能把技术标记为已改进。</p></div>
-            <button class="ghost" onclick="showView('techImprove')">进入</button>
+            <div><div class="mini-icon">🏓</div><h4>已掌握的发球</h4><p>继续使用你现在这版的发球分区内容，不做改动。</p></div>
+            <button class="ghost" onclick="showView('servesMastered')">进入</button>
           </div>
           <div class="mini-card">
-            <div><div class="mini-icon">♟️</div><h4>比赛技战术</h4><p>记录自己常用套路、不同对手特征、比赛中有效的应对方案和复盘内容。</p></div>
-            <button class="ghost" onclick="showView('tactics')">进入</button>
+            <div><div class="mini-icon">🎯</div><h4>对手接球能力判断</h4><p>按不同区域记录对手接球能力、习惯和应对思路。</p></div>
+            <button class="ghost" onclick="showView('receiveJudge')">进入</button>
           </div>
           <div class="mini-card">
-            <div><div class="mini-icon">🧑‍🏫</div><h4>教练教学</h4><p>记录教学技术库，也管理学员信息、阶段水平和目前存在的问题。</p></div>
-            <button class="ghost" onclick="showView('coaching')">进入</button>
+            <div><div class="mini-icon">♟️</div><h4>不同类型对手的技战术</h4><p>先整理对手类型，再在每个类型下面记录相应技战术。</p></div>
+            <button class="ghost" onclick="showView('opponentTactics')">进入</button>
           </div>
         </div>
-        <div class="page-actions"><button class="back-btn" onclick="showView('home')">返回首页</button></div>
       </div>
     </section>
 
-    <section class="view" id="techImproveView">
+    
+
+    
+
+    
+
+    <section class="view" id="servesMasteredView">
       <div class="section glass single">
         <div class="section-topbar">
           <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
         </div>
-        <h2>技术改进</h2>
-        <p>把你想改、正在改、已经改好的技术分开管理。每项技术都可以记录改进思路、细节、知识点和训练计划。</p>
-
-        <div class="module-panel module-wide focus-panel weekly-focus-card">
-          <div class="focus-badge">⭐ 本周重点技术</div>
-          <h3>优先处理的一项技术</h3>
-          <p style="margin:0 0 12px;color:#64748b;">这里会优先展示你标记为“本周重点”的技术；如果没有手动标记，就自动显示优先级最高的正在改进技术。</p>
-          <div id="techImprove-weekly-focus"></div>
-        </div>
-
-        <div class="module-panel module-wide focus-panel">
-          <div class="focus-badge">⭐ 当前重点</div>
-          <h3>正在改进的技术</h3>
-          <p style="margin:0 0 12px;color:#64748b;">这一块放在最上面，方便你每次打开页面时第一眼就看到目前真正要改的技术重点。</p>
-          <div id="techImprove-active-list" class="items-list"></div>
-        </div>
-
-        <div class="module-grid">
-          <div class="module-panel">
-            <div class="editor">
-              <div class="label">技术改进总览（自动同步）</div>
-              <textarea id="techImprove-text" placeholder="例如：目前最优先改的是反手拧拉稳定性、正手衔接重心转换、接发抢上手意识……"></textarea>
-              <div class="hint">这里适合写总体方向、阶段重点、近期优先级。</div>
-            </div>
-          </div>
-          <div class="module-panel">
-            <div class="editor">
-              <div class="label">新增 / 编辑技术条目</div>
-              <input id="techImprove-name" class="field" type="text" placeholder="技术名称，例如：反手拧拉、正手前冲弧圈">
-              <div class="form-grid">
-                <select id="techImprove-status" class="field">
-                  <option value="active">正在改进</option>
-                  <option value="completed">已改进</option>
-                </select>
-                <select id="techImprove-priority" class="field">
-                  <option value="high">高优先级</option>
-                  <option value="medium" selected>中优先级</option>
-                  <option value="low">低优先级</option>
-                </select>
-              </div>
-              <div class="form-grid">
-                <select id="techImprove-progress" class="field">
-                  <option value="red">红灯：刚开始调整</option>
-                  <option value="yellow" selected>黄灯：推进中</option>
-                  <option value="green">绿灯：基本稳定</option>
-                </select>
-                <select id="techImprove-focus" class="field">
-                  <option value="false" selected>不是本周重点</option>
-                  <option value="true">设为本周重点</option>
-                </select>
-              </div>
-              <textarea id="techImprove-goal" class="small-textarea" placeholder="改进目标 / 准备怎么改进"></textarea>
-              <textarea id="techImprove-details" class="small-textarea" placeholder="细节、知识点、动作理解"></textarea>
-              <textarea id="techImprove-plan" class="small-textarea" placeholder="训练计划 / 频次 / 方法"></textarea>
-              <div class="item-actions">
-                <button class="primary-btn" id="techImprove-submit">添加技术</button>
-                <button class="btn" id="techImprove-cancel">取消编辑</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="module-panel module-wide archive-panel">
-          <h3>已改进的技术</h3>
-          <p style="margin:0 0 12px;color:#64748b;">这里作为你的技术成果归档区，用来回看已经解决或明显改善的技术。</p>
-          <div id="techImprove-completed-list" class="items-list"></div>
-        </div>
-
-        <div class="page-actions"><button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button><button class="back-btn" onclick="showView('home')">返回首页</button></div>
-      </div>
-    </section>
-
-    <section class="view" id="tacticsView">
-      <div class="section glass single">
-        <div class="section-topbar">
-          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
-        </div>
-        <h2>比赛技战术</h2>
-        <p>这里用来沉淀比赛里真正有效的东西：常用套路、对手特征、适用场景、比赛复盘与调整方向。</p>
-        <div class="module-grid">
-          <div class="module-panel">
-            <div class="editor">
-              <div class="label">技战术总览（自动同步）</div>
-              <textarea id="tactics-text" placeholder="例如：我对下旋短球上手时更适合先控短再上手；遇到快节奏正反手衔接型对手时，先顶住反手位再找正手位……"></textarea>
-              <div class="hint">这里适合写你自己的总策略、比赛原则和常见思路。</div>
-            </div>
-          </div>
-          <div class="module-panel">
-            <div class="editor">
-              <div class="label">新增 / 编辑技战术条目</div>
-              <input id="tactics-title" class="field" type="text" placeholder="标题，例如：对左手横板反手拧拉型选手">
-              <textarea id="tactics-opponent" class="small-textarea" placeholder="对手特征 / 使用场景"></textarea>
-              <textarea id="tactics-content" class="small-textarea" placeholder="常用技战术 / 应对方案"></textarea>
-              <textarea id="tactics-review" class="small-textarea" placeholder="复盘备注 / 下次调整"></textarea>
-              <div class="item-actions">
-                <button class="primary-btn" id="tactics-submit">添加条目</button>
-                <button class="btn" id="tactics-cancel">取消编辑</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="module-panel module-wide"><h3>技战术条目列表</h3><div id="tactics-list" class="items-list"></div></div>
-        <div class="page-actions"><button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button><button class="back-btn" onclick="showView('home')">返回首页</button></div>
-      </div>
-    </section>
-
-    <section class="view" id="coachingView">
-      <div class="section glass single">
-        <div class="section-topbar">
-          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
-        </div>
-        <h2>教练教学</h2>
-        <p>一边沉淀教学技术库，一边管理学员。你可以记录某项技术怎么教，也能添加学员信息、阶段问题和教学建议。</p>
+        <h2>已掌握的发球</h2>
+        <p>这里用来按落点与站位整理你已经掌握的发球类型、旋转特点和实战使用场景。</p>
         <div class="module-panel">
           <div class="editor">
-            <div class="label">教学总览（自动同步）</div>
-            <textarea id="coaching-text" placeholder="例如：本阶段重点先解决学员引拍过大、重心过高、还原慢的问题；教学上先稳动作框架，再上质量……"></textarea>
-            <div class="hint">这里适合写教学总体思路、阶段重点或本周教学安排。</div>
+            <div class="label">发球总览（自动同步）</div>
+            <textarea id="serves-text" placeholder="例如：目前已经较熟练掌握下旋短球、侧下长球、勾手发球等，重点在比赛中根据接发习惯灵活搭配……"></textarea>
+            <div class="hint">这里适合写整体总结、当前最常用的发球组合或后续想加强的方向。</div>
           </div>
         </div>
-        <div class="module-grid">
-          <div class="module-panel">
-            <h3>教学技术库</h3>
-            <div class="editor">
-              <input id="coaching-tech-title" class="field" type="text" placeholder="技术名称，例如：正手攻球、反手拨球">
-              <textarea id="coaching-tech-points" class="small-textarea" placeholder="教学要点 / 核心讲法"></textarea>
-              <textarea id="coaching-tech-mistakes" class="small-textarea" placeholder="常见错误 / 易错点"></textarea>
-              <textarea id="coaching-tech-drills" class="small-textarea" placeholder="训练方法 / 课堂安排"></textarea>
-              <div class="item-actions">
-                <button class="primary-btn" id="coaching-tech-submit">添加技术</button>
-                <button class="btn" id="coaching-tech-cancel">取消编辑</button>
-              </div>
+
+        <div class="serves-zone-grid">
+          <div class="serve-zone-card">
+            <div class="serve-zone-head">
+              <h3 class="serve-zone-title">反手长</h3>
+              <button class="serve-zone-add" onclick="window.setServeZone('backhand_long')">添加</button>
             </div>
-            <div id="coaching-tech-list" class="items-list" style="margin-top:12px;"></div>
+            <div id="serves-backhand_long-list" class="items-list"></div>
           </div>
-          <div class="module-panel">
-            <h3>学员管理</h3>
-            <div class="editor">
-              <input id="coaching-student-name" class="field" type="text" placeholder="学员姓名">
-              <input id="coaching-student-stage" class="field" type="text" placeholder="当前阶段 / 水平 / 年龄等">
-              <textarea id="coaching-student-issues" class="small-textarea" placeholder="目前存在的问题"></textarea>
-              <textarea id="coaching-student-plan" class="small-textarea" placeholder="教学建议 / 改进安排"></textarea>
-              <div class="item-actions">
-                <button class="primary-btn" id="coaching-student-submit">添加学员</button>
-                <button class="btn" id="coaching-student-cancel">取消编辑</button>
-              </div>
+          <div class="serve-zone-card">
+            <div class="serve-zone-head">
+              <h3 class="serve-zone-title">正手长</h3>
+              <button class="serve-zone-add" onclick="window.setServeZone('forehand_long')">添加</button>
             </div>
-            <div id="coaching-student-list" class="items-list" style="margin-top:12px;"></div>
+            <div id="serves-forehand_long-list" class="items-list"></div>
+          </div>
+          <div class="serve-zone-card">
+            <div class="serve-zone-head">
+              <h3 class="serve-zone-title">反手短</h3>
+              <button class="serve-zone-add" onclick="window.setServeZone('backhand_short')">添加</button>
+            </div>
+            <div id="serves-backhand_short-list" class="items-list"></div>
+          </div>
+          <div class="serve-zone-card">
+            <div class="serve-zone-head">
+              <h3 class="serve-zone-title">正手短</h3>
+              <button class="serve-zone-add" onclick="window.setServeZone('forehand_short')">添加</button>
+            </div>
+            <div id="serves-forehand_short-list" class="items-list"></div>
           </div>
         </div>
-        <div class="page-actions"><button class="back-btn" onclick="showView('pingpong')">返回乒乓球</button><button class="back-btn" onclick="showView('home')">返回首页</button></div>
+
+        <div class="module-panel module-wide" style="margin-top:16px;">
+          <div class="editor">
+            <div class="label">新增 / 编辑发球</div>
+            <select id="serves-zone" class="field serve-zone-select">
+              <option value="backhand_long">反手长</option>
+              <option value="forehand_long">正手长</option>
+              <option value="backhand_short">反手短</option>
+              <option value="forehand_short">正手短</option>
+            </select>
+            <input id="serves-title" class="field" type="text" placeholder="发球名称，例如：侧下旋短球">
+            <textarea id="serves-content" class="small-textarea" placeholder="发球特点 / 旋转 / 落点 / 适用场景"></textarea>
+            <div class="item-actions">
+              <button class="primary-btn" id="serves-submit">添加发球</button>
+              <button class="btn" id="serves-cancel">取消编辑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="receiveJudgeView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>对手接球能力判断</h2>
+        <p>按区域记录对手接球能力、稳定性、习惯和你后续的针对思路。</p>
+
+        <div class="module-panel">
+          <div class="editor">
+            <div class="label">判断总览（自动同步）</div>
+            <textarea id="receivejudge-text" placeholder="例如：对手反手短球处理一般，正手长球退台后质量下降，中间短球容易冒高……"></textarea>
+            <div class="hint">这里适合写整体印象、比赛中的判断逻辑、针对策略等。</div>
+          </div>
+        </div>
+
+        <div class="zone-grid">
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">反手长</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-bhLong">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('bhLong')">添加</button></div></div><div id="receivejudge-list-bhLong" class="zone-list"></div></div>
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">反手短</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-bhShort">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('bhShort')">添加</button></div></div><div id="receivejudge-list-bhShort" class="zone-list"></div></div>
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">正手长</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-fhLong">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('fhLong')">添加</button></div></div><div id="receivejudge-list-fhLong" class="zone-list"></div></div>
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">正手短</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-fhShort">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('fhShort')">添加</button></div></div><div id="receivejudge-list-fhShort" class="zone-list"></div></div>
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">中间长</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-middleLong">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('middleLong')">添加</button></div></div><div id="receivejudge-list-middleLong" class="zone-list"></div></div>
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">中间短</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-middleShort">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('middleShort')">添加</button></div></div><div id="receivejudge-list-middleShort" class="zone-list"></div></div>
+          <div class="zone-card"><div class="zone-head"><div class="zone-title">反手小三角</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-bhTriangle">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('bhTriangle')">添加</button></div></div><div id="receivejudge-list-bhTriangle" class="zone-list"></div></div>
+        </div>
+
+        <div class="module-panel module-wide" id="receivejudge-form-panel">
+          <div class="editor">
+            <div class="label">新增 / 编辑判断记录</div>
+            <div class="zone-form-grid">
+              <div class="editor">
+                <input id="receivejudge-title" class="field" type="text" placeholder="标题，例如：对手接反手短球">
+                <select id="receivejudge-zone" class="field">
+                  <option value="bhLong">反手长</option>
+                  <option value="bhShort">反手短</option>
+                  <option value="fhLong">正手长</option>
+                  <option value="fhShort">正手短</option>
+                  <option value="middleLong">中间长</option>
+                  <option value="middleShort">中间短</option>
+                  <option value="bhTriangle">反手小三角</option>
+                </select>
+              </div>
+              <div class="editor">
+                <textarea id="receivejudge-content" class="small-textarea" placeholder="对手接球质量 / 习惯 / 容易失误点 / 你的对应策略"></textarea>
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="primary-btn" id="receivejudge-submit">添加记录</button>
+              <button class="btn" id="receivejudge-cancel">取消编辑</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="opponentTacticsView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>不同类型对手的技战术</h2>
+        <p>这里按对手类型整理。每个类型下面用分项结构记录：主要特点、判断依据、对应技战术、关键落点和临场提醒。</p>
+
+        <div class="module-panel">
+          <div class="editor">
+            <div class="label">总览（自动同步）</div>
+            <textarea id="opponenttactics-text" placeholder="例如：对左手快攻型以压反手长和反手小三角为主；对退台拉冲型优先控制前三板和中间短球……"></textarea>
+            <div class="hint">这里适合写整体分类思路、常用判断方法和总策略。</div>
+          </div>
+        </div>
+
+        <div class="opp-layout">
+          <div class="opp-card">
+            <div class="opp-head">
+              <div class="opp-title">对手类型</div>
+              <button class="opp-add-btn" onclick="window.focusOpponentTypeForm()">添加类型</button>
+            </div>
+            <div class="opp-subtitle">每个类型下面直接写该类型的技战术、发球思路、限制点和临场提醒。</div>
+            <div id="opponent-type-list" class="opp-type-list"></div>
+            <div class="module-panel module-wide" id="opponent-type-form-panel">
+              <div class="editor">
+                <div class="label">新增 / 编辑对手类型</div>
+                <input id="opponent-type-title" class="field" type="text" placeholder="例如：左手快攻型、反手拧拉型、退台相持型">
+                <textarea id="opponent-type-content" class="small-textarea" placeholder="该类型的主要特点 / 判断依据 / 对应技战术 / 关键落点 / 临场提醒"></textarea>
+                <div class="item-actions">
+                  <button class="primary-btn" id="opponent-type-submit">添加类型</button>
+                  <button class="btn" id="opponent-type-cancel">取消编辑</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1607,14 +2024,14 @@
 
   <script>
     let currentView = 'home';
-    const parentMap = { home:'home', tasks:'home', pingpong:'home', techImprove:'pingpong', tactics:'pingpong', coaching:'pingpong', gymcenter:'home', paper:'home' };
+    const parentMap = { home:'home', tasks:'home', pingpong:'home', servesMastered:'pingpong', receiveJudge:'pingpong', opponentTactics:'pingpong', gymcenter:'home', paper:'home' };
     const views = {
       home: document.getElementById('homeView'),
       tasks: document.getElementById('tasksView'),
       pingpong: document.getElementById('pingpongView'),
-      techImprove: document.getElementById('techImproveView'),
-      tactics: document.getElementById('tacticsView'),
-      coaching: document.getElementById('coachingView'),
+      servesMastered: document.getElementById('servesMasteredView'),
+      receiveJudge: document.getElementById('receiveJudgeView'),
+      opponentTactics: document.getElementById('opponentTacticsView'),
       gymcenter: document.getElementById('gymcenterView'),
       paper: document.getElementById('paperView')
     };
@@ -1673,6 +2090,8 @@
     const closeCompletedDayModal = document.getElementById('closeCompletedDayModal');
     const taskEditorModal = document.getElementById('taskEditorModal');
     const closeTaskEditorModal = document.getElementById('closeTaskEditorModal');
+    const todayCompletedModal = document.getElementById('todayCompletedModal');
+    const closeTodayCompletedModal = document.getElementById('closeTodayCompletedModal');
     const gymLogModal = document.getElementById('gymLogModal');
     const closeGymLogModal = document.getElementById('closeGymLogModal');
 
@@ -1752,6 +2171,67 @@
         if (e.target === taskEditorModal) window.closeTaskEditor();
       });
     }
+
+    window.closeTodayCompletedModal = function() {
+      if (todayCompletedModal) todayCompletedModal.classList.remove('show');
+    };
+
+    window.renderTodayCompletedModal = function() {
+      const title = document.getElementById('todayCompletedTitle');
+      const body = document.getElementById('todayCompletedBody');
+      if (!title || !body) return;
+
+      const todayKey = getLocalDateKey();
+      title.textContent = `${todayKey} 已完成任务`;
+
+      const completedItems = Array.isArray(window.todayCompletedItemsCache)
+        ? window.todayCompletedItemsCache
+        : (state.tasks.items || [])
+            .filter(item => item && item.type === 'completed')
+            .filter(item => {
+              const ts = item.completedAt || item.updatedAt || 0;
+              return ts && getLocalDateKey(ts) === todayKey;
+            })
+            .sort((a, b) => (b.completedAt || b.updatedAt || 0) - (a.completedAt || a.updatedAt || 0));
+
+      if (!completedItems.length) {
+        body.innerHTML = '<div class="empty-box">今天还没有已完成任务。</div>';
+      } else {
+        body.innerHTML = completedItems.map(item => `
+          <div class="today-completed-item">
+            <div class="today-completed-item-title">${safeHtml(item.title || '未命名任务')}</div>
+            <div class="today-completed-item-time">${new Date(item.completedAt || item.updatedAt || Date.now()).toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'})}</div>
+          </div>
+        `).join('');
+      }
+    };
+
+    window.openTodayCompletedModal = function() {
+      const modal = document.getElementById('todayCompletedModal');
+      if (!modal) return;
+      window.renderTodayCompletedModal();
+      modal.classList.add('show');
+    };
+
+    if (closeTodayCompletedModal && todayCompletedModal) {
+      closeTodayCompletedModal.addEventListener('click', () => window.closeTodayCompletedModal());
+      todayCompletedModal.addEventListener('click', (e) => {
+        if (e.target === todayCompletedModal) window.closeTodayCompletedModal();
+      });
+    }
+
+    function bindTodayCompletedTrigger() {
+      const trigger = document.getElementById('tasks-today-completed-count');
+      if (!trigger || trigger.dataset.bound === '1') return;
+      trigger.dataset.bound = '1';
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.openTodayCompletedModal();
+      });
+    }
+
+    bindTodayCompletedTrigger();
 
     window.closeGymLog = function() {
       if (gymLogModal) gymLogModal.classList.remove('show');
@@ -1834,17 +2314,20 @@
     const textTimers = {};
     const state = {
       tasks: { items: [], editingId: null },
-      techImprove: { items: [], editingId: null },
-      tactics: { items: [], editingId: null },
-      coaching: { techItems: [], studentItems: [], techEditingId: null, studentEditingId: null },
+      serves: { items: [], editingId: null },
+      receivejudge: { items: [], editingId: null },
+      opponenttactics: { items: [], editingId: null },
       anki: { items: [], editingId: null },
       paper: { items: [], editingId: null }
     };
+
+    window.state = state;
 
     function setStatus(text) { saveStatus.textContent = text; }
     function safeHtml(text) {
       return String(text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     }
+    window.safeHtml = safeHtml;
     function moduleDocRef(uid, key) { return doc(db, "users", uid, "modules", key); }
     function collectionRef(uid, moduleKey, collectionKey="items") { return collection(db, "users", uid, "modules", moduleKey, collectionKey); }
     function resetWatchers() {
@@ -1852,19 +2335,26 @@
       Object.keys(unsub).forEach(k => delete unsub[k]);
     }
     function clearUiOnLogout() {
-      ['tasks-text','techImprove-text','tactics-text','coaching-text','anki-text','paper-text'].forEach(id => {
+      ['tasks-text','serves-text','receivejudge-text','opponenttactics-text','anki-text','paper-text'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
       });
-      renderTasks([]); renderTechImprove([]); renderTactics([]); renderCoachingTech([]); renderCoachingStudents([]); renderSimpleList('anki', []); renderSimpleList('paper', []);
+      renderTasks([]); renderSimpleList('serves', []); renderGroupedModule('receivejudge', []); renderOpponentTypesModule([], []); renderSimpleList('anki', []); renderSimpleList('paper', []);
       const homeYesterdayDate = document.getElementById('homeYesterdayDate');
       const homeYesterdayList = document.getElementById('homeYesterdayList');
       const homeYesterdayProgressDate = document.getElementById('homeYesterdayProgressDate');
       const homeYesterdayProgressList = document.getElementById('homeYesterdayProgressList');
+      const todayCompletedBadge = document.getElementById('tasks-today-completed-count');
       if (homeYesterdayDate) homeYesterdayDate.textContent = '--';
       if (homeYesterdayList) homeYesterdayList.innerHTML = '<div class="empty-box">昨天还没有已完成任务。</div>';
       if (homeYesterdayProgressDate) homeYesterdayProgressDate.textContent = '--';
       if (homeYesterdayProgressList) homeYesterdayProgressList.innerHTML = '<div class="empty-box">昨天还没有推进任务。</div>';
-      resetTasksForm(); resetTechImproveForm(); resetTacticsForm(); resetCoachingTechForm(); resetCoachingStudentForm(); resetSimpleForm('anki'); resetSimpleForm('paper');
+      if (todayCompletedBadge) todayCompletedBadge.textContent = '已完成 0';
+      const todayCompletedBody = document.getElementById('todayCompletedBody');
+      const todayCompletedTitle = document.getElementById('todayCompletedTitle');
+      if (todayCompletedBody) todayCompletedBody.innerHTML = '<div class="empty-box">今天还没有已完成任务。</div>';
+      if (todayCompletedTitle) todayCompletedTitle.textContent = '今日已完成任务';
+      window.todayCompletedItemsCache = [];
+      resetTasksForm(); resetSimpleForm('serves'); resetGroupedForm('receivejudge'); resetOpponentTypeForm(); resetSimpleForm('anki'); resetSimpleForm('paper');
       setStatus('状态：未登录，尚未连接云端');
     }
     function watchModuleText(moduleKey, textareaId) {
@@ -1902,6 +2392,7 @@
       const day = String(d.getDate()).padStart(2, '0');
       return `${y}-${m}-${day}`;
     }
+    window.getLocalDateKey = getLocalDateKey;
 
     function inferTomorrowOriginDate(item) {
       if (item.tomorrowOriginDate) return item.tomorrowOriginDate;
@@ -2148,6 +2639,12 @@
         const el = document.getElementById(id);
         if (el) el.textContent = String(value);
       });
+
+      const todayCompletedEl = document.getElementById('tasks-today-completed-count');
+      if (todayCompletedEl) {
+        todayCompletedEl.textContent = `已完成 ${counts.todayCompleted || 0}`;
+      }
+      if (typeof bindTodayCompletedTrigger === 'function') bindTodayCompletedTrigger();
     }
 
     function getYesterdayDateKey() {
@@ -2338,8 +2835,19 @@
       if (activeProgressList) activeProgressList.innerHTML = renderGroup(activeProgressItems);
       if (completedList) completedList.innerHTML = renderCompletedArchive(completedItems);
 
+      const todayKeyForCompleted = getLocalDateKey();
+      const todayCompletedItems = completedItems
+        .filter(item => {
+          const ts = item.completedAt || item.updatedAt || 0;
+          return ts && getLocalDateKey(ts) === todayKeyForCompleted;
+        })
+        .sort((a, b) => (b.completedAt || b.updatedAt || 0) - (a.completedAt || a.updatedAt || 0));
+
+      window.todayCompletedItemsCache = todayCompletedItems;
+
       updateTaskColumnCounts({
         today: todayItems.length,
+        todayCompleted: todayCompletedItems.length,
         tomorrow: tomorrowItems.length,
         todo: todoItems.length,
         progress: progressItems.length,
@@ -2509,7 +3017,44 @@
 
 function renderSimpleList(moduleKey, items) {
       const list = document.getElementById(`${moduleKey}-list`);
+
+      if (moduleKey === 'serves') {
+        const zoneMap = {
+          backhand_long: { label: '反手长', el: document.getElementById('serves-backhand_long-list') },
+          forehand_long: { label: '正手长', el: document.getElementById('serves-forehand_long-list') },
+          backhand_short: { label: '反手短', el: document.getElementById('serves-backhand_short-list') },
+          forehand_short: { label: '正手短', el: document.getElementById('serves-forehand_short-list') },
+        };
+
+        Object.entries(zoneMap).forEach(([zone, cfg]) => {
+          if (!cfg.el) return;
+          const zoneItems = [...items].filter(item => (item.serveZone || 'backhand_long') === zone).sort((a,b) => (b.updatedAt||0)-(a.updatedAt||0));
+          if (!zoneItems.length) {
+            cfg.el.innerHTML = '<div class="empty-box">这一块还没有发球。</div>';
+            return;
+          }
+          cfg.el.innerHTML = zoneItems.map(item => `
+            <div class="serve-item-card">
+              <div class="item-card-top">
+                <div>
+                  <div class="serve-item-title">${safeHtml(item.title || '未命名发球')}</div>
+                  <div class="serve-item-zone">${cfg.label}</div>
+                  <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+                </div>
+                <div class="item-buttons">
+                  <button class="small-btn" onclick="window.editSimpleItem('serves','${item.id}')">编辑</button>
+                  <button class="small-btn danger" onclick="window.deleteSimpleItem('serves','${item.id}')">删除</button>
+                </div>
+              </div>
+              <div class="item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+            </div>
+          `).join('');
+        });
+        return;
+      }
+
       if (!items.length) {
+        if (!list) return;
         list.innerHTML = moduleKey === 'anki'
           ? '<div class="empty-box">还没有训练计划，先添加第一条吧。</div>'
           : '<div class="empty-box">还没有条目，先添加第一条吧。</div>';
@@ -2578,6 +3123,7 @@ function renderSimpleList(moduleKey, items) {
         return;
       }
 
+      if (!list) return;
       list.innerHTML = items.map(item => `
         <div class="item-card">
           <div class="item-card-top">
@@ -2602,8 +3148,297 @@ function renderSimpleList(moduleKey, items) {
         const targetInput = document.getElementById('anki-target-count');
         if (targetInput) targetInput.value = '';
       }
-      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '添加训练计划' : '添加条目';
+      if (moduleKey === 'serves') {
+        const zoneInput = document.getElementById('serves-zone');
+        if (zoneInput) zoneInput.value = 'backhand_long';
+      }
+      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '添加训练计划' : moduleKey === 'serves' ? '添加发球' : '添加条目';
     }
+    const groupedModuleConfigs = {
+      receivejudge: {
+        textId: 'receivejudge-text',
+        titleId: 'receivejudge-title',
+        contentId: 'receivejudge-content',
+        zoneId: 'receivejudge-zone',
+        submitId: 'receivejudge-submit',
+        cancelId: 'receivejudge-cancel',
+        listPrefix: 'receivejudge-list-',
+        countPrefix: 'receivejudge-count-',
+        emptyText: '该区域还没有判断记录。',
+        addText: '添加记录',
+        saveText: '保存记录',
+        itemName: '记录',
+        zones: {
+          bhLong: '反手长',
+          bhShort: '反手短',
+          fhLong: '正手长',
+          fhShort: '正手短',
+          middleLong: '中间长',
+          middleShort: '中间短',
+          bhTriangle: '反手小三角',
+        },
+      },
+    };
+
+    function renderGroupedModule(moduleKey, items) {
+      const cfg = groupedModuleConfigs[moduleKey];
+      if (!cfg) return;
+      Object.entries(cfg.zones).forEach(([zoneKey]) => {
+        const listEl = document.getElementById(`${cfg.listPrefix}${zoneKey}`);
+        const countEl = document.getElementById(`${cfg.countPrefix}${zoneKey}`);
+        if (!listEl) return;
+
+        const zoneItems = [...(items || [])]
+          .filter(item => item.zone === zoneKey)
+          .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+        if (countEl) countEl.textContent = String(zoneItems.length);
+
+        listEl.innerHTML = zoneItems.length
+          ? zoneItems.map(item => `
+              <div class="zone-item">
+                <div class="zone-item-title">${safeHtml(item.title || `未命名${cfg.itemName}`)}</div>
+                <div class="zone-item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+                <div class="item-buttons">
+                  <button class="small-btn" onclick="window.editGroupedItem('${moduleKey}','${item.id}')">编辑</button>
+                  <button class="small-btn danger" onclick="window.deleteGroupedItem('${moduleKey}','${item.id}')">删除</button>
+                </div>
+              </div>
+            `).join('')
+          : `<div class="empty-box">${cfg.emptyText}</div>`;
+      });
+    }
+
+    function resetGroupedForm(moduleKey) {
+      const cfg = groupedModuleConfigs[moduleKey];
+      if (!cfg) return;
+      state[moduleKey].editingId = null;
+      const titleEl = document.getElementById(cfg.titleId);
+      const contentEl = document.getElementById(cfg.contentId);
+      const zoneEl = document.getElementById(cfg.zoneId);
+      const submitEl = document.getElementById(cfg.submitId);
+      if (titleEl) titleEl.value = '';
+      if (contentEl) contentEl.value = '';
+      if (zoneEl) zoneEl.value = Object.keys(cfg.zones)[0];
+      if (submitEl) submitEl.textContent = cfg.addText;
+    }
+
+    function bindGroupedModule(moduleKey, label) {
+      const cfg = groupedModuleConfigs[moduleKey];
+      if (!cfg) return;
+      bindAutoSaveText(moduleKey, cfg.textId, label);
+
+      const submitEl = document.getElementById(cfg.submitId);
+      if (!submitEl || submitEl.dataset.bound === '1') return;
+      submitEl.dataset.bound = '1';
+
+      submitEl.addEventListener('click', async () => {
+        if (!currentUid) return window.showToast('请先登录');
+        const title = document.getElementById(cfg.titleId).value.trim();
+        const zone = document.getElementById(cfg.zoneId).value;
+        const content = document.getElementById(cfg.contentId).value.trim();
+        if (!title && !content) return window.showToast('先输入一点内容');
+
+        try {
+          const payload = { title, zone, content, updatedAt: Date.now() };
+          if (state[moduleKey].editingId) {
+            await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), payload, { merge:true });
+            window.showToast(`已更新${cfg.itemName}`);
+          } else {
+            await addDoc(collectionRef(currentUid, moduleKey, 'items'), { ...payload, createdAt: Date.now() });
+            window.showToast(`已添加${cfg.itemName}`);
+          }
+          resetGroupedForm(moduleKey);
+        } catch (error) {
+          console.error(error);
+          window.showToast('保存失败');
+        }
+      });
+
+      const cancelEl = document.getElementById(cfg.cancelId);
+      if (cancelEl) cancelEl.addEventListener('click', () => resetGroupedForm(moduleKey));
+    }
+
+    function watchGroupedModuleItems(moduleKey) {
+      if (!currentUid) return;
+      unsub[`items:${moduleKey}`] = onSnapshot(
+        query(collectionRef(currentUid, moduleKey, 'items'), orderBy('updatedAt','desc')),
+        snapshot => {
+          const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+          state[moduleKey].items = items;
+          renderGroupedModule(moduleKey, items);
+        }
+      );
+    }
+
+    window.editGroupedItem = function(moduleKey, itemId) {
+      const cfg = groupedModuleConfigs[moduleKey];
+      const item = (state[moduleKey].items || []).find(x => x.id === itemId);
+      if (!cfg || !item) return;
+      state[moduleKey].editingId = itemId;
+      document.getElementById(cfg.titleId).value = item.title || '';
+      document.getElementById(cfg.contentId).value = item.content || '';
+      document.getElementById(cfg.zoneId).value = item.zone || Object.keys(cfg.zones)[0];
+      document.getElementById(cfg.submitId).textContent = cfg.saveText;
+      window.showToast(`已载入${cfg.itemName}，可直接修改`);
+    };
+
+    window.deleteGroupedItem = async function(moduleKey, itemId) {
+      const cfg = groupedModuleConfigs[moduleKey];
+      if (!cfg || !currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", itemId));
+        if (state[moduleKey].editingId === itemId) resetGroupedForm(moduleKey);
+        window.showToast(`已删除${cfg.itemName}`);
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    window.quickAddReceiveJudge = function(zoneKey) {
+      const zoneEl = document.getElementById('receivejudge-zone');
+      const titleEl = document.getElementById('receivejudge-title');
+      const formPanel = document.getElementById('receivejudge-form-panel');
+      if (typeof resetGroupedForm === 'function') resetGroupedForm('receivejudge');
+      if (zoneEl) zoneEl.value = zoneKey;
+      if (formPanel) formPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => {
+        if (titleEl) titleEl.focus();
+      }, 180);
+    };
+
+    function renderOpponentTypesModule(items) {
+      const typeListEl = document.getElementById('opponent-type-list');
+      const list = [...(items || [])].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      state.opponenttactics.items = list;
+
+      if (!typeListEl) return;
+
+      typeListEl.innerHTML = list.length
+        ? list.map(item => `
+            <div class="opp-type-item">
+              <div class="opp-type-main">
+                <div>
+                  <div class="opp-type-name">${safeHtml(item.title || '未命名类型')}</div>
+                </div>
+                <div class="item-buttons">
+                  <button class="small-btn opp-collapsible-toggle" id="opp-toggle-${item.id}" onclick="window.toggleOpponentTypeContent('${item.id}')">展开</button>
+                  <button class="small-btn" onclick="window.editOpponentType('${item.id}')">编辑</button>
+                  <button class="small-btn danger" onclick="window.deleteOpponentType('${item.id}')">删除</button>
+                </div>
+              </div>
+              <div class="opp-collapsible-body" id="opp-content-${item.id}">${safeHtml(item.content || '').replace(/\n/g,'<br>') || '暂无补充内容'}</div>
+            </div>
+          `).join('')
+        : '<div class="opp-empty">还没有对手类型，先添加一个类型。</div>';
+    }
+
+    function resetOpponentTypeForm() {
+      state.opponenttactics.editingId = null;
+      const titleEl = document.getElementById('opponent-type-title');
+      const contentEl = document.getElementById('opponent-type-content');
+      const submitEl = document.getElementById('opponent-type-submit');
+      if (titleEl) titleEl.value = '';
+      if (contentEl) contentEl.value = '';
+      if (submitEl) submitEl.textContent = '添加类型';
+    }
+
+    window.focusOpponentTypeForm = function() {
+      const panel = document.getElementById('opponent-type-form-panel');
+      const input = document.getElementById('opponent-type-title');
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => { if (input) input.focus(); }, 180);
+    };
+
+    window.toggleOpponentTypeContent = function(typeId) {
+      const body = document.getElementById(`opp-content-${typeId}`);
+      const btn = document.getElementById(`opp-toggle-${typeId}`);
+      if (!body || !btn) return;
+      const isOpen = body.classList.toggle('show');
+      btn.textContent = isOpen ? '收起' : '展开';
+      btn.classList.toggle('active', isOpen);
+    };
+
+    window.editOpponentType = function(typeId) {
+      const item = (state.opponenttactics.items || []).find(x => x.id === typeId);
+      if (!item) return;
+      state.opponenttactics.editingId = typeId;
+      document.getElementById('opponent-type-title').value = item.title || '';
+      document.getElementById('opponent-type-content').value = item.content || '';
+      document.getElementById('opponent-type-submit').textContent = '保存类型';
+      window.focusOpponentTypeForm();
+    };
+
+    window.deleteOpponentType = async function(typeId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "opponenttactics", "types", typeId));
+        if (state.opponenttactics.editingId === typeId) resetOpponentTypeForm();
+        window.showToast('已删除对手类型');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    function bindOpponentTacticsModule() {
+      bindAutoSaveText('opponenttactics', 'opponenttactics-text', '不同类型对手的技战术总览');
+
+      const typeSubmit = document.getElementById('opponent-type-submit');
+      if (typeSubmit && typeSubmit.dataset.bound !== '1') {
+        typeSubmit.dataset.bound = '1';
+        typeSubmit.addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const title = document.getElementById('opponent-type-title').value.trim();
+          const content = document.getElementById('opponent-type-content').value.trim();
+
+          if (!title && !content) {
+            return window.showToast('先输入一点内容');
+          }
+
+          try {
+            const payload = { title, content, updatedAt: Date.now() };
+            if (state.opponenttactics.editingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "opponenttactics", "types", state.opponenttactics.editingId), payload, { merge: true });
+              window.showToast('已更新对手类型');
+            } else {
+              await addDoc(collectionRef(currentUid, 'opponenttactics', 'types'), { ...payload, createdAt: Date.now() });
+              window.showToast('已添加对手类型');
+            }
+            resetOpponentTypeForm();
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+      }
+
+      const typeCancel = document.getElementById('opponent-type-cancel');
+      if (typeCancel && typeCancel.dataset.bound !== '1') {
+        typeCancel.dataset.bound = '1';
+        typeCancel.addEventListener('click', () => resetOpponentTypeForm());
+      }
+    }
+
+    function watchOpponentTacticsModule() {
+      if (!currentUid) return;
+
+      unsub['doc:opponenttactics'] = onSnapshot(moduleDocRef(currentUid, 'opponenttactics'), snap => {
+        const data = snap.exists() ? snap.data() : {};
+        const textarea = document.getElementById('opponenttactics-text');
+        if (textarea && document.activeElement !== textarea) textarea.value = data.text || '';
+      });
+
+      unsub['types:opponenttactics'] = onSnapshot(
+        query(collectionRef(currentUid, 'opponenttactics', 'types'), orderBy('updatedAt', 'desc')),
+        snapshot => {
+          state.opponenttactics.items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          renderOpponentTypesModule(state.opponenttactics.items);
+        }
+      );
+    }
+
     function bindSimpleModule(moduleKey, label) {
       bindAutoSaveText(moduleKey, `${moduleKey}-text`, label);
       if (!document.getElementById(`${moduleKey}-submit`).dataset.bound) {
@@ -2642,6 +3477,16 @@ function renderSimpleList(moduleKey, items) {
                   createdAt: Date.now()
                 });
                 window.showToast('已添加训练计划');
+              }
+            } else if (moduleKey === 'serves') {
+              const serveZone = document.getElementById('serves-zone').value || 'backhand_long';
+              const payload = { title, content, serveZone, updatedAt: Date.now() };
+              if (state[moduleKey].editingId) {
+                await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), payload, { merge:true });
+                window.showToast('已更新发球');
+              } else {
+                await addDoc(collectionRef(currentUid, moduleKey, 'items'), { ...payload, createdAt: Date.now() });
+                window.showToast('已添加发球');
               }
             } else {
               if (state[moduleKey].editingId) {
@@ -2754,15 +3599,26 @@ function renderSimpleList(moduleKey, items) {
         const targetInput = document.getElementById('anki-target-count');
         if (targetInput) targetInput.value = Math.max(1, Number(item.targetCount || 1));
       }
-      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '保存训练计划' : '保存修改';
-      window.showToast(moduleKey === 'anki' ? '已载入训练计划，可直接修改' : '已载入条目，可直接修改');
+      if (moduleKey === 'serves') {
+        const zoneInput = document.getElementById('serves-zone');
+        if (zoneInput) zoneInput.value = item.serveZone || 'backhand_long';
+      }
+      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '保存训练计划' : moduleKey === 'serves' ? '保存发球' : '保存修改';
+      window.showToast(moduleKey === 'anki' ? '已载入训练计划，可直接修改' : moduleKey === 'serves' ? '已载入发球，可直接修改' : '已载入条目，可直接修改');
     };
-    window.deleteSimpleItem = async function(moduleKey, itemId) {
+        window.setServeZone = function(zone) {
+      const zoneInput = document.getElementById('serves-zone');
+      if (zoneInput) zoneInput.value = zone;
+      const titleInput = document.getElementById('serves-title');
+      if (titleInput) titleInput.focus();
+    };
+
+window.deleteSimpleItem = async function(moduleKey, itemId) {
       if (!currentUid) return window.showToast('请先登录');
       try {
         await deleteDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", itemId));
         if (state[moduleKey].editingId === itemId) resetSimpleForm(moduleKey);
-        window.showToast(moduleKey === 'anki' ? '已删除训练计划' : '已删除条目');
+        window.showToast(moduleKey === 'anki' ? '已删除训练计划' : moduleKey === 'serves' ? '已删除发球' : '已删除条目');
       } catch (error) {
         console.error(error);
         window.showToast('删除失败');
@@ -3279,17 +4135,17 @@ function renderSimpleList(moduleKey, items) {
 
     function bindAllUiOnce() {
       bindTasks();
-      bindTechImprove();
-      bindTactics();
-      bindCoaching();
+      bindSimpleModule('serves','已掌握的发球总内容');
+      bindGroupedModule('receivejudge','对手接球能力判断总内容');
+      bindOpponentTacticsModule();
       bindSimpleModule('anki','健身房总内容');
       bindSimpleModule('paper','论文总内容');
     }
     function startWatchers() {
       watchModuleText('tasks','tasks-text'); watchTaskItems();
-      watchModuleText('techImprove','techImprove-text'); watchTechImproveItems();
-      watchModuleText('tactics','tactics-text'); watchTacticsItems();
-      watchModuleText('coaching','coaching-text'); watchCoachingItems();
+      watchModuleText('serves','serves-text'); watchSimpleModuleItems('serves');
+      watchModuleText('receivejudge','receivejudge-text'); watchGroupedModuleItems('receivejudge');
+      watchModuleText('opponenttactics','opponenttactics-text'); watchOpponentTacticsModule();
       watchModuleText('anki','anki-text'); watchSimpleModuleItems('anki');
       watchModuleText('paper','paper-text'); watchSimpleModuleItems('paper');
       setStatus('状态：已连接云端同步');
