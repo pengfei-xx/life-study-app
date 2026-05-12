@@ -506,6 +506,83 @@
       font-weight:700;
       line-height:1;
     }
+    .recent-tech-layout{
+      display:grid;
+      grid-template-columns:1fr .82fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    .recent-tech-stats{
+      display:grid;
+      gap:10px;
+    }
+    .recent-tech-stat{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:var(--shadow-soft);
+    }
+    .recent-tech-stat-label{
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:8px;
+    }
+    .recent-tech-stat-value{
+      font-size:22px;
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:#0f172a;
+    }
+    .recent-tech-empty{
+      padding:16px;
+      border:1px dashed rgba(15,23,42,.12);
+      border-radius:16px;
+      color:var(--muted);
+      font-size:13px;
+      background:rgba(255,255,255,.55);
+    }
+    .recent-tech-groups{
+      display:grid;
+      gap:16px;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      margin-top:16px;
+    }
+    .recent-tech-group{
+      padding:16px;
+      border-radius:22px;
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(15,23,42,.08);
+      box-shadow:var(--shadow-soft);
+      min-height:240px;
+    }
+    .recent-tech-group-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-bottom:10px;
+      margin-bottom:10px;
+      border-bottom:1px solid rgba(15,23,42,.06);
+    }
+    .recent-tech-group-title{
+      font-size:18px;
+      font-weight:700;
+      color:#0f172a;
+    }
+    .recent-tech-group-count{
+      min-width:26px;
+      height:26px;
+      padding:0 8px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background:#eef2ff;
+      color:#4338ca;
+      font-size:12px;
+      font-weight:800;
+    }
 
 
     .task-panel-head{
@@ -1799,7 +1876,7 @@
         </div>
         <h2>乒乓球模块</h2>
         <p>保留已掌握的发球模块不动，并新增一个“对手接球能力判断”模块，用来整理比赛中的判断信息。</p>
-        <div class="mini-grid" style="grid-template-columns:repeat(3, minmax(0,1fr));">
+        <div class="mini-grid" style="grid-template-columns:repeat(4, minmax(0,1fr));">
           <div class="mini-card">
             <div><div class="mini-icon">🏓</div><h4>已掌握的发球</h4><p>继续使用你现在这版的发球分区内容，不做改动。</p></div>
             <button class="ghost" onclick="showView('servesMastered')">进入</button>
@@ -1809,7 +1886,11 @@
             <button class="ghost" onclick="showView('receiveJudge')">进入</button>
           </div>
           <div class="mini-card">
-            <div><div class="mini-icon">♟️</div><h4>不同类型对手的技战术</h4><p>先整理对手类型，再在每个类型下面记录相应技战术。</p></div>
+            <div><div class="mini-icon">🛠️</div><h4>近期想改进的技术</h4><p>记录近期重点想改的技术，并像任务清单一样追踪推进日期。</p></div>
+            <button class="ghost" onclick="showView('recentImprove')">进入</button>
+          </div>
+          <div class="mini-card">
+            <div><div class="mini-icon">♟️</div><h4>不同类型对手的技战术</h4><p>按对手类型整理对应技战术与临场提醒。</p></div>
             <button class="ghost" onclick="showView('opponentTactics')">进入</button>
           </div>
         </div>
@@ -1943,6 +2024,64 @@
       </div>
     </section>
 
+    <section class="view" id="recentImproveView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>近期想改进的技术</h2>
+        <p>把最近一段时间重点想改进的技术放在这里。现在分成两个类型：基本功 和 技战术。每推进一次就点一下“今日已推进”，系统会像任务清单一样记录推进日期。</p>
+
+        <div class="module-panel">
+          <div class="editor">
+            <div class="label">技术总览（自动同步）</div>
+            <textarea id="recentimprove-text" placeholder="例如：近期重点想改发力时机、反手拉下旋、前三板衔接和小球上手质量……"></textarea>
+            <div class="hint">这里适合写这一阶段最想改的技术方向、周期安排和整体提醒。</div>
+          </div>
+        </div>
+
+        <div class="recent-tech-layout">
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">新增 / 编辑技术</div>
+              <input id="recentimprove-title" class="field" type="text" placeholder="技术名称，例如：反手拉下旋">
+              <select id="recentimprove-kind" class="field">
+                <option value="basic">基本功</option>
+                <option value="tactics">技战术</option>
+              </select>
+              <textarea id="recentimprove-content" class="small-textarea" placeholder="当前问题 / 训练重点 / 注意点 / 目标"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="recentimprove-submit" type="button">添加技术</button>
+                <button class="btn" id="recentimprove-cancel">取消编辑</button>
+              </div>
+            </div>
+          </div>
+          <div class="module-panel weekly-focus-card">
+            <div class="focus-badge">推进概览</div>
+            <h3>这一阶段的推进情况</h3>
+            <div id="recentimprove-stats" class="recent-tech-stats"></div>
+          </div>
+        </div>
+
+        <div class="recent-tech-groups">
+          <div class="recent-tech-group">
+            <div class="recent-tech-group-head">
+              <div class="recent-tech-group-title">基本功</div>
+              <div class="recent-tech-group-count" id="recentimprove-basic-count">0</div>
+            </div>
+            <div id="recentimprove-basic-list" class="items-list"></div>
+          </div>
+          <div class="recent-tech-group">
+            <div class="recent-tech-group-head">
+              <div class="recent-tech-group-title">技战术</div>
+              <div class="recent-tech-group-count" id="recentimprove-tactics-count">0</div>
+            </div>
+            <div id="recentimprove-tactics-list" class="items-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="view" id="opponentTacticsView">
       <div class="section glass single">
         <div class="section-topbar">
@@ -2024,13 +2163,14 @@
 
   <script>
     let currentView = 'home';
-    const parentMap = { home:'home', tasks:'home', pingpong:'home', servesMastered:'pingpong', receiveJudge:'pingpong', opponentTactics:'pingpong', gymcenter:'home', paper:'home' };
+    const parentMap = { home:'home', tasks:'home', pingpong:'home', servesMastered:'pingpong', receiveJudge:'pingpong', recentImprove:'pingpong', opponentTactics:'pingpong', gymcenter:'home', paper:'home' };
     const views = {
       home: document.getElementById('homeView'),
       tasks: document.getElementById('tasksView'),
       pingpong: document.getElementById('pingpongView'),
       servesMastered: document.getElementById('servesMasteredView'),
       receiveJudge: document.getElementById('receiveJudgeView'),
+      recentImprove: document.getElementById('recentImproveView'),
       opponentTactics: document.getElementById('opponentTacticsView'),
       gymcenter: document.getElementById('gymcenterView'),
       paper: document.getElementById('paperView')
@@ -2038,10 +2178,11 @@
     const meta = {
       home: { title:'四个主模块', desc:'任务清单、乒乓球、Anki 卡牌、论文。登录同一账号后，所有模块内容都会自动同步。', crumbs:['首页'] },
       tasks: { title:'任务清单', desc:'记录待办事项、近期安排和任务条目。', crumbs:['首页','任务清单'] },
-      pingpong: { title:'乒乓球模块', desc:'围绕技术改进、比赛技战术和教学管理重新设计。', crumbs:['首页','乒乓球'] },
+      pingpong: { title:'乒乓球模块', desc:'围绕发球、对手判断、近期改技术和比赛策略进行整理。', crumbs:['首页','乒乓球'] },
       techImprove: { title:'技术改进', desc:'管理正在改和已经改好的技术，记录方案、知识点和训练计划。', crumbs:['首页','乒乓球','技术改进'] },
       tactics: { title:'比赛技战术', desc:'沉淀常用套路、对手特征、应对方案与复盘。', crumbs:['首页','乒乓球','比赛技战术'] },
       coaching: { title:'教练教学', desc:'记录教学技术库与学员管理信息。', crumbs:['首页','乒乓球','教练教学'] },
+      recentImprove: { title:'近期想改进的技术', desc:'记录近期重点想改的技术，并追踪每天的推进日期。', crumbs:['首页','乒乓球','近期想改进的技术'] },
       gymcenter: { title:'健身房', desc:'记录训练计划和训练条目。', crumbs:['首页','健身房'] },
       paper: { title:'论文', desc:'记录阅读、写作推进和研究条目。', crumbs:['首页','论文'] }
     };
@@ -2316,6 +2457,7 @@
       tasks: { items: [], editingId: null },
       serves: { items: [], editingId: null },
       receivejudge: { items: [], editingId: null },
+      recentimprove: { items: [], editingId: null },
       opponenttactics: { items: [], editingId: null },
       anki: { items: [], editingId: null },
       paper: { items: [], editingId: null }
@@ -2335,10 +2477,10 @@
       Object.keys(unsub).forEach(k => delete unsub[k]);
     }
     function clearUiOnLogout() {
-      ['tasks-text','serves-text','receivejudge-text','opponenttactics-text','anki-text','paper-text'].forEach(id => {
+      ['tasks-text','serves-text','receivejudge-text','recentimprove-text','opponenttactics-text','anki-text','paper-text'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
       });
-      renderTasks([]); renderSimpleList('serves', []); renderGroupedModule('receivejudge', []); renderOpponentTypesModule([], []); renderSimpleList('anki', []); renderSimpleList('paper', []);
+      renderTasks([]); renderSimpleList('serves', []); renderGroupedModule('receivejudge', []); renderRecentImprove([]); renderOpponentTypesModule([], []); renderSimpleList('anki', []); renderSimpleList('paper', []);
       const homeYesterdayDate = document.getElementById('homeYesterdayDate');
       const homeYesterdayList = document.getElementById('homeYesterdayList');
       const homeYesterdayProgressDate = document.getElementById('homeYesterdayProgressDate');
@@ -2354,7 +2496,7 @@
       if (todayCompletedBody) todayCompletedBody.innerHTML = '<div class="empty-box">今天还没有已完成任务。</div>';
       if (todayCompletedTitle) todayCompletedTitle.textContent = '今日已完成任务';
       window.todayCompletedItemsCache = [];
-      resetTasksForm(); resetSimpleForm('serves'); resetGroupedForm('receivejudge'); resetOpponentTypeForm(); resetSimpleForm('anki'); resetSimpleForm('paper');
+      resetTasksForm(); resetSimpleForm('serves'); resetGroupedForm('receivejudge'); resetRecentImproveForm(); resetOpponentTypeForm(); resetSimpleForm('anki'); resetSimpleForm('paper');
       setStatus('状态：未登录，尚未连接云端');
     }
     function watchModuleText(moduleKey, textareaId) {
@@ -3308,6 +3450,220 @@ function renderSimpleList(moduleKey, items) {
       }, 180);
     };
 
+    function renderRecentImprove(items) {
+      const basicListEl = document.getElementById('recentimprove-basic-list');
+      const tacticsListEl = document.getElementById('recentimprove-tactics-list');
+      const statsEl = document.getElementById('recentimprove-stats');
+      const arr = [...(items || [])].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      state.recentimprove.items = arr;
+
+      const basicItems = arr.filter(item => (item.kind || 'basic') === 'basic');
+      const tacticsItems = arr.filter(item => (item.kind || 'basic') === 'tactics');
+
+      if (statsEl) {
+        const today = getTodayDateString();
+        const todayCount = arr.filter(item => Array.isArray(item.progressDates) && item.progressDates.includes(today)).length;
+        const totalPush = arr.reduce((sum, item) => sum + (Array.isArray(item.progressDates) ? item.progressDates.length : 0), 0);
+        statsEl.innerHTML = `
+          <div class="recent-tech-stat">
+            <div class="recent-tech-stat-label">技术数量</div>
+            <div class="recent-tech-stat-value">${arr.length}</div>
+          </div>
+          <div class="recent-tech-stat">
+            <div class="recent-tech-stat-label">累计推进次数</div>
+            <div class="recent-tech-stat-value">${totalPush}</div>
+          </div>
+          <div class="recent-tech-stat">
+            <div class="recent-tech-stat-label">今日已推进技术</div>
+            <div class="recent-tech-stat-value">${todayCount}</div>
+          </div>
+          <div class="recent-tech-stat">
+            <div class="recent-tech-stat-label">基本功 / 技战术</div>
+            <div class="recent-tech-stat-value">${basicItems.length} / ${tacticsItems.length}</div>
+          </div>
+        `;
+      }
+
+      const basicCountEl = document.getElementById('recentimprove-basic-count');
+      const tacticsCountEl = document.getElementById('recentimprove-tactics-count');
+      if (basicCountEl) basicCountEl.textContent = String(basicItems.length);
+      if (tacticsCountEl) tacticsCountEl.textContent = String(tacticsItems.length);
+
+      function renderCards(list) {
+        if (!list.length) {
+          return '<div class="recent-tech-empty">这个类型里还没有技术。</div>';
+        }
+        return list.map(item => {
+          const progressDates = Array.isArray(item.progressDates) ? item.progressDates : [];
+          const recentDates = progressDates.slice(-6).reverse();
+          const kindLabel = (item.kind || 'basic') === 'tactics' ? '技战术' : '基本功';
+          return `
+            <div class="item-card">
+              <div class="item-card-top">
+                <div>
+                  <div class="item-title">${safeHtml(item.title || '未命名技术')}</div>
+                  <div class="item-badge">${kindLabel}</div>
+                  <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+                </div>
+                <div class="item-buttons">
+                  <button class="small-btn success" onclick="window.markRecentImproveProgress('${item.id}')">今日已推进</button>
+                  <button class="small-btn" onclick="window.editRecentImprove('${item.id}')">编辑</button>
+                  <button class="small-btn danger" onclick="window.deleteRecentImprove('${item.id}')">删除</button>
+                </div>
+              </div>
+              <div class="item-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+              <div class="task-progress-visual">
+                <div class="task-progress-top">
+                  <div class="task-progress-count">
+                    <span class="task-progress-number">${progressDates.length}</span>
+                    <span class="task-progress-label">次推进</span>
+                  </div>
+                </div>
+                <div class="task-progress-mini">
+                  ${Array.from({ length: 8 }).map((_, i) => `<span class="task-progress-dot ${i < Math.min(progressDates.length, 8) ? 'filled' : ''}"></span>`).join('')}
+                </div>
+                ${recentDates.length ? `<div class="task-progress-dates">${recentDates.map(date => `<span class="task-progress-date">${safeHtml(date)}</span>`).join('')}</div>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      if (basicListEl) basicListEl.innerHTML = renderCards(basicItems);
+      if (tacticsListEl) tacticsListEl.innerHTML = renderCards(tacticsItems);
+    }
+
+    function resetRecentImproveForm() {
+      state.recentimprove.editingId = null;
+      const titleEl = document.getElementById('recentimprove-title');
+      const kindEl = document.getElementById('recentimprove-kind');
+      const contentEl = document.getElementById('recentimprove-content');
+      const submitEl = document.getElementById('recentimprove-submit');
+      if (titleEl) titleEl.value = '';
+      if (kindEl) kindEl.value = 'basic';
+      if (contentEl) contentEl.value = '';
+      if (submitEl) submitEl.textContent = '添加技术';
+    }
+
+    window.saveRecentImprove = async function() {
+      if (!currentUid) return window.showToast('请先登录');
+
+      const titleEl = document.getElementById('recentimprove-title');
+      const kindEl = document.getElementById('recentimprove-kind');
+      const contentEl = document.getElementById('recentimprove-content');
+
+      const title = titleEl ? titleEl.value.trim() : '';
+      const kind = kindEl ? (kindEl.value || 'basic') : 'basic';
+      const content = contentEl ? contentEl.value.trim() : '';
+
+      if (!title && !content) return window.showToast('先输入一点内容');
+
+      try {
+        const existing = (state.recentimprove.items || []).find(item => item.id === state.recentimprove.editingId);
+        const payload = {
+          title,
+          kind,
+          content,
+          progressDates: Array.isArray(existing && existing.progressDates) ? existing.progressDates : [],
+          updatedAt: Date.now()
+        };
+
+        if (state.recentimprove.editingId) {
+          await setDoc(
+            doc(db, "users", currentUid, "modules", "recentimprove", "items", state.recentimprove.editingId),
+            payload,
+            { merge:true }
+          );
+          window.showToast('已更新技术');
+        } else {
+          await addDoc(
+            collectionRef(currentUid, 'recentimprove', 'items'),
+            { ...payload, createdAt: Date.now() }
+          );
+          window.showToast('已添加技术');
+        }
+
+        resetRecentImproveForm();
+      } catch (error) {
+        console.error(error);
+        window.showToast('保存失败');
+      }
+    };
+
+    function bindRecentImprove() {
+      bindAutoSaveText('recentimprove', 'recentimprove-text', '近期想改进的技术总览');
+      const submitEl = document.getElementById('recentimprove-submit');
+      if (submitEl && submitEl.dataset.bound !== '1') {
+        submitEl.dataset.bound = '1';
+        submitEl.addEventListener('click', async (e) => {
+          e.preventDefault();
+          await window.saveRecentImprove();
+        });
+      }
+
+      const cancelEl = document.getElementById('recentimprove-cancel');
+      if (cancelEl && cancelEl.dataset.bound !== '1') {
+        cancelEl.dataset.bound = '1';
+        cancelEl.addEventListener('click', () => resetRecentImproveForm());
+      }
+    }
+
+    function watchRecentImproveItems() {
+      if (!currentUid) return;
+      unsub['items:recentimprove'] = onSnapshot(
+        query(collectionRef(currentUid, 'recentimprove', 'items'), orderBy('updatedAt','desc')),
+        snapshot => {
+          const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+          state.recentimprove.items = items;
+          renderRecentImprove(items);
+        }
+      );
+    }
+
+    window.editRecentImprove = function(itemId) {
+      const item = (state.recentimprove.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      state.recentimprove.editingId = itemId;
+      document.getElementById('recentimprove-title').value = item.title || '';
+      const kindEl = document.getElementById('recentimprove-kind');
+      if (kindEl) kindEl.value = item.kind || 'basic';
+      document.getElementById('recentimprove-content').value = item.content || '';
+      document.getElementById('recentimprove-submit').textContent = '保存技术';
+      const titleEl = document.getElementById('recentimprove-title');
+      if (titleEl) titleEl.focus();
+    };
+
+    window.deleteRecentImprove = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "recentimprove", "items", itemId));
+        if (state.recentimprove.editingId === itemId) resetRecentImproveForm();
+        window.showToast('已删除技术');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
+    window.markRecentImproveProgress = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      const item = (state.recentimprove.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      const today = getTodayDateString();
+      const dates = Array.isArray(item.progressDates) ? [...item.progressDates] : [];
+      if (!dates.includes(today)) dates.push(today);
+      try {
+        await setDoc(doc(db, "users", currentUid, "modules", "recentimprove", "items", itemId), {
+          progressDates: dates,
+          updatedAt: Date.now()
+        }, { merge: true });
+        window.showToast('已记录今日推进');
+      } catch (error) {
+        console.error(error);
+        window.showToast('记录失败');
+      }
+    };
+
     function renderOpponentTypesModule(items) {
       const typeListEl = document.getElementById('opponent-type-list');
       const list = [...(items || [])].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
@@ -4137,6 +4493,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
       bindTasks();
       bindSimpleModule('serves','已掌握的发球总内容');
       bindGroupedModule('receivejudge','对手接球能力判断总内容');
+      bindRecentImprove();
       bindOpponentTacticsModule();
       bindSimpleModule('anki','健身房总内容');
       bindSimpleModule('paper','论文总内容');
@@ -4145,6 +4502,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
       watchModuleText('tasks','tasks-text'); watchTaskItems();
       watchModuleText('serves','serves-text'); watchSimpleModuleItems('serves');
       watchModuleText('receivejudge','receivejudge-text'); watchGroupedModuleItems('receivejudge');
+      watchModuleText('recentimprove','recentimprove-text'); watchRecentImproveItems();
       watchModuleText('opponenttactics','opponenttactics-text'); watchOpponentTacticsModule();
       watchModuleText('anki','anki-text'); watchSimpleModuleItems('anki');
       watchModuleText('paper','paper-text'); watchSimpleModuleItems('paper');
