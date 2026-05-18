@@ -1876,7 +1876,7 @@
         </div>
         <h2>乒乓球模块</h2>
         <p>保留已掌握的发球模块不动，并新增一个“对手接球能力判断”模块，用来整理比赛中的判断信息。</p>
-        <div class="mini-grid" style="grid-template-columns:repeat(4, minmax(0,1fr));">
+        <div class="mini-grid" style="grid-template-columns:repeat(5, minmax(0,1fr));">
           <div class="mini-card">
             <div><div class="mini-icon">🏓</div><h4>已掌握的发球</h4><p>继续使用你现在这版的发球分区内容，不做改动。</p></div>
             <button class="ghost" onclick="showView('servesMastered')">进入</button>
@@ -1892,6 +1892,10 @@
           <div class="mini-card">
             <div><div class="mini-icon">♟️</div><h4>不同类型对手的技战术</h4><p>按对手类型整理对应技战术与临场提醒。</p></div>
             <button class="ghost" onclick="showView('opponentTactics')">进入</button>
+          </div>
+          <div class="mini-card">
+            <div><div class="mini-icon">🤝</div><h4>球友训练</h4><p>记录常一起训练的球友，并给每位球友添加训练备注。</p></div>
+            <button class="ghost" onclick="showView('ballfriends')">进入</button>
           </div>
         </div>
       </div>
@@ -1909,7 +1913,7 @@
           <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
         </div>
         <h2>已掌握的发球</h2>
-        <p>这里用来按落点与站位整理你已经掌握的发球类型、旋转特点和实战使用场景。</p>
+        <p>这里用来按落点与站位整理你已经掌握的发球类型、旋转特点和实战使用场景，并额外增加“测试中的发球”区域。</p>
         <div class="module-panel">
           <div class="editor">
             <div class="label">发球总览（自动同步）</div>
@@ -1947,6 +1951,13 @@
             </div>
             <div id="serves-forehand_short-list" class="items-list"></div>
           </div>
+          <div class="serve-zone-card">
+            <div class="serve-zone-head">
+              <h3 class="serve-zone-title">测试中的发球</h3>
+              <button class="serve-zone-add" onclick="window.setServeZone('testing')">添加</button>
+            </div>
+            <div id="serves-testing-list" class="items-list"></div>
+          </div>
         </div>
 
         <div class="module-panel module-wide" style="margin-top:16px;">
@@ -1957,6 +1968,7 @@
               <option value="forehand_long">正手长</option>
               <option value="backhand_short">反手短</option>
               <option value="forehand_short">正手短</option>
+              <option value="testing">测试中的发球</option>
             </select>
             <input id="serves-title" class="field" type="text" placeholder="发球名称，例如：侧下旋短球">
             <textarea id="serves-content" class="small-textarea" placeholder="发球特点 / 旋转 / 落点 / 适用场景"></textarea>
@@ -2122,6 +2134,43 @@
       </div>
     </section>
 
+    <section class="view" id="ballfriendsView">
+      <div class="section glass single">
+        <div class="section-topbar">
+          <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
+        </div>
+        <h2>球友训练</h2>
+        <p>这里用来记录常一起训练的球友，以及每位球友的训练特点、相处方式、配合重点和你的备注。</p>
+
+        <div class="module-grid">
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">球友训练总览（自动同步）</div>
+              <textarea id="ballfriends-text" placeholder="例如：目前常一起练的球友主要有两位，一位适合练前三板，一位适合练中远台相持；后续可根据球友特点安排不同训练内容……"></textarea>
+              <div class="hint">这里适合写整体训练安排、分工、常用训练组合等。</div>
+            </div>
+          </div>
+
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">新增 / 编辑球友</div>
+              <input id="ballfriends-title" class="field" type="text" placeholder="球友名称">
+              <textarea id="ballfriends-content" class="small-textarea" placeholder="备注：例如擅长什么、适合练什么、训练时要注意什么"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="ballfriends-submit">添加球友</button>
+                <button class="btn" id="ballfriends-cancel">取消编辑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-panel module-wide">
+          <h3>球友列表</h3>
+          <div id="ballfriends-list" class="items-list"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="view" id="gymcenterView">
       <div class="section glass single">
         <div class="section-topbar">
@@ -2163,7 +2212,7 @@
 
   <script>
     let currentView = 'home';
-    const parentMap = { home:'home', tasks:'home', pingpong:'home', servesMastered:'pingpong', receiveJudge:'pingpong', recentImprove:'pingpong', opponentTactics:'pingpong', gymcenter:'home', paper:'home' };
+    const parentMap = { home:'home', tasks:'home', pingpong:'home', servesMastered:'pingpong', receiveJudge:'pingpong', recentImprove:'pingpong', opponentTactics:'pingpong', ballfriends:'pingpong', gymcenter:'home', paper:'home' };
     const views = {
       home: document.getElementById('homeView'),
       tasks: document.getElementById('tasksView'),
@@ -2172,6 +2221,7 @@
       receiveJudge: document.getElementById('receiveJudgeView'),
       recentImprove: document.getElementById('recentImproveView'),
       opponentTactics: document.getElementById('opponentTacticsView'),
+      ballfriends: document.getElementById('ballfriendsView'),
       gymcenter: document.getElementById('gymcenterView'),
       paper: document.getElementById('paperView')
     };
@@ -2459,6 +2509,7 @@
       receivejudge: { items: [], editingId: null },
       recentimprove: { items: [], editingId: null },
       opponenttactics: { items: [], editingId: null },
+      ballfriends: { items: [], editingId: null },
       anki: { items: [], editingId: null },
       paper: { items: [], editingId: null }
     };
@@ -2477,7 +2528,7 @@
       Object.keys(unsub).forEach(k => delete unsub[k]);
     }
     function clearUiOnLogout() {
-      ['tasks-text','serves-text','receivejudge-text','recentimprove-text','opponenttactics-text','anki-text','paper-text'].forEach(id => {
+      ['tasks-text','serves-text','receivejudge-text','recentimprove-text','opponenttactics-text','ballfriends-text','anki-text','paper-text'].forEach(id => {
         const el = document.getElementById(id); if (el) el.value = '';
       });
       renderTasks([]); renderSimpleList('serves', []); renderGroupedModule('receivejudge', []); renderRecentImprove([]); renderOpponentTypesModule([], []); renderSimpleList('anki', []); renderSimpleList('paper', []);
@@ -2496,7 +2547,7 @@
       if (todayCompletedBody) todayCompletedBody.innerHTML = '<div class="empty-box">今天还没有已完成任务。</div>';
       if (todayCompletedTitle) todayCompletedTitle.textContent = '今日已完成任务';
       window.todayCompletedItemsCache = [];
-      resetTasksForm(); resetSimpleForm('serves'); resetGroupedForm('receivejudge'); resetRecentImproveForm(); resetOpponentTypeForm(); resetSimpleForm('anki'); resetSimpleForm('paper');
+      resetTasksForm(); resetSimpleForm('serves'); resetGroupedForm('receivejudge'); resetRecentImproveForm(); resetOpponentTypeForm(); resetSimpleForm('ballfriends'); resetSimpleForm('anki'); resetSimpleForm('paper');
       setStatus('状态：未登录，尚未连接云端');
     }
     function watchModuleText(moduleKey, textareaId) {
@@ -3166,6 +3217,7 @@ function renderSimpleList(moduleKey, items) {
           forehand_long: { label: '正手长', el: document.getElementById('serves-forehand_long-list') },
           backhand_short: { label: '反手短', el: document.getElementById('serves-backhand_short-list') },
           forehand_short: { label: '正手短', el: document.getElementById('serves-forehand_short-list') },
+          testing: { label: '测试中的发球', el: document.getElementById('serves-testing-list') },
         };
 
         Object.entries(zoneMap).forEach(([zone, cfg]) => {
@@ -3199,7 +3251,9 @@ function renderSimpleList(moduleKey, items) {
         if (!list) return;
         list.innerHTML = moduleKey === 'anki'
           ? '<div class="empty-box">还没有训练计划，先添加第一条吧。</div>'
-          : '<div class="empty-box">还没有条目，先添加第一条吧。</div>';
+          : moduleKey === 'ballfriends'
+            ? '<div class="empty-box">还没有球友，先添加第一位吧。</div>'
+            : '<div class="empty-box">还没有条目，先添加第一条吧。</div>';
         return;
       }
 
@@ -3294,7 +3348,7 @@ function renderSimpleList(moduleKey, items) {
         const zoneInput = document.getElementById('serves-zone');
         if (zoneInput) zoneInput.value = 'backhand_long';
       }
-      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '添加训练计划' : moduleKey === 'serves' ? '添加发球' : '添加条目';
+      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '添加训练计划' : moduleKey === 'serves' ? '添加发球' : moduleKey === 'ballfriends' ? '添加球友' : '添加条目';
     }
     const groupedModuleConfigs = {
       receivejudge: {
@@ -3847,10 +3901,10 @@ function renderSimpleList(moduleKey, items) {
             } else {
               if (state[moduleKey].editingId) {
                 await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), { title, content, updatedAt: Date.now() }, { merge:true });
-                window.showToast('已更新条目');
+                window.showToast(moduleKey === 'ballfriends' ? '已更新球友' : '已更新条目');
               } else {
                 await addDoc(collectionRef(currentUid, moduleKey, 'items'), { title, content, createdAt: Date.now(), updatedAt: Date.now() });
-                window.showToast('已添加条目');
+                window.showToast(moduleKey === 'ballfriends' ? '已添加球友' : '已添加条目');
               }
             }
 
@@ -3959,8 +4013,8 @@ function renderSimpleList(moduleKey, items) {
         const zoneInput = document.getElementById('serves-zone');
         if (zoneInput) zoneInput.value = item.serveZone || 'backhand_long';
       }
-      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '保存训练计划' : moduleKey === 'serves' ? '保存发球' : '保存修改';
-      window.showToast(moduleKey === 'anki' ? '已载入训练计划，可直接修改' : moduleKey === 'serves' ? '已载入发球，可直接修改' : '已载入条目，可直接修改');
+      document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '保存训练计划' : moduleKey === 'serves' ? '保存发球' : moduleKey === 'ballfriends' ? '保存球友' : '保存修改';
+      window.showToast(moduleKey === 'anki' ? '已载入训练计划，可直接修改' : moduleKey === 'serves' ? '已载入发球，可直接修改' : moduleKey === 'ballfriends' ? '已载入球友，可直接修改' : '已载入条目，可直接修改');
     };
         window.setServeZone = function(zone) {
       const zoneInput = document.getElementById('serves-zone');
@@ -3974,7 +4028,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
       try {
         await deleteDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", itemId));
         if (state[moduleKey].editingId === itemId) resetSimpleForm(moduleKey);
-        window.showToast(moduleKey === 'anki' ? '已删除训练计划' : moduleKey === 'serves' ? '已删除发球' : '已删除条目');
+        window.showToast(moduleKey === 'anki' ? '已删除训练计划' : moduleKey === 'serves' ? '已删除发球' : moduleKey === 'ballfriends' ? '已删除球友' : '已删除条目');
       } catch (error) {
         console.error(error);
         window.showToast('删除失败');
@@ -4276,10 +4330,10 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
             const payload = { title, opponent, content, review, updatedAt: Date.now() };
             if (state.tactics.editingId) {
               await setDoc(doc(db, "users", currentUid, "modules", "tactics", "items", state.tactics.editingId), payload, { merge:true });
-              window.showToast('已更新条目');
+              window.showToast(moduleKey === 'ballfriends' ? '已更新球友' : '已更新条目');
             } else {
               await addDoc(collectionRef(currentUid, 'tactics', 'items'), { ...payload, createdAt: Date.now() });
-              window.showToast('已添加条目');
+              window.showToast(moduleKey === 'ballfriends' ? '已添加球友' : '已添加条目');
             }
             resetTacticsForm();
           } catch (error) {
@@ -4495,6 +4549,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
       bindGroupedModule('receivejudge','对手接球能力判断总内容');
       bindRecentImprove();
       bindOpponentTacticsModule();
+      bindSimpleModule('ballfriends','球友训练总览');
       bindSimpleModule('anki','健身房总内容');
       bindSimpleModule('paper','论文总内容');
     }
@@ -4504,6 +4559,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
       watchModuleText('receivejudge','receivejudge-text'); watchGroupedModuleItems('receivejudge');
       watchModuleText('recentimprove','recentimprove-text'); watchRecentImproveItems();
       watchModuleText('opponenttactics','opponenttactics-text'); watchOpponentTacticsModule();
+      watchModuleText('ballfriends','ballfriends-text'); watchSimpleModuleItems('ballfriends');
       watchModuleText('anki','anki-text'); watchSimpleModuleItems('anki');
       watchModuleText('paper','paper-text'); watchSimpleModuleItems('paper');
       setStatus('状态：已连接云端同步');
