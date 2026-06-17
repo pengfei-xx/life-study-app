@@ -1014,6 +1014,30 @@
       margin-top:16px;
       grid-template-columns:1.05fr .95fr;
     }
+    .receive-custom-list{
+      display:grid;
+      gap:12px;
+    }
+    .receive-custom-card{
+      padding:14px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,.06);
+      box-shadow:0 4px 10px rgba(15,23,42,.03);
+    }
+    .receive-custom-title{
+      font-size:15px;
+      font-weight:700;
+      color:#111827;
+      line-height:1.45;
+    }
+    .receive-custom-content{
+      color:#475569;
+      font-size:13px;
+      line-height:1.8;
+      white-space:pre-wrap;
+      margin-top:10px;
+    }
     .opp-layout{
       display:grid;
       grid-template-columns:1fr;
@@ -1306,6 +1330,50 @@
       font-weight:700;
       margin-bottom:8px;
     }
+    .serve-drop-zone{
+      min-height:92px;
+      border-radius:16px;
+      transition:.18s ease;
+      padding:2px;
+    }
+    .serve-drop-zone.drop-active{
+      background:rgba(219,234,254,.30);
+      box-shadow:inset 0 0 0 1.5px rgba(59,130,246,.18);
+    }
+    .serve-draggable{
+      cursor:grab;
+    }
+    .serve-draggable.dragging{
+      opacity:.58;
+      transform:scale(.985);
+      cursor:grabbing;
+    }
+    .serve-draggable.drop-before{
+      box-shadow:inset 0 3px 0 rgba(59,130,246,.9), 0 6px 14px rgba(15,23,42,.03);
+    }
+    .serve-draggable.drop-after{
+      box-shadow:inset 0 -3px 0 rgba(59,130,246,.9), 0 6px 14px rgba(15,23,42,.03);
+    }
+    .serve-sort-badge{
+      width:22px;
+      height:22px;
+      border-radius:999px;
+      background:#f3f4f6;
+      color:#6b7280;
+      font-size:11px;
+      font-weight:700;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      margin-top:1px;
+      border:1px solid rgba(15,23,42,.04);
+    }
+    .serve-title-row{
+      display:flex;
+      align-items:flex-start;
+      gap:8px;
+    }
     @media (max-width: 980px){
       .serves-zone-grid{
         grid-template-columns:1fr;
@@ -1327,6 +1395,66 @@
       color:#475569;
       font-size:12px;
       font-weight:700;
+    }
+    .gym-history{
+      margin-top:10px;
+      border-radius:14px;
+      border:1px solid rgba(15,23,42,.06);
+      background:#fff;
+      overflow:hidden;
+    }
+    .gym-history summary{
+      list-style:none;
+      cursor:pointer;
+      padding:10px 12px;
+      color:#334155;
+      font-size:13px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+    }
+    .gym-history summary::-webkit-details-marker{
+      display:none;
+    }
+    .gym-history summary::before{
+      content:"▸";
+      color:#64748b;
+      font-size:11px;
+      transition:.18s ease;
+    }
+    .gym-history[open] summary::before{
+      transform:rotate(90deg);
+    }
+    .gym-history-list{
+      display:grid;
+      gap:8px;
+      padding:0 12px 12px;
+    }
+    .gym-history-item{
+      padding:10px 12px;
+      border-radius:12px;
+      background:#f8fafc;
+      border:1px solid rgba(15,23,42,.05);
+    }
+    .gym-history-date{
+      color:#64748b;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    .gym-history-change{
+      color:#111827;
+      font-size:13px;
+      line-height:1.65;
+      font-weight:700;
+    }
+    .gym-history-sub{
+      color:#64748b;
+      font-size:12px;
+      line-height:1.6;
+      margin-top:4px;
     }
     .gym-log-modal{
       position:fixed;
@@ -1875,14 +2003,14 @@
           <button class="section-back" onclick="showView('home')">返回上一级</button>
         </div>
         <h2>乒乓球模块</h2>
-        <p>保留已掌握的发球模块不动，并新增一个“对手接球能力判断”模块，用来整理比赛中的判断信息。</p>
+        <p>保留已掌握的发球模块不动，并新增一个“接球方式”模块，用来整理比赛中的判断信息。</p>
         <div class="mini-grid" style="grid-template-columns:repeat(5, minmax(0,1fr));">
           <div class="mini-card">
             <div><div class="mini-icon">🏓</div><h4>已掌握的发球</h4><p>继续使用你现在这版的发球分区内容，不做改动。</p></div>
             <button class="ghost" onclick="showView('servesMastered')">进入</button>
           </div>
           <div class="mini-card">
-            <div><div class="mini-icon">🎯</div><h4>对手接球能力判断</h4><p>按不同区域记录对手接球能力、习惯和应对思路。</p></div>
+            <div><div class="mini-icon">🎯</div><h4>接球方式</h4><p>按不同区域记录接球方式、习惯和应对思路。</p></div>
             <button class="ghost" onclick="showView('receiveJudge')">进入</button>
           </div>
           <div class="mini-card">
@@ -1928,35 +2056,35 @@
               <h3 class="serve-zone-title">反手长</h3>
               <button class="serve-zone-add" onclick="window.setServeZone('backhand_long')">添加</button>
             </div>
-            <div id="serves-backhand_long-list" class="items-list"></div>
+            <div id="serves-backhand_long-list" class="items-list serve-drop-zone" data-serve-zone="backhand_long"></div>
           </div>
           <div class="serve-zone-card">
             <div class="serve-zone-head">
               <h3 class="serve-zone-title">正手长</h3>
               <button class="serve-zone-add" onclick="window.setServeZone('forehand_long')">添加</button>
             </div>
-            <div id="serves-forehand_long-list" class="items-list"></div>
+            <div id="serves-forehand_long-list" class="items-list serve-drop-zone" data-serve-zone="forehand_long"></div>
           </div>
           <div class="serve-zone-card">
             <div class="serve-zone-head">
               <h3 class="serve-zone-title">反手短</h3>
               <button class="serve-zone-add" onclick="window.setServeZone('backhand_short')">添加</button>
             </div>
-            <div id="serves-backhand_short-list" class="items-list"></div>
+            <div id="serves-backhand_short-list" class="items-list serve-drop-zone" data-serve-zone="backhand_short"></div>
           </div>
           <div class="serve-zone-card">
             <div class="serve-zone-head">
               <h3 class="serve-zone-title">正手短</h3>
               <button class="serve-zone-add" onclick="window.setServeZone('forehand_short')">添加</button>
             </div>
-            <div id="serves-forehand_short-list" class="items-list"></div>
+            <div id="serves-forehand_short-list" class="items-list serve-drop-zone" data-serve-zone="forehand_short"></div>
           </div>
           <div class="serve-zone-card">
             <div class="serve-zone-head">
               <h3 class="serve-zone-title">测试中的发球</h3>
               <button class="serve-zone-add" onclick="window.setServeZone('testing')">添加</button>
             </div>
-            <div id="serves-testing-list" class="items-list"></div>
+            <div id="serves-testing-list" class="items-list serve-drop-zone" data-serve-zone="testing"></div>
           </div>
         </div>
 
@@ -1986,52 +2114,40 @@
         <div class="section-topbar">
           <button class="section-back" onclick="showView('pingpong')">返回上一级</button>
         </div>
-        <h2>对手接球能力判断</h2>
-        <p>按区域记录对手接球能力、稳定性、习惯和你后续的针对思路。</p>
+        <h2>接球方式</h2>
+        <p>这里不再固定成几个预设区域，而是改成你自己定义分类名称。你可以按自己的习惯添加，比如：搓接、拧拉、挑打、摆短，或者按你自己的理解方式命名。</p>
 
         <div class="module-panel">
           <div class="editor">
-            <div class="label">判断总览（自动同步）</div>
-            <textarea id="receivejudge-text" placeholder="例如：对手反手短球处理一般，正手长球退台后质量下降，中间短球容易冒高……"></textarea>
-            <div class="hint">这里适合写整体印象、比赛中的判断逻辑、针对策略等。</div>
+            <div class="label">接球方式总览（自动同步）</div>
+            <textarea id="receivejudge-text" placeholder="例如：目前想重点记录拧拉、摆短、反撕、过渡搓几种接球方式，也可以按自己习惯继续细分……"></textarea>
+            <div class="hint">这里适合写整体印象、接球方式特点和针对策略等。</div>
           </div>
         </div>
 
-        <div class="zone-grid">
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">反手长</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-bhLong">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('bhLong')">添加</button></div></div><div id="receivejudge-list-bhLong" class="zone-list"></div></div>
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">反手短</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-bhShort">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('bhShort')">添加</button></div></div><div id="receivejudge-list-bhShort" class="zone-list"></div></div>
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">正手长</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-fhLong">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('fhLong')">添加</button></div></div><div id="receivejudge-list-fhLong" class="zone-list"></div></div>
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">正手短</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-fhShort">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('fhShort')">添加</button></div></div><div id="receivejudge-list-fhShort" class="zone-list"></div></div>
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">中间长</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-middleLong">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('middleLong')">添加</button></div></div><div id="receivejudge-list-middleLong" class="zone-list"></div></div>
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">中间短</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-middleShort">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('middleShort')">添加</button></div></div><div id="receivejudge-list-middleShort" class="zone-list"></div></div>
-          <div class="zone-card"><div class="zone-head"><div class="zone-title">反手小三角</div><div class="zone-head-right"><span class="zone-count" id="receivejudge-count-bhTriangle">0</span><button class="zone-add-btn" onclick="window.quickAddReceiveJudge('bhTriangle')">添加</button></div></div><div id="receivejudge-list-bhTriangle" class="zone-list"></div></div>
-        </div>
-
-        <div class="module-panel module-wide" id="receivejudge-form-panel">
-          <div class="editor">
-            <div class="label">新增 / 编辑判断记录</div>
-            <div class="zone-form-grid">
-              <div class="editor">
-                <input id="receivejudge-title" class="field" type="text" placeholder="标题，例如：对手接反手短球">
-                <select id="receivejudge-zone" class="field">
-                  <option value="bhLong">反手长</option>
-                  <option value="bhShort">反手短</option>
-                  <option value="fhLong">正手长</option>
-                  <option value="fhShort">正手短</option>
-                  <option value="middleLong">中间长</option>
-                  <option value="middleShort">中间短</option>
-                  <option value="bhTriangle">反手小三角</option>
-                </select>
+        <div class="module-grid">
+          <div class="module-panel">
+            <div class="editor">
+              <div class="label">新增 / 编辑自定义分类</div>
+              <input id="receivejudge-title" class="field" type="text" placeholder="分类名称，例如：摆短、拧拉、挑打">
+              <textarea id="receivejudge-content" class="small-textarea" placeholder="补充内容：特点 / 使用场景 / 判断 / 注意点"></textarea>
+              <div class="item-actions">
+                <button class="primary-btn" id="receivejudge-submit">添加分类</button>
+                <button class="btn" id="receivejudge-cancel">取消编辑</button>
               </div>
-              <div class="editor">
-                <textarea id="receivejudge-content" class="small-textarea" placeholder="对手接球质量 / 习惯 / 容易失误点 / 你的对应策略"></textarea>
-              </div>
-            </div>
-            <div class="item-actions">
-              <button class="primary-btn" id="receivejudge-submit">添加记录</button>
-              <button class="btn" id="receivejudge-cancel">取消编辑</button>
             </div>
           </div>
+
+          <div class="module-panel weekly-focus-card">
+            <div class="focus-badge">分类概览</div>
+            <h3>当前接球方式分类</h3>
+            <div id="receivejudge-stats" class="recent-tech-stats"></div>
+          </div>
+        </div>
+
+        <div class="module-panel module-wide">
+          <h3>自定义分类列表</h3>
+          <div id="receivejudge-custom-list" class="receive-custom-list"></div>
         </div>
       </div>
     </section>
@@ -2547,7 +2663,7 @@
       if (todayCompletedBody) todayCompletedBody.innerHTML = '<div class="empty-box">今天还没有已完成任务。</div>';
       if (todayCompletedTitle) todayCompletedTitle.textContent = '今日已完成任务';
       window.todayCompletedItemsCache = [];
-      resetTasksForm(); resetSimpleForm('serves'); resetGroupedForm('receivejudge'); resetRecentImproveForm(); resetOpponentTypeForm(); resetSimpleForm('ballfriends'); resetSimpleForm('anki'); resetSimpleForm('paper');
+      resetTasksForm(); resetSimpleForm('serves'); resetReceiveJudgeForm(); resetRecentImproveForm(); resetOpponentTypeForm(); resetSimpleForm('ballfriends'); resetSimpleForm('anki'); resetSimpleForm('paper');
       setStatus('状态：未登录，尚未连接云端');
     }
     function watchModuleText(moduleKey, textareaId) {
@@ -3208,10 +3324,167 @@
       }
     };
 
-function renderSimpleList(moduleKey, items) {
+function getServePositionValue(item) {
+      const n = Number(item && item.servePosition);
+      return Number.isFinite(n) ? n : Number.MAX_SAFE_INTEGER;
+    }
+
+    function sortServeItems(arr) {
+      return [...(arr || [])].sort((a, b) => {
+        const pa = getServePositionValue(a);
+        const pb = getServePositionValue(b);
+        if (pa !== pb) return pa - pb;
+        return (a.createdAt || a.updatedAt || 0) - (b.createdAt || b.updatedAt || 0);
+      });
+    }
+
+    function getNextServePosition(zone, items, excludeId = '') {
+      const sameZone = (items || []).filter(item => (item.serveZone || 'backhand_long') === zone && item.id !== excludeId);
+      if (!sameZone.length) return 1;
+      const maxPos = Math.max(...sameZone.map(getServePositionValue).map(v => Number.isFinite(v) ? v : 0));
+      return (Number.isFinite(maxPos) ? maxPos : 0) + 1;
+    }
+
+    function clearServeDropIndicators() {
+      document.querySelectorAll('.serve-draggable').forEach(card => {
+        card.classList.remove('drop-before', 'drop-after');
+      });
+    }
+
+    async function reorderServeItem(draggedId, targetZone, targetId = '', insertAfter = false) {
+      if (!currentUid || !draggedId || !targetZone) return;
+
+      const items = [...(state.serves.items || [])];
+      const dragged = items.find(item => item.id === draggedId);
+      if (!dragged) return;
+
+      const sourceZone = dragged.serveZone || 'backhand_long';
+      let sourceList = sortServeItems(items.filter(item => (item.serveZone || 'backhand_long') === sourceZone && item.id !== draggedId));
+      let targetList = sourceZone === targetZone
+        ? sourceList
+        : sortServeItems(items.filter(item => (item.serveZone || 'backhand_long') === targetZone && item.id !== draggedId));
+
+      let insertIndex = targetList.length;
+      if (targetId) {
+        const targetIndex = targetList.findIndex(item => item.id === targetId);
+        if (targetIndex >= 0) insertIndex = insertAfter ? targetIndex + 1 : targetIndex;
+      }
+
+      const draggedClone = { ...dragged, serveZone: targetZone };
+      targetList.splice(insertIndex, 0, draggedClone);
+
+      const updates = [];
+
+      if (sourceZone === targetZone) {
+        targetList.forEach((item, idx) => {
+          updates.push({ id: item.id, data: { servePosition: idx + 1 } });
+        });
+      } else {
+        sourceList.forEach((item, idx) => {
+          updates.push({ id: item.id, data: { servePosition: idx + 1 } });
+        });
+        targetList.forEach((item, idx) => {
+          if (item.id === draggedId) {
+            updates.push({ id: item.id, data: { serveZone: targetZone, servePosition: idx + 1, updatedAt: Date.now() } });
+          } else {
+            updates.push({ id: item.id, data: { servePosition: idx + 1 } });
+          }
+        });
+      }
+
+      try {
+        await Promise.all(
+          updates.map(update =>
+            setDoc(
+              doc(db, "users", currentUid, "modules", "serves", "items", update.id),
+              update.data,
+              { merge: true }
+            )
+          )
+        );
+        window.showToast(sourceZone === targetZone ? '已调整发球顺序' : '已移动发球区域');
+      } catch (error) {
+        console.error(error);
+        window.showToast('拖动发球失败');
+      }
+    }
+
+    function bindServeDropZones() {
+      const serveView = document.getElementById('servesMasteredView');
+      if (!serveView || serveView.dataset.dragBound === '1') return;
+      serveView.dataset.dragBound = '1';
+
+      document.querySelectorAll('.serve-drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        });
+        zone.addEventListener('dragenter', (e) => {
+          e.preventDefault();
+          zone.classList.add('drop-active');
+        });
+        zone.addEventListener('dragleave', (e) => {
+          if (!zone.contains(e.relatedTarget)) zone.classList.remove('drop-active');
+        });
+        zone.addEventListener('drop', async (e) => {
+          e.preventDefault();
+          zone.classList.remove('drop-active');
+          clearServeDropIndicators();
+          const itemId = window.currentDraggedServeId || (e.dataTransfer ? e.dataTransfer.getData('text/plain') : '');
+          const targetZone = zone.dataset.serveZone;
+          if (!itemId || !targetZone) return;
+          await reorderServeItem(itemId, targetZone);
+        });
+      });
+    }
+
+    window.startServeDrag = function(event, itemId) {
+      window.currentDraggedServeId = itemId;
+      if (event.dataTransfer) {
+        event.dataTransfer.setData('text/plain', itemId);
+        event.dataTransfer.effectAllowed = 'move';
+      }
+      if (event.currentTarget) event.currentTarget.classList.add('dragging');
+    };
+
+    window.endServeDrag = function(event) {
+      window.currentDraggedServeId = null;
+      if (event.currentTarget) event.currentTarget.classList.remove('dragging');
+      document.querySelectorAll('.serve-drop-zone').forEach(zone => zone.classList.remove('drop-active'));
+      clearServeDropIndicators();
+    };
+
+    window.handleServeCardDragOver = function(event) {
+      event.preventDefault();
+      const card = event.currentTarget;
+      const rect = card.getBoundingClientRect();
+      const after = event.clientY > rect.top + rect.height / 2;
+      clearServeDropIndicators();
+      card.classList.add(after ? 'drop-after' : 'drop-before');
+    };
+
+    window.dropServeOnCard = async function(event, targetItemId) {
+      event.preventDefault();
+      event.stopPropagation();
+      const itemId = window.currentDraggedServeId || (event.dataTransfer ? event.dataTransfer.getData('text/plain') : '');
+      if (!itemId || !targetItemId) return;
+
+      const targetItem = (state.serves.items || []).find(item => item.id === targetItemId);
+      if (!targetItem) return;
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const insertAfter = event.clientY > rect.top + rect.height / 2;
+
+      clearServeDropIndicators();
+      await reorderServeItem(itemId, targetItem.serveZone || 'backhand_long', targetItemId, insertAfter);
+    };
+
+    function renderSimpleList(moduleKey, items) {
       const list = document.getElementById(`${moduleKey}-list`);
 
       if (moduleKey === 'serves') {
+        bindServeDropZones();
+
         const zoneMap = {
           backhand_long: { label: '反手长', el: document.getElementById('serves-backhand_long-list') },
           forehand_long: { label: '正手长', el: document.getElementById('serves-forehand_long-list') },
@@ -3222,16 +3495,24 @@ function renderSimpleList(moduleKey, items) {
 
         Object.entries(zoneMap).forEach(([zone, cfg]) => {
           if (!cfg.el) return;
-          const zoneItems = [...items].filter(item => (item.serveZone || 'backhand_long') === zone).sort((a,b) => (b.updatedAt||0)-(a.updatedAt||0));
+          const zoneItems = sortServeItems(items.filter(item => (item.serveZone || 'backhand_long') === zone));
           if (!zoneItems.length) {
             cfg.el.innerHTML = '<div class="empty-box">这一块还没有发球。</div>';
             return;
           }
-          cfg.el.innerHTML = zoneItems.map(item => `
-            <div class="serve-item-card">
+          cfg.el.innerHTML = zoneItems.map((item, index) => `
+            <div class="serve-item-card serve-draggable"
+                 draggable="true"
+                 ondragstart="window.startServeDrag(event, '${item.id}')"
+                 ondragend="window.endServeDrag(event)"
+                 ondragover="window.handleServeCardDragOver(event)"
+                 ondrop="window.dropServeOnCard(event, '${item.id}')">
               <div class="item-card-top">
                 <div>
-                  <div class="serve-item-title">${safeHtml(item.title || '未命名发球')}</div>
+                  <div class="serve-title-row">
+                    <span class="serve-sort-badge">${index + 1}</span>
+                    <div class="serve-item-title">${safeHtml(item.title || '未命名发球')}</div>
+                  </div>
                   <div class="serve-item-zone">${cfg.label}</div>
                   <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
                 </div>
@@ -3276,6 +3557,32 @@ function renderSimpleList(moduleKey, items) {
           const done = safeCurrent >= targetCount;
           const logs = Array.isArray(item.trainingLogs) ? sortGymLogs(item.trainingLogs) : [];
           const recentLogs = logs.slice(0, 3);
+          const planHistory = Array.isArray(item.planHistory) ? [...item.planHistory].sort((a, b) => (b.changedAt || 0) - (a.changedAt || 0)) : [];
+
+          const historyHtml = planHistory.length ? `
+            <details class="gym-history">
+              <summary>修改记录 ${planHistory.length}</summary>
+              <div class="gym-history-list">
+                ${planHistory.map(record => {
+                  const when = record.changedAt ? new Date(record.changedAt).toLocaleString('zh-CN') : '未知时间';
+                  const fromTarget = Number(record.fromTargetCount || 0);
+                  const toTarget = Number(record.toTargetCount || 0);
+                  const targetChanged = fromTarget && toTarget && fromTarget !== toTarget;
+                  const titleChanged = (record.fromTitle || '') !== (record.toTitle || '');
+                  const contentChanged = !!record.contentChanged;
+                  return `
+                    <div class="gym-history-item">
+                      <div class="gym-history-date">${when}</div>
+                      ${targetChanged ? `<div class="gym-history-change">每日目标：${fromTarget} 次 → ${toTarget} 次</div>` : ''}
+                      ${titleChanged ? `<div class="gym-history-sub">标题：${safeHtml(record.fromTitle || '未命名训练')} → ${safeHtml(record.toTitle || '未命名训练')}</div>` : ''}
+                      ${contentChanged ? `<div class="gym-history-sub">训练内容 / 注意点有更新</div>` : ''}
+                      ${!targetChanged && !titleChanged && !contentChanged ? `<div class="gym-history-sub">训练计划有更新</div>` : ''}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </details>
+          ` : '';
 
           return `
             <div class="gym-plan-card">
@@ -3307,6 +3614,8 @@ function renderSimpleList(moduleKey, items) {
               </div>
 
               ${recentLogs.length ? `<div class="gym-plan-meta">${recentLogs.map(log => `<span class="gym-meta-chip">${safeHtml(log.date)} · ${Number(log.count || 0)}次</span>`).join('')}</div>` : ''}
+
+              ${historyHtml}
 
               <div class="gym-actions">
                 <button class="small-btn success" ${done ? 'disabled' : ''} onclick="window.markGymPlanDone('${item.id}')">练完一次</button>
@@ -3350,6 +3659,125 @@ function renderSimpleList(moduleKey, items) {
       }
       document.getElementById(`${moduleKey}-submit`).textContent = moduleKey === 'anki' ? '添加训练计划' : moduleKey === 'serves' ? '添加发球' : moduleKey === 'ballfriends' ? '添加球友' : '添加条目';
     }
+    function renderReceiveJudgeCustom(items) {
+      const listEl = document.getElementById('receivejudge-custom-list');
+      const statsEl = document.getElementById('receivejudge-stats');
+      const arr = [...(items || [])].sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+      state.receivejudge.items = arr;
+
+      if (statsEl) {
+        statsEl.innerHTML = `
+          <div class="recent-tech-stat">
+            <div class="recent-tech-stat-label">分类数量</div>
+            <div class="recent-tech-stat-value">${arr.length}</div>
+          </div>
+        `;
+      }
+
+      if (!listEl) return;
+      if (!arr.length) {
+        listEl.innerHTML = '<div class="empty-box">还没有自定义分类，先添加一条吧。</div>';
+        return;
+      }
+
+      listEl.innerHTML = arr.map(item => `
+        <div class="receive-custom-card">
+          <div class="item-card-top">
+            <div>
+              <div class="receive-custom-title">${safeHtml(item.title || '未命名分类')}</div>
+              <div class="item-time">${item.updatedAt ? new Date(item.updatedAt).toLocaleString('zh-CN') : '刚刚'}</div>
+            </div>
+            <div class="item-buttons">
+              <button class="small-btn" onclick="window.editReceiveJudgeCustom('${item.id}')">编辑</button>
+              <button class="small-btn danger" onclick="window.deleteReceiveJudgeCustom('${item.id}')">删除</button>
+            </div>
+          </div>
+          <div class="receive-custom-content">${safeHtml(item.content || '').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join('');
+    }
+
+    function resetReceiveJudgeForm() {
+      state.receivejudge.editingId = null;
+      const titleEl = document.getElementById('receivejudge-title');
+      const contentEl = document.getElementById('receivejudge-content');
+      const submitEl = document.getElementById('receivejudge-submit');
+      if (titleEl) titleEl.value = '';
+      if (contentEl) contentEl.value = '';
+      if (submitEl) submitEl.textContent = '添加分类';
+    }
+
+    function bindReceiveJudgeModule() {
+      bindAutoSaveText('receivejudge', 'receivejudge-text', '接球方式总内容');
+
+      const submitEl = document.getElementById('receivejudge-submit');
+      if (submitEl && submitEl.dataset.bound !== '1') {
+        submitEl.dataset.bound = '1';
+        submitEl.addEventListener('click', async () => {
+          if (!currentUid) return window.showToast('请先登录');
+          const title = document.getElementById('receivejudge-title').value.trim();
+          const content = document.getElementById('receivejudge-content').value.trim();
+          if (!title && !content) return window.showToast('先输入一点内容');
+
+          try {
+            const payload = { title, content, updatedAt: Date.now() };
+            if (state.receivejudge.editingId) {
+              await setDoc(doc(db, "users", currentUid, "modules", "receivejudge", "items", state.receivejudge.editingId), payload, { merge:true });
+              window.showToast('已更新分类');
+            } else {
+              await addDoc(collectionRef(currentUid, 'receivejudge', 'items'), { ...payload, createdAt: Date.now() });
+              window.showToast('已添加分类');
+            }
+            resetReceiveJudgeForm();
+          } catch (error) {
+            console.error(error);
+            window.showToast('保存失败');
+          }
+        });
+      }
+
+      const cancelEl = document.getElementById('receivejudge-cancel');
+      if (cancelEl && cancelEl.dataset.bound !== '1') {
+        cancelEl.dataset.bound = '1';
+        cancelEl.addEventListener('click', () => resetReceiveJudgeForm());
+      }
+    }
+
+    function watchReceiveJudgeItems() {
+      if (!currentUid) return;
+      unsub['items:receivejudge'] = onSnapshot(
+        query(collectionRef(currentUid, 'receivejudge', 'items'), orderBy('updatedAt','desc')),
+        snapshot => {
+          const items = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+          state.receivejudge.items = items;
+          renderReceiveJudgeCustom(items);
+        }
+      );
+    }
+
+    window.editReceiveJudgeCustom = function(itemId) {
+      const item = (state.receivejudge.items || []).find(x => x.id === itemId);
+      if (!item) return;
+      state.receivejudge.editingId = itemId;
+      document.getElementById('receivejudge-title').value = item.title || '';
+      document.getElementById('receivejudge-content').value = item.content || '';
+      document.getElementById('receivejudge-submit').textContent = '保存分类';
+      const titleEl = document.getElementById('receivejudge-title');
+      if (titleEl) titleEl.focus();
+    };
+
+    window.deleteReceiveJudgeCustom = async function(itemId) {
+      if (!currentUid) return window.showToast('请先登录');
+      try {
+        await deleteDoc(doc(db, "users", currentUid, "modules", "receivejudge", "items", itemId));
+        if (state.receivejudge.editingId === itemId) resetReceiveJudgeForm();
+        window.showToast('已删除分类');
+      } catch (error) {
+        console.error(error);
+        window.showToast('删除失败');
+      }
+    };
+
     const groupedModuleConfigs = {
       receivejudge: {
         textId: 'receivejudge-text',
@@ -3360,9 +3788,9 @@ function renderSimpleList(moduleKey, items) {
         cancelId: 'receivejudge-cancel',
         listPrefix: 'receivejudge-list-',
         countPrefix: 'receivejudge-count-',
-        emptyText: '该区域还没有判断记录。',
-        addText: '添加记录',
-        saveText: '保存记录',
+        emptyText: '该区域还没有接球方式记录。',
+        addText: '添加接球方式',
+        saveText: '保存接球方式',
         itemName: '记录',
         zones: {
           bhLong: '反手长',
@@ -3868,6 +4296,29 @@ function renderSimpleList(moduleKey, items) {
               const existingCurrent = existingItem && existingItem.lastProgressDate === todayKey
                 ? Math.max(0, Number(existingItem.currentCount || 0))
                 : 0;
+              const existingHistory = Array.isArray(existingItem && existingItem.planHistory) ? existingItem.planHistory : [];
+              const oldTarget = Math.max(1, Number(existingItem && existingItem.targetCount ? existingItem.targetCount : parsedTarget));
+              const oldTitle = existingItem ? (existingItem.title || '') : '';
+              const oldContent = existingItem ? (existingItem.content || '') : '';
+              const titleChanged = !!existingItem && oldTitle !== title;
+              const contentChanged = !!existingItem && oldContent !== content;
+              const targetChanged = !!existingItem && oldTarget !== parsedTarget;
+
+              let nextHistory = existingHistory;
+              if (state[moduleKey].editingId && existingItem && (titleChanged || contentChanged || targetChanged)) {
+                nextHistory = [
+                  ...existingHistory,
+                  {
+                    changedAt: Date.now(),
+                    fromTitle: oldTitle,
+                    toTitle: title,
+                    fromTargetCount: oldTarget,
+                    toTargetCount: parsedTarget,
+                    contentChanged
+                  }
+                ].slice(-80);
+              }
+
               const payload = {
                 title,
                 content,
@@ -3875,22 +4326,31 @@ function renderSimpleList(moduleKey, items) {
                 currentCount: Math.min(existingCurrent, parsedTarget),
                 lastProgressDate: todayKey,
                 trainingLogs: Array.isArray(existingItem && existingItem.trainingLogs) ? existingItem.trainingLogs : [],
+                planHistory: nextHistory,
                 updatedAt: Date.now()
               };
 
               if (state[moduleKey].editingId) {
                 await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), payload, { merge:true });
-                window.showToast('已更新训练计划');
+                window.showToast('已更新训练计划，并记录修改历史');
               } else {
                 await addDoc(collectionRef(currentUid, moduleKey, 'items'), {
                   ...payload,
+                  planHistory: [],
                   createdAt: Date.now()
                 });
                 window.showToast('已添加训练计划');
               }
             } else if (moduleKey === 'serves') {
               const serveZone = document.getElementById('serves-zone').value || 'backhand_long';
-              const payload = { title, content, serveZone, updatedAt: Date.now() };
+              const existingItem = (state[moduleKey].items || []).find(item => item.id === state[moduleKey].editingId);
+              const nextPosition = state[moduleKey].editingId
+                ? ((existingItem && (existingItem.serveZone || 'backhand_long') === serveZone)
+                    ? (Number.isFinite(Number(existingItem && existingItem.servePosition)) ? Number(existingItem.servePosition) : getNextServePosition(serveZone, state[moduleKey].items, state[moduleKey].editingId))
+                    : getNextServePosition(serveZone, state[moduleKey].items, state[moduleKey].editingId))
+                : getNextServePosition(serveZone, state[moduleKey].items);
+
+              const payload = { title, content, serveZone, servePosition: nextPosition, updatedAt: Date.now() };
               if (state[moduleKey].editingId) {
                 await setDoc(doc(db, "users", currentUid, "modules", moduleKey, "items", state[moduleKey].editingId), payload, { merge:true });
                 window.showToast('已更新发球');
@@ -4546,7 +5006,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
     function bindAllUiOnce() {
       bindTasks();
       bindSimpleModule('serves','已掌握的发球总内容');
-      bindGroupedModule('receivejudge','对手接球能力判断总内容');
+      bindReceiveJudgeModule();
       bindRecentImprove();
       bindOpponentTacticsModule();
       bindSimpleModule('ballfriends','球友训练总览');
@@ -4556,7 +5016,7 @@ window.deleteSimpleItem = async function(moduleKey, itemId) {
     function startWatchers() {
       watchModuleText('tasks','tasks-text'); watchTaskItems();
       watchModuleText('serves','serves-text'); watchSimpleModuleItems('serves');
-      watchModuleText('receivejudge','receivejudge-text'); watchGroupedModuleItems('receivejudge');
+      watchModuleText('receivejudge','receivejudge-text'); watchReceiveJudgeItems();
       watchModuleText('recentimprove','recentimprove-text'); watchRecentImproveItems();
       watchModuleText('opponenttactics','opponenttactics-text'); watchOpponentTacticsModule();
       watchModuleText('ballfriends','ballfriends-text'); watchSimpleModuleItems('ballfriends');
